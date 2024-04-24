@@ -50,7 +50,8 @@ android {
 }
 
 dependencies {
-
+    // MODULE DEPENDENCIES
+    // Default dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -59,11 +60,20 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // Navigation dependency
+    implementation(libs.androidx.navigation.compose)
+    // Extended material icons dependency
+    implementation(libs.androidx.material.icons.extended)
+
+    // UNIT TESTING DEPENDENCIES
     testImplementation(libs.junit)
+    // INSTRUMENTATION ANDROID TESTING DEPENDENCIES
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    // DEBUG BUILD DEPENDENCIES
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
