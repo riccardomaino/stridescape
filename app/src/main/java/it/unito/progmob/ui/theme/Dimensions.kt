@@ -3,7 +3,6 @@ package it.unito.progmob.ui.theme
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-// Spacing
 val default: Dp = 0.dp
 val extraSmall: Dp = 4.dp
 val small: Dp = 8.dp
