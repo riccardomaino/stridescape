@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="content_desc_onboarding_image1">Immagine pagina di benvenuto</string>
+    <string name="onboarding_next_btn">Avanti</string>
+    <string name="onboarding_back_btn">Indietro</string>
+    <string name="onboarding_getstarted_btn">Inizia</string>
+</resources>
