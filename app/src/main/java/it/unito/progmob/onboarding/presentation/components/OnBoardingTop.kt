@@ -1,6 +1,5 @@
 package it.unito.progmob.onboarding.presentation.components
 
-import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -17,11 +16,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import it.unito.progmob.onboarding.presentation.utils.Page
-import it.unito.progmob.onboarding.presentation.utils.pages
+import it.unito.progmob.onboarding.presentation.uidata.Page
+import it.unito.progmob.onboarding.presentation.uidata.pages
 import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
-import it.unito.progmob.ui.theme.medium
 
 @Composable
 fun OnBoardingTop(

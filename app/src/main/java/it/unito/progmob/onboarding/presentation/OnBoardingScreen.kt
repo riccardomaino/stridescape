@@ -22,7 +22,7 @@ import it.unito.progmob.onboarding.presentation.components.OnBoardingButton
 import it.unito.progmob.onboarding.presentation.components.OnBoardingTextButton
 import it.unito.progmob.onboarding.presentation.components.OnBoardingTop
 import it.unito.progmob.onboarding.presentation.components.PageIndicator
-import it.unito.progmob.onboarding.presentation.utils.pages
+import it.unito.progmob.onboarding.presentation.uidata.pages
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.pageIndicatorWidth
 import kotlinx.coroutines.launch

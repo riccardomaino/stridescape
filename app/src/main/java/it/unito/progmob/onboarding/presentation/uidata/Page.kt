@@ -1,4 +1,4 @@
-package it.unito.progmob.onboarding.presentation.utils
+package it.unito.progmob.onboarding.presentation.uidata
 
 import androidx.annotation.DrawableRes
 import it.unito.progmob.R
