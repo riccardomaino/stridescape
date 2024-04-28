@@ -1,4 +1,4 @@
-package it.unito.progmob
+package it.unito.progmob.core
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

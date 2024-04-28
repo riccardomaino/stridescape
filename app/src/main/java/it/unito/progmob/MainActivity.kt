@@ -6,15 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
+import it.unito.progmob.onboarding.presentation.viewmodels.OnBoardingViewModel
 import it.unito.progmob.ui.theme.MyApplicationTheme
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class  MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
@@ -25,7 +26,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    OnBoardingScreen()
+                    val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
+                    OnBoardingScreen(
+                        event = onBoardingViewModel::onEvent
+                    )
                 }
             }
         }

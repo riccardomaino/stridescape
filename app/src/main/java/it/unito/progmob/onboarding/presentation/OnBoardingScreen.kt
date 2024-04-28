@@ -29,22 +29,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnBoardingScreen(modifier: Modifier = Modifier) {
+fun OnBoardingScreen(
+    modifier: Modifier = Modifier,
+    event: (OnBoardingEvent) -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()) {
-        val pagerState = rememberPagerState(initialPage = 0) {
-            pages.size
-        }
+        val pagerState = rememberPagerState(initialPage = 0) { pages.size }
 
         val buttonState = remember {
             derivedStateOf {
                 when (pagerState.currentPage) {
                     0 -> listOf("", "Next")
                     1 -> listOf("Back", "Next")
-                    2 -> listOf(
-                        "Back",
-                        "Get Started"
-                    )
-
+                    2 -> listOf("Back", "Get Started")
                     else -> listOf("", "")
                 }
             }
@@ -68,22 +65,21 @@ fun OnBoardingScreen(modifier: Modifier = Modifier) {
                 selectedPage = pagerState.currentPage
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                val scope = rememberCoroutineScope()
-
-
+                val coroutineScope = rememberCoroutineScope()
 
                 if (buttonState.value[0].isNotEmpty()) {
                     OnBoardingTextButton(text = buttonState.value[0], onClick = {
-                        scope.launch {
+                        coroutineScope.launch {
                             pagerState.animateScrollToPage(page = pagerState.currentPage - 1)
                         }
                     })
                 }
 
                 OnBoardingButton(text = buttonState.value[1], onClick = {
-                    scope.launch {
-                        if (pagerState.currentPage == 3) {
+                    coroutineScope.launch {
+                        if (pagerState.currentPage == 2) {
                             // TODO: Navigate to the Home screen
+                            event(OnBoardingEvent.SaveOnboardingEntry)
                         } else {
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }
