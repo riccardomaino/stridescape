@@ -11,6 +11,9 @@ val extraLarge: Dp = 32.dp
 val doubleExtraLarge: Dp = 64.dp
 
 val smallRadius: Dp = 6.dp
+val mediumRadius: Dp = 12.dp
+val largeRadius: Dp = 18.dp
+val extralargeRadius: Dp = 24.dp
 
 // OnBoarding dimension
 val indicatorSize: Dp = 14.dp

@@ -12,9 +12,9 @@ data class Page(
 
 val pages = listOf(
     Page(
-        title = "Welcome",
-        description = "This is a simple onboarding screen",
-        image = R.drawable.onboarding1
+        title = "Welcome to Tracker",
+        description = "Track your steps, calories, and more! \n With Tracker you can track your daily activities and improve your health. \n Make sure to allow all the permissions to get the best experience.",
+        image = R.drawable.homepage
     ),
     Page(
         title = "Simple and Easy",

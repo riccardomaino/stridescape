@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,6 +25,7 @@ import it.unito.progmob.onboarding.presentation.components.OnBoardingTop
 import it.unito.progmob.onboarding.presentation.components.PageIndicator
 import it.unito.progmob.onboarding.presentation.uidata.pages
 import it.unito.progmob.ui.theme.large
+import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.pageIndicatorWidth
 import kotlinx.coroutines.launch
 
@@ -33,7 +35,7 @@ fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     event: (OnBoardingEvent) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         val pagerState = rememberPagerState(initialPage = 0) { pages.size }
 
         val buttonState = remember {
@@ -51,19 +53,21 @@ fun OnBoardingScreen(
             OnBoardingTop(page = pages[index])
         }
         Spacer(modifier = Modifier.weight(1f))
+        PageIndicator(
+            Modifier.width(pageIndicatorWidth),
+            pagesNumber = pages.size,
+            selectedPage = pagerState.currentPage
+        )
+        Spacer(modifier = Modifier.height(medium))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = large)
                 .navigationBarsPadding(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.aligned(alignment = Alignment.CenterHorizontally)
         ) {
-            PageIndicator(
-                Modifier.width(pageIndicatorWidth),
-                pagesNumber = pages.size,
-                selectedPage = pagerState.currentPage
-            )
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val coroutineScope = rememberCoroutineScope()
 

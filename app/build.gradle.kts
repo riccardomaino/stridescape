@@ -76,7 +76,7 @@ dependencies {
     // Dagger-Hilt
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    // kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // UNIT TESTING DEPENDENCIES
