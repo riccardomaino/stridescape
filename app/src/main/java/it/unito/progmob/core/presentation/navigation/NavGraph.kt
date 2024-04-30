@@ -1,4 +1,4 @@
-package it.unito.progmob.core.presentation.navgraph
+package it.unito.progmob.core.presentation.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
-import it.unito.progmob.onboarding.presentation.viewmodels.OnBoardingViewModel
+import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
 
 
 @Composable
@@ -19,11 +19,11 @@ fun NavGraph(
 
     NavHost(navController = navController, startDestination = startDestination) {
         navigation(
-            route = Route.AppStartNavigation.route,
-            startDestination = Route.OnBoardingScreen.route
+            route = Route.StartNavigationRoute.route,
+            startDestination = Route.OnBoardingScreenRoute.route
         ) {
             composable(
-                route = Route.OnBoardingScreen.route
+                route = Route.OnBoardingScreenRoute.route
             ) {
                 val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
                 OnBoardingScreen(
@@ -33,11 +33,11 @@ fun NavGraph(
         }
         
         navigation(
-            route = Route.HomeNavigation.route,
-            startDestination = Route.HomeNavigationScreen.route
-        ){
+            route = Route.HomeNavigationRoute.route,
+            startDestination = Route.HomeScreenRoute.route
+        ) {
             composable(
-                route = Route.HomeNavigationScreen.route
+                route = Route.HomeScreenRoute.route
             ) {
                 Text(text = "Home Navigator Screen")
             }

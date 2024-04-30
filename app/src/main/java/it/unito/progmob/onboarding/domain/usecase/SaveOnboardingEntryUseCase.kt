@@ -1,8 +1,8 @@
-package it.unito.progmob.onboarding.domain.usecases
+package it.unito.progmob.onboarding.domain.usecase
 
-import it.unito.progmob.core.domain.managers.DataStoreManager
+import it.unito.progmob.core.domain.manager.DataStoreManager
 
-class SaveOnboardingEntry(
+class SaveOnboardingEntryUseCase(
     private val dataStoreManager: DataStoreManager
 ) {
     suspend operator fun invoke() {

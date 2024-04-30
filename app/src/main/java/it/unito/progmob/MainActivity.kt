@@ -9,13 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import it.unito.progmob.core.presentation.MainViewModel
-import it.unito.progmob.core.presentation.navgraph.NavGraph
-import it.unito.progmob.onboarding.presentation.OnBoardingScreen
-import it.unito.progmob.onboarding.presentation.viewmodels.OnBoardingViewModel
+import it.unito.progmob.core.presentation.viewmodel.MainViewModel
+import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint

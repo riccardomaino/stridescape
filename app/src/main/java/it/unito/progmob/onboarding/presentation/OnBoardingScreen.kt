@@ -79,7 +79,7 @@ fun OnBoardingScreen(
                     coroutineScope.launch {
                         if (pagerState.currentPage == 2) {
                             // TODO: Navigate to the Home screen
-                            event(OnBoardingEvent.SaveOnboardingEntry)
+                            event(OnBoardingEvent.SaveOnBoardingEntry)
                         } else {
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }

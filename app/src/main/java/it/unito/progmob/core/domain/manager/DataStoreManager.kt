@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.managers
+package it.unito.progmob.core.domain.manager
 
 import kotlinx.coroutines.flow.Flow
 
