@@ -17,4 +17,6 @@ val extralargeRadius: Dp = 24.dp
 
 // OnBoarding dimension
 val indicatorSize: Dp = 14.dp
+val pageIndicatorSpacing: Dp = 10.dp
+val pageIndicatorHeight: Dp = 48.dp
 val pageIndicatorWidth: Dp = 52.dp
