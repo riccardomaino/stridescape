@@ -13,17 +13,18 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import it.unito.progmob.R
+import it.unito.progmob.onboarding.domain.model.getOnboardingPages
 import it.unito.progmob.onboarding.presentation.components.OnBoardingButton
 import it.unito.progmob.onboarding.presentation.components.OnBoardingTextButton
 import it.unito.progmob.onboarding.presentation.components.OnBoardingTop
 import it.unito.progmob.onboarding.presentation.components.PageIndicator
-import it.unito.progmob.onboarding.presentation.uidata.pages
 import it.unito.progmob.ui.theme.large
 import kotlinx.coroutines.launch
 
@@ -35,7 +36,8 @@ fun OnBoardingScreen(
 ) {
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         val context = LocalContext.current
-        val pagerState = rememberPagerState(initialPage = 0) { pages.size }
+        val pages = remember { mutableStateOf(getOnboardingPages(context)) }
+        val pagerState = rememberPagerState(initialPage = 0) { pages.value.size }
         val buttonState = remember {
             derivedStateOf {
                 when (pagerState.currentPage) {
@@ -56,7 +58,7 @@ fun OnBoardingScreen(
         }
 
         HorizontalPager(state = pagerState) { index ->
-            OnBoardingTop(page = pages[index])
+            OnBoardingTop(page = pages.value[index])
         }
         Spacer(modifier = Modifier.weight(1f))
         Row(
@@ -68,7 +70,7 @@ fun OnBoardingScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             PageIndicator(
-                pagesNumber = pages.size,
+                pagesNumber = pages.value.size,
                 pagerState = pagerState
             )
             Row(verticalAlignment = Alignment.CenterVertically) {

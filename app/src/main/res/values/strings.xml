@@ -1,7 +1,11 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Stridescape</string>
     <string name="content_desc_onboarding_image1">Welcome page image</string>
     <string name="onboarding_next_btn">Next</string>
     <string name="onboarding_back_btn">Back</string>
     <string name="onboarding_getstarted_btn">Get Started</string>
+    <string name="onboarding_page1_description">Track your steps, calories, and more! With Stridescape you can track your daily activities and improve your health.</string>
+    <string name="onboarding_page1_title">Welcome</string>
+    <string name="onboarding_page2_title">Live Map</string>
+    <string name="onboarding_page2_description">Keep track on your position with the live map! Make sure to allow all the permissions to ensure a precise localization</string>
 </resources>

@@ -2,6 +2,8 @@ package it.unito.progmob.onboarding.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,13 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import it.unito.progmob.onboarding.presentation.uidata.Page
-import it.unito.progmob.onboarding.presentation.uidata.pages
+import it.unito.progmob.onboarding.domain.model.Page
+import it.unito.progmob.onboarding.domain.model.getOnboardingPages
 import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
 
@@ -34,27 +35,37 @@ fun OnBoardingTop(
     Column(
         modifier = modifier
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(fraction = 0.6f)
-                .clip(shape = RoundedCornerShape(bottomStart = extraLarge, bottomEnd = extraLarge)),
-            painter = painterResource(id = page.image),
-            contentDescription = page.imageContentDescription,
-            contentScale = ContentScale.Crop
-        )
+        Box(
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)
+        ) {
+            Box(
+                modifier = Modifier.padding(horizontal = large)
+            ) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(fraction = 0.6f)
+                        .clip(shape = RoundedCornerShape(topStart = large, topEnd = large)),
+                    painter = painterResource(id = page.image),
+                    contentDescription = page.imageContentDescription,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.BottomCenter
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(large))
         Text(
             text = page.title,
-            modifier = Modifier.padding(horizontal = extraLarge).align(Alignment.CenterHorizontally),
-            style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier
+                .padding(horizontal = extraLarge),
+            style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold),
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(large))
         Text(
             text = page.description,
             modifier = Modifier.padding(horizontal = extraLarge),
-            style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal),
             color = MaterialTheme.colorScheme.onSurface
         )
     }
@@ -64,6 +75,7 @@ fun OnBoardingTop(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun OnBoardingTopPreview() {
+    val  pages = getOnboardingPages(LocalContext.current)
     OnBoardingTop(
         page = pages[0]
     )
