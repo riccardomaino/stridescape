@@ -1,5 +1,8 @@
-package it.unito.progmob.homeapge.presentation
+package it.unito.progmob.home.presentation
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +24,22 @@ import it.unito.progmob.R
 import it.unito.progmob.ui.theme.large
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, homeEvent: (HomeEvent) -> Unit) {
+
+    val activityRecognitionPermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                homeEvent(
+                    HomeEvent.SavePermissionResult(
+                        Manifest.permission.ACTIVITY_RECOGNITION,
+                        isGranted
+                    )
+                )
+            }
+        }
+    )
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -32,7 +50,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.Person, contentDescription = stringResource(R.string.home_user_icon),)
+            Icon(
+                Icons.Default.Person,
+                contentDescription = stringResource(R.string.home_user_icon),
+            )
             Text(
                 stringResource(R.string.home_title),
                 style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)

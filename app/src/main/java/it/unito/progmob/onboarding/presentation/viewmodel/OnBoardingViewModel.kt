@@ -1,6 +1,5 @@
 package it.unito.progmob.onboarding.presentation.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +16,7 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases
 ) : ViewModel() {
-    // Queue used to show some potential different permission dialog
-    private val visiblePermissionDialogQueue = mutableStateListOf<String>()
+
 
     /**
      * Handles OnBoarding events emitted from the UI.
@@ -28,7 +26,6 @@ class OnBoardingViewModel @Inject constructor(
         when (event) {
             is OnBoardingEvent.SaveOnBoardingEntry -> saveOnboardingEntry()
             is OnBoardingEvent.ReadOnBoardingEntry -> readOnboardingEntry()
-            is OnBoardingEvent.SavePermissionResult -> onPermissionResult(isGranted = event.isGranted, permission = event.permission)
         }
     }
 
@@ -50,25 +47,6 @@ class OnBoardingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             onBoardingUseCases.readOnboardingEntryUseCase()
         }
-    }
-
-    /**
-     * Dismiss a the dialog. It pops the first entry of the queue of permissions
-     */
-    fun dismissDialog(){
-        visiblePermissionDialogQueue.removeFirst()
-    }
-
-    /**
-     * Function called when we got the permission result
-     * @param permission The string name representing the permission
-     * @param isGranted A boolean value used to evaluate if the permission was granted or not
-     */
-    private fun onPermissionResult(
-        permission: String,
-        isGranted: Boolean
-    ){
-        visiblePermissionDialogQueue.add(0, permission)
     }
 
 }

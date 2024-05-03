@@ -74,14 +74,14 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore.preferences)
     // Room
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.compiler)
+//    implementation(libs.androidx.room.ktx)
+//    implementation(libs.androidx.room.runtime)
+//    implementation(libs.androidx.room.compiler)
     // Dagger-Hilt
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
     //kapt(libs.androidx.hilt.compiler) // INUTILE
-    //implementation(libs.androidx.hilt.navigation.compose) // INUTILE
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // UNIT TESTING DEPENDENCIES
     testImplementation(libs.junit)

@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import it.unito.progmob.homeapge.presentation.HomeScreen
-import it.unito.progmob.homeapge.presentation.viewmodel.HomeViewModel
+import it.unito.progmob.home.presentation.HomeScreen
+import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
 import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
 
@@ -28,7 +28,7 @@ fun NavGraph(
             ) {
                 val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
                 OnBoardingScreen(
-                    event = onBoardingViewModel::onEvent
+                    onBoardingEvent = onBoardingViewModel::onEvent
                 )
             }
         }
@@ -42,7 +42,7 @@ fun NavGraph(
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
                 HomeScreen(
-
+                    homeEvent = homeViewModel::onEvent
                 )
             }
         }

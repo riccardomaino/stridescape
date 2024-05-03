@@ -1,10 +1,5 @@
 package it.unito.progmob.onboarding.presentation
 
-import android.Manifest
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,25 +27,16 @@ import it.unito.progmob.onboarding.presentation.components.PageIndicator
 import it.unito.progmob.ui.theme.large
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    modifier: Modifier = Modifier,
-    event: (OnBoardingEvent) -> Unit
+    onBoardingEvent: (OnBoardingEvent) -> Unit
 ) {
     Column {
         val context = LocalContext.current
         val pages = remember { mutableStateOf(getOnboardingPages(context)) }
         val pagerState = rememberPagerState(initialPage = 0) { pages.value.size }
-        val activityRecognitionPermissionResultLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-            onResult = { isGranted ->
-                if (isGranted) {
-                    event(OnBoardingEvent.SavePermissionResult(Manifest.permission.ACTIVITY_RECOGNITION, isGranted))
-                }
-            }
-        )
+
         val buttonState = remember {
             derivedStateOf {
                 when (pagerState.currentPage) {
@@ -99,11 +85,8 @@ fun OnBoardingScreen(
                     coroutineScope.launch {
                         if (pagerState.currentPage == 2) {
                             // TODO: Navigate to the Home screen
-                            event(OnBoardingEvent.SaveOnBoardingEntry)
+                            onBoardingEvent(OnBoardingEvent.SaveOnBoardingEntry)
                         } else {
-                            if (pagerState.currentPage == 0) {
-                                activityRecognitionPermissionResultLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
-                            }
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }
                     }
