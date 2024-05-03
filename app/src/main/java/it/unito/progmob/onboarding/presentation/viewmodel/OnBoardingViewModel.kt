@@ -1,5 +1,6 @@
 package it.unito.progmob.onboarding.presentation.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases
 ) : ViewModel() {
+    private val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     /**
      * Handles OnBoarding events emitted from the UI.
@@ -25,6 +27,7 @@ class OnBoardingViewModel @Inject constructor(
         when (event) {
             is OnBoardingEvent.SaveOnBoardingEntry -> saveOnboardingEntry()
             is OnBoardingEvent.ReadOnBoardingEntry -> readOnboardingEntry()
+            is OnBoardingEvent.SavePermissionResult -> onPermisisonResult(isGranted = event.isGranted, permission = event.permission)
         }
     }
 
@@ -47,4 +50,16 @@ class OnBoardingViewModel @Inject constructor(
             onBoardingUseCases.readOnboardingEntryUseCase()
         }
     }
+
+    fun dismissDialog(){
+        visiblePermissionDialogQueue.removeFirst()
+    }
+
+    fun onPermisisonResult(
+        permission: String,
+        isGranted: Boolean
+    ){
+        visiblePermissionDialogQueue.add(0, permission)
+    }
+
 }
