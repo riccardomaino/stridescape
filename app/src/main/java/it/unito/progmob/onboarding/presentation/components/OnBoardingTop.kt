@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +25,7 @@ import it.unito.progmob.onboarding.domain.model.Page
 import it.unito.progmob.onboarding.domain.model.getOnboardingPages
 import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
+import it.unito.progmob.ui.theme.medium
 
 @Composable
 fun OnBoardingTop(
@@ -36,22 +36,20 @@ fun OnBoardingTop(
         modifier = modifier
     ) {
         Box(
-            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.primary)
+                .padding(start = large, end = large, top = medium)
+                .fillMaxHeight(fraction = 0.6f)
         ) {
-            Box(
-                modifier = Modifier.padding(horizontal = large)
-            ) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(fraction = 0.6f)
-                        .clip(shape = RoundedCornerShape(topStart = large, topEnd = large)),
-                    painter = painterResource(id = page.image),
-                    contentDescription = page.imageContentDescription,
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.BottomCenter
-                )
-            }
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(topStart = large, topEnd = large)),
+                painter = painterResource(id = page.image),
+                contentDescription = page.imageContentDescription,
+                contentScale = ContentScale.Crop,
+
+            )
         }
         Spacer(modifier = Modifier.height(large))
         Text(

@@ -26,9 +26,10 @@ fun getOnboardingPages(
             image = R.drawable.livemap
         ),
         Page(
-            title = "Get Started",
-            description = "This is a simple onboarding screen",
-            image = R.drawable.onboarding3
+            title = context.getString(R.string.onboarding_page3_title),
+            //description = context.getString(R.string.onboarding_page3_description),
+            description = "This is a description",
+            image = R.drawable.history
         )
     )
 

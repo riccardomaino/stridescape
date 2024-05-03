@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stridescape</string>
+    <string name="app_name" translatable="false">Stridescape</string>
     <string name="content_desc_onboarding_image1">Welcome page image</string>
     <string name="onboarding_next_btn">Next</string>
     <string name="onboarding_back_btn">Back</string>
@@ -8,4 +8,9 @@
     <string name="onboarding_page1_title">Welcome</string>
     <string name="onboarding_page2_title">Live Map</string>
     <string name="onboarding_page2_description">Keep track on your position with the live map! Make sure to allow all the permissions to ensure a precise localization</string>
+    <string name="onboarding_page3_description">Check all your previous walks with the history and keep track on your improvements!</string>
+    <string name="onboarding_page3_title">History</string>
+    <string name="home_user_icon">User icon</string>
+    <string name="home_settings_icon">Settings icon</string>
+    <string name="home_title" translatable="false">Home</string>
 </resources>

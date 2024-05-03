@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Stridescape</string>
     <string name="content_desc_onboarding_image1">Immagine pagina di benvenuto</string>
     <string name="onboarding_next_btn">Avanti</string>
     <string name="onboarding_back_btn">Indietro</string>
@@ -9,4 +8,8 @@
     <string name="onboarding_page1_title">Benvenuto</string>
     <string name="onboarding_page2_title">Mappa Live</string>
     <string name="onboarding_page2_description">Tieni traccia della tua posizione con la mappa live! Assicurati di concedere tutti i permessi per permettere una localizzazione precisa.</string>
+    <string name="onboarding_page3_description">Accedi a tutti le tue camminate grazie alla cronologia e tieni traccia dei tuoi miglioramenti!</string>
+    <string name="onboarding_page3_title">Cronologia</string>
+    <string name="home_user_icon">Icona Utente</string>
+    <string name="home_settings_icon">Icona impostazioni</string>
 </resources>

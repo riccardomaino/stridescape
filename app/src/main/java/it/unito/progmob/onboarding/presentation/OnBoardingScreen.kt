@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -34,7 +33,7 @@ fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     event: (OnBoardingEvent) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column {
         val context = LocalContext.current
         val pages = remember { mutableStateOf(getOnboardingPages(context)) }
         val pagerState = rememberPagerState(initialPage = 0) { pages.value.size }
@@ -56,17 +55,16 @@ fun OnBoardingScreen(
                 }
             }
         }
-
-        HorizontalPager(state = pagerState) { index ->
+        HorizontalPager(state = pagerState, verticalAlignment = Alignment.Top) { index ->
             OnBoardingTop(page = pages.value[index])
         }
         Spacer(modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = large)
+                .padding(start = large, end = large, bottom = large)
                 .navigationBarsPadding(),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             PageIndicator(
@@ -96,6 +94,5 @@ fun OnBoardingScreen(
                 })
             }
         }
-        Spacer(modifier = Modifier.weight(0.2f))
     }
 }

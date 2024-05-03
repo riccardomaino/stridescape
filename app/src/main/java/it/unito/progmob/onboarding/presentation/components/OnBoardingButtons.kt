@@ -13,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.ui.theme.extralargeRadius
-import it.unito.progmob.ui.theme.largeRadius
-import it.unito.progmob.ui.theme.smallRadius
 
 @Composable
 fun OnBoardingButton(
@@ -42,7 +40,8 @@ fun OnBoardingTextButton(
     onClick: () -> Unit
 ) {
     TextButton(
-        onClick = onClick
+        onClick = onClick ,
+        modifier = Modifier.height(45.dp),
     ) {
         Text(
             text = text,

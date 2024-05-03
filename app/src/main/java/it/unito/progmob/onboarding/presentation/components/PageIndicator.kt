@@ -41,7 +41,7 @@ fun PageIndicator(
             repeat(pagesNumber) {
                 Box(
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(15.dp)
                         .background(
                             color = MaterialTheme.colorScheme.primary.copy(
                                 alpha = if (it == pagerState.currentPage) 1f else 0.3f
@@ -54,7 +54,7 @@ fun PageIndicator(
         Box(
             Modifier
                 .wormTransition(pagerState, MaterialTheme.colorScheme.primary)
-                .size(20.dp)
+                .size(15.dp)
         )
     }
 }
