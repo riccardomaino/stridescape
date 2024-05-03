@@ -43,7 +43,7 @@ fun OnBoardingScreen(
         val context = LocalContext.current
         val pages = remember { mutableStateOf(getOnboardingPages(context)) }
         val pagerState = rememberPagerState(initialPage = 0) { pages.value.size }
-        val activityRecognitionPrermissionResultLauncher = rememberLauncherForActivityResult(
+        val activityRecognitionPermissionResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
                 if (isGranted) {
@@ -59,7 +59,6 @@ fun OnBoardingScreen(
                         context.getString(R.string.onboarding_back_btn),
                         context.getString(R.string.onboarding_next_btn)
                     )
-
                     2 -> listOf(
                         context.getString(R.string.onboarding_back_btn),
                         context.getString(R.string.onboarding_getstarted_btn)
@@ -103,7 +102,7 @@ fun OnBoardingScreen(
                             event(OnBoardingEvent.SaveOnBoardingEntry)
                         } else {
                             if (pagerState.currentPage == 0) {
-                                activityRecognitionPrermissionResultLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+                                activityRecognitionPermissionResultLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
                             }
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }

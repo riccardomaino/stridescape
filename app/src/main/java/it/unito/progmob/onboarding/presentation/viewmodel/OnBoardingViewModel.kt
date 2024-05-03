@@ -17,6 +17,7 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases
 ) : ViewModel() {
+    // Queue used to show some potential different permission dialog
     private val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     /**
@@ -27,7 +28,7 @@ class OnBoardingViewModel @Inject constructor(
         when (event) {
             is OnBoardingEvent.SaveOnBoardingEntry -> saveOnboardingEntry()
             is OnBoardingEvent.ReadOnBoardingEntry -> readOnboardingEntry()
-            is OnBoardingEvent.SavePermissionResult -> onPermisisonResult(isGranted = event.isGranted, permission = event.permission)
+            is OnBoardingEvent.SavePermissionResult -> onPermissionResult(isGranted = event.isGranted, permission = event.permission)
         }
     }
 
@@ -51,11 +52,19 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Dismiss a the dialog. It pops the first entry of the queue of permissions
+     */
     fun dismissDialog(){
         visiblePermissionDialogQueue.removeFirst()
     }
 
-    fun onPermisisonResult(
+    /**
+     * Function called when we got the permission result
+     * @param permission The string name representing the permission
+     * @param isGranted A boolean value used to evaluate if the permission was granted or not
+     */
+    private fun onPermissionResult(
         permission: String,
         isGranted: Boolean
     ){
