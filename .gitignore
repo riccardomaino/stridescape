@@ -48,6 +48,8 @@ local.properties
 .idea/gradle.xml
 .idea/jarRepositories.xml
 .idea/navEditor.xml
+.idea/deploymentTargetSelector.xml
+.idea/deploymentTargetDropDown.xml
 
 # Built application files
 *.apk

@@ -23,3 +23,5 @@
 /gradle.xml
 /jarRepositories.xml
 /navEditor.xml
+/deploymentTargetSelector.xml
+/deploymentTargetDropDown.xml
