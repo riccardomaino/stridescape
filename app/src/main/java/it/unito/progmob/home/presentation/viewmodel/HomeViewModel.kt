@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import it.unito.progmob.home.presentation.HomeEvent
 
 class HomeViewModel: ViewModel() {
-
     // Queue used to show some potential different permission dialog
-    private val visiblePermissionDialogQueue = mutableStateListOf<String>()
+    val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.SavePermissionResult -> onPermissionResult(isGranted = event.isGranted, permission = event.permission)
+            is HomeEvent.DismissPermissionDialog -> dismissDialog()
         }
     }
 
@@ -31,6 +31,7 @@ class HomeViewModel: ViewModel() {
         permission: String,
         isGranted: Boolean
     ){
-        if(!isGranted) visiblePermissionDialogQueue.add(permission)
+        if(!isGranted && !visiblePermissionDialogQueue.contains(permission)) visiblePermissionDialogQueue.add(permission)
     }
+
 }

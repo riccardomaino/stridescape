@@ -18,7 +18,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import it.unito.progmob.R
+import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.onboarding.domain.model.getOnboardingPages
 import it.unito.progmob.onboarding.presentation.components.OnBoardingButton
 import it.unito.progmob.onboarding.presentation.components.OnBoardingTextButton
@@ -30,7 +32,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    onBoardingEvent: (OnBoardingEvent) -> Unit
+    onBoardingEvent: (OnBoardingEvent) -> Unit,
+    navController: NavController
 ) {
     Column {
         val context = LocalContext.current
@@ -85,6 +88,7 @@ fun OnBoardingScreen(
                     coroutineScope.launch {
                         if (pagerState.currentPage == 2) {
                             // TODO: Navigate to the Home screen
+                            navController.navigate(route = Route.HomeNavigationRoute.route)
                             onBoardingEvent(OnBoardingEvent.SaveOnBoardingEntry)
                         } else {
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)

@@ -1,5 +1,6 @@
 package it.unito.progmob.core.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +31,12 @@ class MainViewModel @Inject constructor(
 
     init {
         onBoardingUseCases.readOnboardingEntryUseCase().onEach { shouldStartFromHomeScreen ->
+            Log.i("MainViewModel", "Passo 0")
             startDestination = if(shouldStartFromHomeScreen) {
+                Log.d("MainViewModel", "Passo 1")
                 Route.HomeNavigationRoute.route
             } else {
+                Log.d("MainViewModel", "Passo 2")
                 Route.StartNavigationRoute.route
             }
 
