@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import it.unito.progmob.MainActivity
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.util.findActivity
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
@@ -41,12 +42,13 @@ import it.unito.progmob.ui.theme.large
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeEvent: (HomeEvent) -> Unit,
-    homeViewModel: HomeViewModel,
-    mainActivity: MainActivity
+    homeViewModel: HomeViewModel
 ) {
 
     val dialogQueue = homeViewModel.visiblePermissionDialogQueue
     val permissionsToRequest = homeViewModel.permissionsToRequest
+    val context = LocalContext.current
+    val mainActivity = context.findActivity()
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -102,7 +104,7 @@ fun HomeScreen(
         }, modifier = Modifier
             .width(200.dp)
             .height(50.dp)) {
-            Text("Open settings")
+            Text(stringResource(R.string.home_open_settings))
         }
 
     }
@@ -114,7 +116,7 @@ fun HomeScreen(
                 Manifest.permission.ACCESS_FINE_LOCATION -> AccessFineLocationPermissionTextProvider()
                 else -> return@forEach
             },
-            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(LocalContext.current as Activity, permission),
+            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(mainActivity, permission),
             onDismiss = {
                 homeEvent(HomeEvent.DismissPermissionDialog)
             },

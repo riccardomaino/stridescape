@@ -12,4 +12,5 @@
     <string name="onboarding_page3_title">Cronologia</string>
     <string name="home_user_icon">Icona Utente</string>
     <string name="home_settings_icon">Icona impostazioni</string>
+    <string name="home_open_settings">Open settings</string>
 </resources>

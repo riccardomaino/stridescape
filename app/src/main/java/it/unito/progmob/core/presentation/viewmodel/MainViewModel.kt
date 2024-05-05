@@ -28,12 +28,9 @@ class MainViewModel @Inject constructor(
 
     init {
         onBoardingUseCases.readOnboardingEntryUseCase().onEach { shouldStartFromHomeScreen ->
-            Log.d("MainViewModel", "Passo p")
             startDestination = if(shouldStartFromHomeScreen) {
-                Log.d("MainViewModel", "Passo 1")
                 Route.HomeNavigationRoute.route
             } else {
-                Log.d("MainViewModel", "Passo 2")
                 Route.StartNavigationRoute.route
             }
 

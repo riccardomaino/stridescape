@@ -15,8 +15,7 @@ import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
 
 @Composable
 fun NavGraph(
-    startDestination: String,
-    mainActivity: MainActivity
+    startDestination: String
 ) {
     val navController = rememberNavController()
 
@@ -46,8 +45,7 @@ fun NavGraph(
                 val homeViewModel = hiltViewModel<HomeViewModel>()
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
-                    homeViewModel = homeViewModel,
-                    mainActivity = mainActivity
+                    homeViewModel = homeViewModel
                 )
             }
         }

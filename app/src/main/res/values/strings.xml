@@ -13,4 +13,5 @@
     <string name="home_user_icon">User icon</string>
     <string name="home_settings_icon">Settings icon</string>
     <string name="home_title" translatable="false">Home</string>
+    <string name="home_open_settings">Open settings</string>
 </resources>

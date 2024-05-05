@@ -27,8 +27,7 @@ class  MainActivity : ComponentActivity() {
                 ) {
                     val startDestination = viewModel.startDestination
                     NavGraph(
-                        startDestination = startDestination,
-                        mainActivity = this
+                        startDestination = startDestination
                     )
                 }
             }

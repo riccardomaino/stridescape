@@ -30,8 +30,7 @@ class HomeViewModel: ViewModel() {
      * Dismiss a the dialog. It pops the first entry of the queue of permissions
      */
     private fun dismissDialog(){
-        val removed = visiblePermissionDialogQueue.removeFirst()
-        Log.d("HomeViewModel", "dismissDialog: $removed")
+        visiblePermissionDialogQueue.removeFirst()
     }
 
     /**
