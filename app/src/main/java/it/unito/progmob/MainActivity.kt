@@ -26,7 +26,10 @@ class  MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val startDestination = viewModel.startDestination
-                    NavGraph(startDestination = startDestination)
+                    NavGraph(
+                        startDestination = startDestination,
+                        mainActivity = this
+                    )
                 }
             }
         }

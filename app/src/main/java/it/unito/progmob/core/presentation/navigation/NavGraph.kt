@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import it.unito.progmob.MainActivity
 import it.unito.progmob.home.presentation.HomeScreen
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
@@ -14,7 +15,8 @@ import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
 
 @Composable
 fun NavGraph(
-    startDestination: String
+    startDestination: String,
+    mainActivity: MainActivity
 ) {
     val navController = rememberNavController()
 
@@ -42,10 +44,10 @@ fun NavGraph(
                 route = Route.HomeScreenRoute.route
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
-                val dialogQueue = homeViewModel.visiblePermissionDialogQueue
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
-                    dialogQueue = dialogQueue
+                    homeViewModel = homeViewModel,
+                    mainActivity = mainActivity
                 )
             }
         }

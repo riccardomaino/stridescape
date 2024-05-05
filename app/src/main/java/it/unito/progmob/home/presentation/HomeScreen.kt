@@ -27,11 +27,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import it.unito.progmob.MainActivity
 import it.unito.progmob.R
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.home.presentation.components.PermissionDialog
+import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.ui.theme.large
 
 
@@ -39,15 +41,12 @@ import it.unito.progmob.ui.theme.large
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeEvent: (HomeEvent) -> Unit,
-    dialogQueue: List<String>
+    homeViewModel: HomeViewModel,
+    mainActivity: MainActivity
 ) {
 
-    val permissionsToRequest = arrayOf(
-        Manifest.permission.ACTIVITY_RECOGNITION,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        //Manifest.permission.ACCESS_COARSE_LOCATION,
-        //Manifest.permission.ACCESS_BACKGROUND_LOCATION
-    )
+    val dialogQueue = homeViewModel.visiblePermissionDialogQueue
+    val permissionsToRequest = homeViewModel.permissionsToRequest
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -55,7 +54,7 @@ fun HomeScreen(
             permissionsToRequest.forEach { permission ->
                 if(perms[permission] == false) {
                     homeEvent(
-                        HomeEvent.SavePermissionResult(
+                        HomeEvent.CheckPermissionResult(
                             permission,
                             isGranted = perms[permission] == true
                         )
@@ -99,7 +98,7 @@ fun HomeScreen(
             Text("Request permission")
         }
         Button(onClick = {
-            Activity().openAppSettings()
+            mainActivity.openAppSettings()
         }, modifier = Modifier
             .width(200.dp)
             .height(50.dp)) {
@@ -113,8 +112,6 @@ fun HomeScreen(
             permissionTextProvider = when (permission) {
                 Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()
                 Manifest.permission.ACCESS_FINE_LOCATION -> AccessFineLocationPermissionTextProvider()
-                //Manifest.permission.ACCESS_COARSE_LOCATION -> AccessFineLocationPermissionTextProvider()
-                //Manifest.permission.ACCESS_BACKGROUND_LOCATION -> AccessBackgroundLocationPermissionTextProvider()
                 else -> return@forEach
             },
             isPermanentlyDeclined = !shouldShowRequestPermissionRationale(LocalContext.current as Activity, permission),
@@ -127,7 +124,7 @@ fun HomeScreen(
                     arrayOf(permission)
                 )
             },
-            onGoToAppSettingsClick = { Activity().openAppSettings() }
+            onGoToAppSettingsClick = { mainActivity.openAppSettings() }
         )
     }
 }
