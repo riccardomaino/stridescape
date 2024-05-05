@@ -22,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import it.unito.progmob.R
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
@@ -32,12 +34,14 @@ import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissi
 import it.unito.progmob.home.presentation.components.PermissionDialog
 import it.unito.progmob.ui.theme.large
 
+
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeEvent: (HomeEvent) -> Unit,
     dialogQueue: List<String>
 ) {
+
     val permissionsToRequest = arrayOf(
         Manifest.permission.ACTIVITY_RECOGNITION,
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -49,18 +53,21 @@ fun HomeScreen(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
             permissionsToRequest.forEach { permission ->
-                homeEvent(
-                    HomeEvent.SavePermissionResult(
-                        permission,
-                        isGranted = perms[permission] == true
+                if(perms[permission] == false) {
+                    homeEvent(
+                        HomeEvent.SavePermissionResult(
+                            permission,
+                            isGranted = perms[permission] == true
+                        )
                     )
-                )
+                }
             }
         }
     )
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             modifier = Modifier
@@ -91,6 +98,13 @@ fun HomeScreen(
             .height(50.dp)) {
             Text("Request permission")
         }
+        Button(onClick = {
+            Activity().openAppSettings()
+        }, modifier = Modifier
+            .width(200.dp)
+            .height(50.dp)) {
+            Text("Open settings")
+        }
 
     }
 
@@ -103,7 +117,7 @@ fun HomeScreen(
                 //Manifest.permission.ACCESS_BACKGROUND_LOCATION -> AccessBackgroundLocationPermissionTextProvider()
                 else -> return@forEach
             },
-            isPermanentlyDeclined = false,
+            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(LocalContext.current as Activity, permission),
             onDismiss = {
                 homeEvent(HomeEvent.DismissPermissionDialog)
             },
@@ -115,6 +129,5 @@ fun HomeScreen(
             },
             onGoToAppSettingsClick = { Activity().openAppSettings() }
         )
-
     }
 }
