@@ -1,5 +1,6 @@
 package it.unito.progmob.home.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import it.unito.progmob.home.presentation.HomeEvent
@@ -18,8 +19,9 @@ class HomeViewModel: ViewModel() {
     /**
      * Dismiss a the dialog. It pops the first entry of the queue of permissions
      */
-    fun dismissDialog(){
-        visiblePermissionDialogQueue.removeFirst()
+    private fun dismissDialog(){
+        val removed = visiblePermissionDialogQueue.removeFirst()
+        Log.d("HomeViewModel", "dismissDialog: $removed")
     }
 
     /**

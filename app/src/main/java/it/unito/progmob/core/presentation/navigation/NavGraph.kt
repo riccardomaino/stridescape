@@ -1,6 +1,5 @@
 package it.unito.progmob.core.presentation.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -44,9 +43,6 @@ fun NavGraph(
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
                 val dialogQueue = homeViewModel.visiblePermissionDialogQueue
-                dialogQueue.forEach { element ->
-                    Log.d("NavGraph", element)
-                }
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
                     dialogQueue = dialogQueue
