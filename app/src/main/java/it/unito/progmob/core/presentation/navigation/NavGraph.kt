@@ -45,7 +45,8 @@ fun NavGraph(
                 val homeViewModel = hiltViewModel<HomeViewModel>()
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
-                    homeViewModel = homeViewModel
+                    homeViewModel = homeViewModel,
+                    navController = navController
                 )
             }
         }

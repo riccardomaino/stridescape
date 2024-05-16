@@ -20,3 +20,7 @@ val indicatorSize: Dp = 14.dp
 val pageIndicatorSpacing: Dp = 10.dp
 val pageIndicatorHeight: Dp = 48.dp
 val pageIndicatorWidth: Dp = 52.dp
+
+// NavigationBar dimension
+val navigationBarHeight: Dp = 64.dp
+val floatingActionButtonSize: Dp = 56.dp

@@ -6,8 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.presentation.MainEvent
+import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
 import kotlinx.coroutines.flow.launchIn
@@ -22,7 +25,6 @@ class MainViewModel @Inject constructor(
     // Da utilizzare in caso di splash screen
     //    var splashCondition by mutableStateOf(true)
     //        private set
-
     var startDestination by mutableStateOf(Route.StartNavigationRoute.route)
         private set
 
@@ -45,6 +47,5 @@ class MainViewModel @Inject constructor(
      * @param event The MainEvent to be processed.
      */
     fun onEvent(event: MainEvent) {
-
     }
 }

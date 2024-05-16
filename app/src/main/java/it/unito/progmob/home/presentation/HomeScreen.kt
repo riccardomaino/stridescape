@@ -5,6 +5,7 @@ import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,9 +29,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.navigation.NavController
 import it.unito.progmob.MainActivity
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.util.findActivity
+import it.unito.progmob.core.presentation.components.NavigationBar
+import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
@@ -42,7 +47,8 @@ import it.unito.progmob.ui.theme.large
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeEvent: (HomeEvent) -> Unit,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    navController: NavController
 ) {
 
     val dialogQueue = homeViewModel.visiblePermissionDialogQueue
@@ -54,7 +60,7 @@ fun HomeScreen(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
             permissionsToRequest.forEach { permission ->
-                if(perms[permission] == false) {
+                if (perms[permission] == false) {
                     homeEvent(
                         HomeEvent.CheckPermissionResult(
                             permission,
@@ -66,47 +72,62 @@ fun HomeScreen(
         }
     )
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = large),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.Default.Person,
-                contentDescription = stringResource(R.string.home_user_icon),
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            NavigationBar(
+                onClickHome = {},
+                onClickMap = {
+                    navController.navigate(Route.OnBoardingScreenRoute.route)
+                },
+                onClickHistory = { },
+                onClickPlay = {
+                    multiplePermissionResultLauncher.launch(
+                        permissionsToRequest
+                    )
+                },
             )
-            Text(
-                stringResource(R.string.home_title),
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
-            )
-            Icon(
-                Icons.Default.Settings,
-                contentDescription = stringResource(R.string.home_settings_icon)
-            )
-        }
-        Button(onClick = {
-            multiplePermissionResultLauncher.launch(
-                permissionsToRequest
-            )
-        }, modifier = Modifier
-            .width(200.dp)
-            .height(50.dp)) {
-            Text("Request permission")
-        }
-        Button(onClick = {
-            mainActivity.openAppSettings()
-        }, modifier = Modifier
-            .width(200.dp)
-            .height(50.dp)) {
-            Text(stringResource(R.string.home_open_settings))
-        }
 
+        }
+    ) { padding ->
+        Column(
+            modifier = modifier.fillMaxSize().padding(padding),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = large),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = stringResource(R.string.home_user_icon),
+                )
+                Text(
+                    stringResource(R.string.home_title),
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
+                )
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.home_settings_icon)
+                )
+            }
+//            Button(
+//                onClick = {
+//                    multiplePermissionResultLauncher.launch(
+//                        permissionsToRequest
+//                    )
+//                }, modifier = Modifier
+//                    .width(200.dp)
+//                    .height(50.dp)
+//            ) {
+//                Text("Request permission")
+//            }
+
+        }
     }
 
     dialogQueue.reversed().forEach { permission ->
