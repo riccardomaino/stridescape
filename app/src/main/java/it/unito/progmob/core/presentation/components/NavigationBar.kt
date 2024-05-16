@@ -31,10 +31,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.ui.theme.doubleExtraLarge
-import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.floatingActionButtonSize
 import it.unito.progmob.ui.theme.large
-import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.navigationBarHeight
 import it.unito.progmob.ui.theme.small
 

@@ -1,16 +1,12 @@
 package it.unito.progmob.core.presentation.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.presentation.MainEvent
-import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
 import kotlinx.coroutines.flow.launchIn
