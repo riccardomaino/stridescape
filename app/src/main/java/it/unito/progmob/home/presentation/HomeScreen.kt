@@ -31,9 +31,11 @@ import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
+import it.unito.progmob.home.presentation.components.CircularProgressBar
 import it.unito.progmob.home.presentation.components.PermissionDialog
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.ui.theme.large
+import it.unito.progmob.ui.theme.small
 
 
 @Composable
@@ -64,10 +66,31 @@ fun HomeScreen(
             }
         }
     )
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = large, end = large, top = small, bottom = small),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = stringResource(R.string.home_user_icon),
+                )
+                Text(
+                    stringResource(R.string.home_title),
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
+                )
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.home_settings_icon)
+                )
+            }
+        },
         bottomBar = {
             NavigationBar(
                 onClickHome = {},
@@ -85,41 +108,11 @@ fun HomeScreen(
         }
     ) { padding ->
         Column(
-            modifier = modifier.fillMaxSize().padding(padding),
-            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding),
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = large),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = stringResource(R.string.home_user_icon),
-                )
-                Text(
-                    stringResource(R.string.home_title),
-                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
-                )
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = stringResource(R.string.home_settings_icon)
-                )
-            }
-//            Button(
-//                onClick = {
-//                    multiplePermissionResultLauncher.launch(
-//                        permissionsToRequest
-//                    )
-//                }, modifier = Modifier
-//                    .width(200.dp)
-//                    .height(50.dp)
-//            ) {
-//                Text("Request permission")
-//            }
-
+            CircularProgressBar(steps = 20000, number = 6000)
         }
     }
 
