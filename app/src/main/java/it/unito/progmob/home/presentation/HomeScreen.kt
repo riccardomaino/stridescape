@@ -32,6 +32,7 @@ import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.home.presentation.components.PermissionDialog
+import it.unito.progmob.home.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.ui.theme.large
 
@@ -128,6 +129,7 @@ fun HomeScreen(
             permissionTextProvider = when (permission) {
                 Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()
                 Manifest.permission.ACCESS_FINE_LOCATION -> AccessFineLocationPermissionTextProvider()
+                Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionTextProvider()
                 else -> return@forEach
             },
             isPermanentlyDeclined = !shouldShowRequestPermissionRationale(mainActivity, permission),

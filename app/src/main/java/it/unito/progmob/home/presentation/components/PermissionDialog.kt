@@ -56,9 +56,9 @@ interface PermissionTextProvider {
 class ActivityRecognitionPermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean): String {
         return if (isPermanentlyDeclined) {
-            "You have permanently denied the permission. Please go to the app settings and grant the permission."
+            "You have permanently denied the \"Activity Recognition\" permission. Please go to the app settings and grant the permission."
         } else {
-            "This permission is required to detect your activity."
+            "The \"Activity Recognition\" permission is required to track your steps."
         }
     }
 }
@@ -66,9 +66,19 @@ class ActivityRecognitionPermissionTextProvider : PermissionTextProvider {
 class AccessFineLocationPermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean): String {
         return if (isPermanentlyDeclined) {
-            "You have permanently denied the permission. Please go to the app settings and grant the permission."
+            "You have permanently denied the \"Access Fine Location\" permission. Please go to the app settings and grant the permission."
         } else {
-            "This permission is required to detect your precise location."
+            "The \"Access Fine Location\" permission is required to access your precise location."
+        }
+    }
+}
+
+class PostNotificationsPermissionTextProvider : PermissionTextProvider{
+    override fun getDescription(isPermanentlyDeclined: Boolean): String {
+        return if(isPermanentlyDeclined){
+            "You have permanently denied the \"Post Notifications\" permission. Please go to the app settings and grant the permission."
+        }else{
+            "The \"Post Notifications\" permission is required to show you notification regarding your runs."
         }
     }
 }

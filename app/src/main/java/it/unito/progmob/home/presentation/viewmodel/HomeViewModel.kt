@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import android.Manifest
+import android.os.Build
 import androidx.lifecycle.viewModelScope
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
@@ -14,16 +15,38 @@ class HomeViewModel: ViewModel() {
     var visiblePermissionDialogQueue = mutableStateListOf<String>()
         private set
 
-    val permissionsToRequest = arrayOf(
-        Manifest.permission.ACTIVITY_RECOGNITION,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
+    val permissionsToRequest = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        arrayOf(
+            Manifest.permission.ACTIVITY_RECOGNITION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+    } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        arrayOf(
+            Manifest.permission.ACTIVITY_RECOGNITION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    } else {
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.CheckPermissionResult -> onPermissionResult(isGranted = event.isGranted, permission = event.permission)
             is HomeEvent.DismissPermissionDialog -> dismissDialog()
+            is HomeEvent.StartRunningService -> startRunningService()
+            is HomeEvent.StopRunningService -> stopRunningService()
         }
+    }
+
+    private fun stopRunningService() {
+        TODO("Not yet implemented")
+    }
+
+    private fun startRunningService() {
+        TODO("Not yet implemented")
     }
 
     /**

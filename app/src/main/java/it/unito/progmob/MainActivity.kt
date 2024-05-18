@@ -1,11 +1,15 @@
 package it.unito.progmob
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import dagger.hilt.android.AndroidEntryPoint
+import it.unito.progmob.core.domain.service.RunningService
 import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.viewmodel.MainViewModel
 import it.unito.progmob.ui.theme.MyApplicationTheme
@@ -23,6 +27,23 @@ class MainActivity : ComponentActivity() {
                     NavGraph(
                         startDestination = startDestination
                     )
+
+                    Button(
+                        onClick = {
+                            Intent(applicationContext, RunningService::class.java).also {
+                                it.action = RunningService.Actions.START.name
+                                startService(it)
+                            }
+                        }
+                    ) { Text(text = "Start Service") }
+
+                    Button(
+                        onClick = {
+                            Intent(RunningService.Actions.STOP.name).also {
+                                startService(it)
+                            }
+                        }
+                    ) { Text(text = "Stop Service") }
                 }
             }
         }
