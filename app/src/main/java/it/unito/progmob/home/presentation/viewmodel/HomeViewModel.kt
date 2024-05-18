@@ -16,10 +16,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val homeUseCases: HomeUseCases
 ): ViewModel() {
-    // Queue used to show some potential different permission dialog
+    // Queue used to contain a list of permission to request again if the the user has refused them
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
-
+    // Array of permissions to request computed based on the SDK version
     val permissionsToRequest = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
         arrayOf(
             Manifest.permission.ACTIVITY_RECOGNITION,
@@ -37,9 +37,13 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Handles Home events emitted from the UI.
+     * @param event The HomeEvent to be processed.
+     */
     fun onEvent(event: HomeEvent) {
         when (event) {
-            is HomeEvent.CheckPermissionResult -> permissionResult(isGranted = event.isGranted, permission = event.permission)
+            is HomeEvent.PermissionResult -> permissionResult(isGranted = event.isGranted, permission = event.permission)
             is HomeEvent.DismissPermissionDialog -> dismissPermissionDialog()
             is HomeEvent.StartRunningService -> startRunningService()
             is HomeEvent.StopRunningService -> stopRunningService()

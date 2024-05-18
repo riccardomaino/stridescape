@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="content_desc_onboarding_image1">Immagine pagina di benvenuto</string>
+    <string name="onboarding_page1_image_content_description">Immagine di on boarding per dare il benvenuto agli utenti</string>
     <string name="onboarding_next_btn">Avanti</string>
     <string name="onboarding_back_btn">Indietro</string>
     <string name="onboarding_getstarted_btn">Inizia</string>
@@ -22,4 +22,6 @@
     <string name="home_permissiondialog_fine_location_txt">E\' necessario accedere alla tua posizione precisa per tracciare le tue camminate</string>
     <string name="home_permissiondialog_post_notifications_declined_txt">Hai negato permanentemente l\'autorizzazione di inviarti notifiche. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
     <string name="home_permissiondialog_post_notifications_txt">E\' necessario inviarti notiifche per mostrarti aggiornamenti sulle tue camminate</string>
+    <string name="onboarding_page2_image_content_description">Immagine di on boarding per la funzionalità di mappa live</string>
+    <string name="onboarding_page3_image_content_description">Immagine di on boarding per la funzionalità di cronologia</string>
 </resources>

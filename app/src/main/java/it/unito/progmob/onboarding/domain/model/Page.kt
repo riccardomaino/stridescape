@@ -18,17 +18,18 @@ fun getOnboardingPages(
         Page(
             title = context.getString(R.string.onboarding_page1_title),
             description = context.getString(R.string.onboarding_page1_description),
+            imageContentDescription = context.getString(R.string.onboarding_page1_image_content_description),
             image = R.drawable.homepage
         ),
         Page(
             title = context.getString(R.string.onboarding_page2_title),
             description = context.getString(R.string.onboarding_page2_description),
+            imageContentDescription = "",
             image = R.drawable.livemap
         ),
         Page(
             title = context.getString(R.string.onboarding_page3_title),
-            //description = context.getString(R.string.onboarding_page3_description),
-            description = "This is a description",
+            description = context.getString(R.string.onboarding_page3_description),
             image = R.drawable.history
         )
     )

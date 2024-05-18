@@ -1,21 +1,23 @@
 <resources>
     <string name="app_name" translatable="false">Stridescape</string>
-    <string name="content_desc_onboarding_image1">Welcome page image</string>
     <string name="onboarding_next_btn">Next</string>
     <string name="onboarding_back_btn">Back</string>
     <string name="onboarding_getstarted_btn">Get Started</string>
     <string name="onboarding_page1_description">Track your steps, calories, and more! With Stridescape you can track your daily activities and improve your health.</string>
     <string name="onboarding_page1_title">Welcome</string>
-    <string name="onboarding_page2_title">Live Map</string>
+    <string name="onboarding_page1_image_content_description">On boarding image to welcome users</string>
     <string name="onboarding_page2_description">Keep track on your position with the live map! Make sure to allow all the permissions to ensure a precise localization</string>
+    <string name="onboarding_page2_title">Live Map</string>
+    <string name="onboarding_page2_image_content_description">On boarding image regarding the live map functionality</string>
     <string name="onboarding_page3_description">Check all your previous walks with the history and keep track on your improvements!</string>
     <string name="onboarding_page3_title">History</string>
+    <string name="onboarding_page3_image_content_description">On boarding image regarding the history functionality</string>
     <string name="home_user_icon">User icon</string>
     <string name="home_settings_icon">Settings icon</string>
     <string name="home_title" translatable="false">Home</string>
     <string name="home_open_settings">Open settings</string>
     <string name="home_permissiondialog_grant_permission_btn">Grant Permission</string>
-    <string name="home_permisisondialog_ok_btn">OK</string>
+    <string name="home_permisisondialog_ok_btn">Ok</string>
     <string name="home_permissiondialog_title">Permission required</string>
     <string name="home_permissiondialog_activity_recognition_declined_txt">You have been permanently denied permission to access your physical activity. Go to the app settings and grant permission.</string>
     <string name="home_permissiondialog_activity_recognition_txt">It is necessary to access your physical activity to track your steps</string>

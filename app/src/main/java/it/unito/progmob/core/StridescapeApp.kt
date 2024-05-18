@@ -4,12 +4,11 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import dagger.hilt.android.HiltAndroidApp
 import it.unito.progmob.core.domain.Constants.NOTIFICATION_CHANNEL_ID
 
 @HiltAndroidApp
-class MyApp : Application() {
+class StridescapeApp : Application() {
     override fun onCreate() {
         super.onCreate()
         val channel = NotificationChannel(

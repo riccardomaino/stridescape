@@ -58,7 +58,7 @@ fun HomeScreen(
             permissionsToRequest.forEach { permission ->
                 if (perms[permission] == false) {
                     homeEvent(
-                        HomeEvent.CheckPermissionResult(
+                        HomeEvent.PermissionResult(
                             permission,
                             isGranted = perms[permission] == true
                         )

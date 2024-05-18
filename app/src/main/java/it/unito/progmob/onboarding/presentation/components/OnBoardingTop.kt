@@ -73,7 +73,7 @@ fun OnBoardingTop(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun OnBoardingTopPreview() {
-    val  pages = getOnboardingPages(LocalContext.current)
+    val pages = getOnboardingPages(LocalContext.current)
     OnBoardingTop(
         page = pages[0]
     )

@@ -9,15 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for the OnBoarding screen. Handles user interactions and interacts with OnBoardingUseCases
- */
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases
 ) : ViewModel() {
-
-
     /**
      * Handles OnBoarding events emitted from the UI.
      * @param event The OnBoardingEvent to be processed.

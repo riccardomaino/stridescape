@@ -12,7 +12,7 @@
 
 
     <application
-        android:name=".core.MyApp"
+        android:name=".core.StridescapeApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
