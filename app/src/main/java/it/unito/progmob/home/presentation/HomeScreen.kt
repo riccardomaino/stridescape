@@ -113,7 +113,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CircularProgressBar(steps = 20000, number = 6000)
+            CircularProgressBar(steps = 443, targetStepsGoal = 6000)
         }
     }
 

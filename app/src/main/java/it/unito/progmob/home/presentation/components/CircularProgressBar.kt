@@ -37,7 +37,7 @@ import it.unito.progmob.ui.theme.large
 @Composable
 fun CircularProgressBar(
     steps: Int,
-    number: Int,
+    targetStepsGoal: Int,
     fontSize: TextUnit = 56.sp,
     radius: Dp = 96.dp,
     color: Color = MaterialTheme.colorScheme.primary,
@@ -50,14 +50,14 @@ fun CircularProgressBar(
     }
 
     val currentPercentage = animateFloatAsState(
-        targetValue = if (animationPlayed) ((steps*100)/number)/100.toFloat() else 0f,
+        targetValue = if (animationPlayed) ((steps*100)/targetStepsGoal)/100.toFloat() else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = animDelay
-        )
+        ), label = "Steps counter animation"
     )
 
-    // Eseguito solo alla prima composition
+    // Runs the side effect in a lifecycle-aware manner which set that the animation has already benn played
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
@@ -71,12 +71,12 @@ fun CircularProgressBar(
             .clip(shape = RoundedCornerShape(extraLarge))
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
-        // permette di creare una forma qualsiasi
+        // Allows to create various types of shapes
         Canvas(modifier = Modifier.size(radius * 2.2f)) {
             drawArc(
                 color = color,
                 startAngle = -90f,
-                sweepAngle = 360 * currentPercentage.value, //raggio mostrato nella barra
+                sweepAngle = 360 * currentPercentage.value, // radius of the circle
                 useCenter = false,
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
@@ -91,14 +91,14 @@ fun CircularProgressBar(
                 color = MaterialTheme.colorScheme.outline,
             )
             Text(
-                text = (currentPercentage.value * number).toInt().toString(),
+                text = steps.toString(),
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 fontSize = fontSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.height(70.dp)
             )
             Text(
-                text = "/${number}",
+                text = "/${targetStepsGoal}",
                 color = MaterialTheme.colorScheme.outline,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 fontWeight = FontWeight.Normal,

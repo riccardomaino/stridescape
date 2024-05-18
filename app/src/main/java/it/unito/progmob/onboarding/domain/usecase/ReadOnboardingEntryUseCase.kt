@@ -3,9 +3,6 @@ package it.unito.progmob.onboarding.domain.usecase
 import it.unito.progmob.core.domain.manager.DataStoreManager
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Use case to read onboarding entry value from the DataStore.
- */
 class ReadOnboardingEntryUseCase(
     private val dataStoreManager: DataStoreManager
 ) {

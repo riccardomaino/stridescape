@@ -14,4 +14,13 @@
     <string name="home_settings_icon">Settings icon</string>
     <string name="home_title" translatable="false">Home</string>
     <string name="home_open_settings">Open settings</string>
+    <string name="home_permissiondialog_grant_permission_btn">Grant Permission</string>
+    <string name="home_permisisondialog_ok_btn">OK</string>
+    <string name="home_permissiondialog_title">Permission required</string>
+    <string name="home_permissiondialog_activity_recognition_declined_txt">You have been permanently denied permission to access your physical activity. Go to the app settings and grant permission.</string>
+    <string name="home_permissiondialog_activity_recognition_txt">It is necessary to access your physical activity to track your steps</string>
+    <string name="home_permissiondialog_fine_location_declined_txt">You have permanently denied permission to access your precise location. Go to the app settings and grant permission.</string>
+    <string name="home_permissiondialog_fine_location_txt">It is necessary to access your precise location to track your walks</string>
+    <string name="home_permissiondialog_post_notifications_declined_txt">You have permanently denied permission to send you notifications. Go to the app settings and grant permission.</string>
+    <string name="home_permissiondialog_post_notifications_txt">It is necessary to send you notifications to show you updates on your walks</string>
 </resources>

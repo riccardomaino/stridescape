@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,22 +29,24 @@ class MainActivity : ComponentActivity() {
                         startDestination = startDestination
                     )
 
-                    Button(
-                        onClick = {
-                            Intent(applicationContext, RunningService::class.java).also {
-                                it.action = RunningService.Actions.START.name
-                                startService(it)
+                    Column {
+                        Button(
+                            onClick = {
+                                Intent(applicationContext, RunningService::class.java).also {
+                                    it.action = RunningService.Actions.START.name
+                                    startService(it)
+                                }
                             }
-                        }
-                    ) { Text(text = "Start Service") }
+                        ) { Text(text = "Start Service") }
+                        Button(
+                            onClick = {
+                                Intent(RunningService.Actions.STOP.name).also {
+                                    startService(it)
+                                }
+                            }
+                        ) { Text(text = "Stop Service") }
+                    }
 
-                    Button(
-                        onClick = {
-                            Intent(RunningService.Actions.STOP.name).also {
-                                startService(it)
-                            }
-                        }
-                    ) { Text(text = "Stop Service") }
                 }
             }
         }
