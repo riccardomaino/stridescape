@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinKapt)
     alias(libs.plugins.daggerHilt)
-    id("kotlin-kapt")
+    alias(libs.plugins.mapsSecrets)
 }
 
 android {
@@ -49,51 +50,67 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    secrets {
+        propertiesFileName = "secrets.properties"
+        defaultPropertiesFileName = "local.defaults.properties"
+        ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+        ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+    }
 }
 
 dependencies {
-    // MODULE DEPENDENCIES
-    // Default
+    // [MODULE DEPENDENCIES]
+    // Core
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    // Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // Kotlin
+    implementation(platform(libs.kotlin.bom))
     // Extended Material Icons
     implementation(libs.androidx.material.icons.extended)
-    // Lifecycle & View Model
+    // Lifecycle & ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     // Navigation
     implementation(libs.androidx.navigation.compose)
     // DataStore
     implementation(libs.androidx.datastore.preferences)
     // Room
-//    implementation(libs.androidx.room.ktx)
-//    implementation(libs.androidx.room.runtime)
-//    implementation(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.paging)
+    kapt(libs.androidx.room.compiler)
     // Dagger-Hilt
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
-    //kapt(libs.androidx.hilt.compiler) // INUTILE
     implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.dagger.hilt.compiler)
+    // Maps
+    implementation(libs.google.maps.compose)
+    implementation(libs.google.play.services.maps)
+    implementation(libs.google.play.services.location)
 
-    // UNIT TESTING DEPENDENCIES
+    // [UNIT TESTING DEPENDENCIES]
     testImplementation(libs.junit)
 
-    // INSTRUMENTATION ANDROID TESTING DEPENDENCIES
+    // [INSTRUMENTATION ANDROID TESTING DEPENDENCIES]
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
-    // DEBUG BUILD DEPENDENCIES
+    // [DEBUG BUILD DEPENDENCIES]
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
 
+kapt {
+    correctErrorTypes = true
 }
