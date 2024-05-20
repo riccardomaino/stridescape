@@ -1,7 +1,5 @@
 package it.unito.progmob.home.domain.usecase
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
-
 class PermissionResultUseCase {
     /**
      * It adds the permission to the queue of permissions if it is not granted and it is not already
@@ -12,12 +10,13 @@ class PermissionResultUseCase {
      * @param isGranted A boolean value used to evaluate if the permission was granted or not
      */
     operator fun invoke(
-        visiblePermissionDialogQueue: SnapshotStateList<String>,
+        visiblePermissionDialogQueue: MutableList<String>,
         permission: String,
         isGranted: Boolean
-    ){
+    ): MutableList<String> {
         if(!isGranted && !visiblePermissionDialogQueue.contains(permission)) {
             visiblePermissionDialogQueue.add(permission)
         }
+        return visiblePermissionDialogQueue
     }
 }

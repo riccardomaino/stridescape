@@ -25,6 +25,7 @@ fun PermissionDialog(
             Button(onClick = {
                 if (isPermanentlyDeclined) {
                     onGoToAppSettingsClick()
+                    onDismiss()
                 } else {
                     onOkClick()
                 }

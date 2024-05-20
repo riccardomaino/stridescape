@@ -17,6 +17,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -47,7 +49,9 @@ fun HomeScreen(
     navController: NavController
 ) {
 
-    val dialogQueue = homeViewModel.visiblePermissionDialogQueue
+    val dialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
+
+
     val permissionsToRequest = homeViewModel.permissionsToRequest
     val context = LocalContext.current
     val mainActivity = context.findActivity()
@@ -135,7 +139,9 @@ fun HomeScreen(
                     arrayOf(permission)
                 )
             },
-            onGoToAppSettingsClick = { mainActivity.openAppSettings() }
+            onGoToAppSettingsClick = {
+                mainActivity.openAppSettings()
+            }
         )
     }
 }
