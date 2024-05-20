@@ -2,9 +2,13 @@ package it.unito.progmob.home.presentation.viewmodel
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.unito.progmob.core.stepscounter.MeasurableSensor
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
@@ -15,11 +19,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeUseCases: HomeUseCases
+    private val homeUseCases: HomeUseCases,
+    private val proximitySensor: MeasurableSensor
 ) : ViewModel() {
     // Queue used to contain a list of permission to request again if the the user has refused them
     var visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
         private set
+
+    var isCovered by mutableStateOf(false)
 
     // Array of permissions to request computed based on the SDK version
     val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -37,6 +44,14 @@ class HomeViewModel @Inject constructor(
         arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+    }
+
+    init {
+        proximitySensor.startListening()
+        proximitySensor.setOnSensorValueChangedListener { values ->
+            val proximity = values[0]
+            isCovered = proximity < 5
+        }
     }
 
     /**

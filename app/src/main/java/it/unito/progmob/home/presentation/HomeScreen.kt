@@ -55,6 +55,7 @@ fun HomeScreen(
     val permissionsToRequest = homeViewModel.permissionsToRequest
     val context = LocalContext.current
     val mainActivity = context.findActivity()
+    val isCovered = homeViewModel.isCovered
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -118,30 +119,41 @@ fun HomeScreen(
                 .padding(padding),
         ) {
             CircularProgressBar(steps = 443, targetStepsGoal = 6000)
-        }
-    }
-
-    dialogQueue.reversed().forEach { permission ->
-        PermissionDialog(
-            permissionTextProvider = when (permission) {
-                Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()
-                Manifest.permission.ACCESS_FINE_LOCATION -> AccessFineLocationPermissionTextProvider()
-                Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionTextProvider()
-                else -> return@forEach
-            },
-            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(mainActivity, permission),
-            onDismiss = {
-                homeEvent(HomeEvent.DismissPermissionDialog)
-            },
-            onOkClick = {
-                homeEvent(HomeEvent.DismissPermissionDialog)
-                multiplePermissionResultLauncher.launch(
-                    arrayOf(permission)
-                )
-            },
-            onGoToAppSettingsClick = {
-                mainActivity.openAppSettings()
+            if (isCovered) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text("Sensor Covered", style = MaterialTheme.typography.headlineLarge)
+                }
             }
-        )
+        }
+
+        dialogQueue.reversed().forEach { permission ->
+            PermissionDialog(
+                permissionTextProvider = when (permission) {
+                    Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()
+                    Manifest.permission.ACCESS_FINE_LOCATION -> AccessFineLocationPermissionTextProvider()
+                    Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionTextProvider()
+                    else -> return@forEach
+                },
+                isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
+                    mainActivity,
+                    permission
+                ),
+                onDismiss = {
+                    homeEvent(HomeEvent.DismissPermissionDialog)
+                },
+                onOkClick = {
+                    homeEvent(HomeEvent.DismissPermissionDialog)
+                    multiplePermissionResultLauncher.launch(
+                        arrayOf(permission)
+                    )
+                },
+                onGoToAppSettingsClick = {
+                    mainActivity.openAppSettings()
+                }
+            )
+        }
     }
 }
