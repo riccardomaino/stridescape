@@ -118,15 +118,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CircularProgressBar(steps = 443, targetStepsGoal = 6000)
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text("Steps: $steps", style = MaterialTheme.typography.headlineLarge)
-            }
-
+            CircularProgressBar(steps = steps, targetStepsGoal = 6000)
         }
 
         dialogQueue.reversed().forEach { permission ->
