@@ -55,7 +55,7 @@ fun HomeScreen(
     val permissionsToRequest = homeViewModel.permissionsToRequest
     val context = LocalContext.current
     val mainActivity = context.findActivity()
-    val isCovered = homeViewModel.isCovered
+    val steps by homeViewModel.stepsCount.collectAsState()
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -119,14 +119,14 @@ fun HomeScreen(
                 .padding(padding),
         ) {
             CircularProgressBar(steps = 443, targetStepsGoal = 6000)
-            if (isCovered) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text("Sensor Covered", style = MaterialTheme.typography.headlineLarge)
-                }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text("Steps: $steps", style = MaterialTheme.typography.headlineLarge)
             }
+
         }
 
         dialogQueue.reversed().forEach { permission ->

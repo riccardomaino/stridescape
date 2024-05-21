@@ -2,9 +2,6 @@ package it.unito.progmob.home.presentation.viewmodel
 
 import android.Manifest
 import android.os.Build
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,13 +17,13 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeUseCases: HomeUseCases,
-    private val proximitySensor: MeasurableSensor
+    private val stepCounterSensor: MeasurableSensor
 ) : ViewModel() {
     // Queue used to contain a list of permission to request again if the the user has refused them
     var visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
         private set
 
-    var isCovered by mutableStateOf(false)
+    var stepsCount = MutableStateFlow(0)
 
     // Array of permissions to request computed based on the SDK version
     val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -47,10 +44,10 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        proximitySensor.startListening()
-        proximitySensor.setOnSensorValueChangedListener { values ->
+        stepCounterSensor.startListening()
+        stepCounterSensor.setOnSensorValueChangedListener { values ->
             val proximity = values[0]
-            isCovered = proximity < 5
+            stepsCount.value = proximity.toInt()
         }
     }
 

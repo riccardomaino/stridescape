@@ -7,11 +7,14 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 
 /**
- *  Second layer of abstraction to being able to access any type of sensor (light, proximity, etc),
- *  this class implements every function needed to get the sensor values
- *  @param context - application context to get the instance of the sensor manager
- *  @param sensorFeature - used to determine whether the sensor is available or not
- *  @param sensorType - the type of sensor
+ * Abstract class representing an Android sensor.
+ *
+ * This class provides functionality for checking sensor availability, starting and stopping sensor
+ * listening, and handling sensor value changes.
+ *
+ * @param context The Android context.
+ * @param sensorFeature The system feature associated with the sensor.
+ * @param sensorType The type of the sensor.
  */
 abstract class AndroidSensor(
     private val context: Context,
@@ -19,7 +22,9 @@ abstract class AndroidSensor(
     sensorType: Int
 ): MeasurableSensor(sensorType), SensorEventListener {
 
-    // Function to check whether the sensor is available or not
+    /**
+     * Checks whether the sensor is available on the device.
+     */
     override val doesSensorExists: Boolean
         get() = context.packageManager.hasSystemFeature(sensorFeature)
 
@@ -32,20 +37,20 @@ abstract class AndroidSensor(
     private var sensor: Sensor? = null
 
     /**
-     * Function that start listening to the sensor
-     * */
+     * Starts listening to the sensor.
+     */
     override fun startListening() {
         // if the sensor doesn't exists we just return form the function
         if(!doesSensorExists){
             return
         }
-        //Now we check if this is the first time we call the "startListening" function, if so the
-        // sensor manager and the sensor are not initialized
+        // Initialize the sensor manager and sensor if they are not already initialized (first time
+        // we call this function).
         if(!::sensorManager.isInitialized && sensor == null) {
             sensorManager = context.getSystemService(SensorManager::class.java) as SensorManager
             sensor = sensorManager.getDefaultSensor(sensorType)
         }
-        // Now we register the listener to the sensor, if the sensor is not null
+        // Register the listener to the sensor, if the sensor is not null
         sensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
@@ -66,7 +71,7 @@ abstract class AndroidSensor(
     }
 
     /**
-     * Function that is called when the sensor value changes
+     * Called when the sensor value changes
      * @param event - the sensor event that has been triggered
      * */
     override fun onSensorChanged(event: SensorEvent?) {
@@ -82,7 +87,10 @@ abstract class AndroidSensor(
     }
 
     /**
-     * FUnction used to handle the accuracy of the sensor
-     * */
+     * Handles changes in sensor accuracy.
+     *
+     * @param sensor The sensor.
+     * @param accuracy The new accuracy.
+     */
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
 }
