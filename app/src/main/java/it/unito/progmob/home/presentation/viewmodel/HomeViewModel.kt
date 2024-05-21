@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.unito.progmob.core.stepscounter.MeasurableSensor
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
@@ -16,13 +17,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeUseCases: HomeUseCases
+    private val homeUseCases: HomeUseCases,
+    private val stepCounterSensor: MeasurableSensor
 ) : ViewModel() {
 
     // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to
     // request again if the the user has refused them
     private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
+
+    var stepsCount = MutableStateFlow(0)
 
     // Array of permissions to request computed based on the SDK version
     val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -40,6 +44,14 @@ class HomeViewModel @Inject constructor(
         arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+    }
+
+    init {
+        stepCounterSensor.startListening()
+        stepCounterSensor.setOnSensorValueChangedListener { values ->
+            val proximity = values[0]
+            stepsCount.value = proximity.toInt()
+        }
     }
 
     /**

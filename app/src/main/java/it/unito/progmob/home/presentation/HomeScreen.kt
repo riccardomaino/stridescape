@@ -55,6 +55,7 @@ fun HomeScreen(
     val permissionsToRequest = homeViewModel.permissionsToRequest
     val context = LocalContext.current
     val mainActivity = context.findActivity()
+    val steps by homeViewModel.stepsCount.collectAsState()
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -124,7 +125,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CircularProgressBar(steps = 443, targetStepsGoal = 6000)
+            CircularProgressBar(steps = steps, targetStepsGoal = 6000)
         }
     }
 
