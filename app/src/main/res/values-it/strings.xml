@@ -25,6 +25,14 @@
     <string name="onboarding_page2_image_content_description">Immagine di on boarding per la funzionalità di mappa live</string>
     <string name="onboarding_page3_image_content_description">Immagine di on boarding per la funzionalità di cronologia</string>
     <string name="location_notification_content_title">Tracciamento Posizione</string>
-    <string name="stop_icon">Icona stop</string>
-    <string name="play_icon">Icona avvio</string>
+    <string name="stop_icon">Icona di stop camminata</string>
+    <string name="walk_icon">Icona avvio camminata</string>
+    <string name="home_weeklystats_title">I Tuoi Progressi</string>
+    <string name="home_weeklystats_monday">Lun</string>
+    <string name="home_weeklystats_tuesday">Mar</string>
+    <string name="home_weeklystats_wednesday">Mer</string>
+    <string name="home_weeklystats_thursday">Gio</string>
+    <string name="home_weeklystats_friday">Ven</string>
+    <string name="home_weeklystats_saturday">Sab</string>
+    <string name="home_weeklystats_sunday">Dom</string>
 </resources>

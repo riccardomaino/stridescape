@@ -14,9 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
+import androidx.compose.material.icons.automirrored.filled.ShowChart
+import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.QueryStats
+import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -27,12 +33,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.floatingActionButtonSize
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.navigationBarHeight
+import it.unito.progmob.ui.theme.navigationBarShadow
 import it.unito.progmob.ui.theme.small
 
 @Composable
@@ -52,15 +61,19 @@ fun NavigationBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         BottomAppBar(
+            tonalElevation = 0.dp,
             contentPadding = PaddingValues(0.dp),
+            containerColor = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .width(LocalContext.current.resources.configuration.screenWidthDp.dp*0.4f)
                 .height(navigationBarHeight)
+                .shadow(navigationBarShadow, shape = RoundedCornerShape(doubleExtraLarge))
                 .clip(
                     shape = RoundedCornerShape(
                         doubleExtraLarge
                     )
                 )
+
         ) {
             Row(
                 modifier = Modifier.fillMaxSize().padding(small),
@@ -70,7 +83,7 @@ fun NavigationBar(
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(onClick = { onClickHome() }) {
@@ -83,7 +96,7 @@ fun NavigationBar(
                 }
                 IconButton(onClick = { onClickMap() }) {
                     Icon(
-                        Icons.Filled.Map,
+                        Icons.AutoMirrored.Filled.ShowChart,
                         contentDescription = "Localized description",
                         modifier = Modifier.size(large),
                     )
@@ -98,6 +111,7 @@ fun NavigationBar(
             }
         }
         FloatingActionButton(
+            containerColor = MaterialTheme.colorScheme.primary,
             elevation = FloatingActionButtonDefaults.elevation(),
             onClick = { onClickFloatingActionButton() },
             shape = FloatingActionButtonDefaults.extendedFabShape,
