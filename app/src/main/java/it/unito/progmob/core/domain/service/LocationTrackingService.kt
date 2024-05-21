@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
 import android.os.Build
 import android.os.IBinder
@@ -103,15 +104,15 @@ class LocationTrackingService @Inject constructor(
                 }
         }
 
-        ServiceCompat.startForeground(
-            this,
-            NOTIFICATION_ID,
-            notification.build(),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                NOTIFICATION_ID,
+                notification.build(),
                 FOREGROUND_SERVICE_TYPE_LOCATION
-            else 0
-        )
-//        startForeground(NOTIFICATION_ID, notification.build())
+            )
+        } else {
+            startForeground(NOTIFICATION_ID, notification.build())
+        }
     }
 
     /**
