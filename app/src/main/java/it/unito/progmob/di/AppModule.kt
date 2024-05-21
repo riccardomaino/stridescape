@@ -1,5 +1,6 @@
 package it.unito.progmob.di
 
+import android.app.Application
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -45,6 +46,14 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideStepCounterSensor(
+        @ApplicationContext context: Context
+    ): MeasurableSensor {
+        return StepCounterSensor(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideOnBoardingUseCases(
         dataStoreManager: DataStoreManager
     ) = OnBoardingUseCases(
@@ -58,11 +67,5 @@ object AppModule {
         DismissPermissionDialogUseCase(),
         PermissionResultUseCase()
     )
-
-    @Provides
-    @Singleton
-    fun provideStepCounterSensor(application: Application): MeasurableSensor {
-        return StepCounterSensor(application)
-    }
 
 }

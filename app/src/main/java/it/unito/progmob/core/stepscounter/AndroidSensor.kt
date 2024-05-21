@@ -7,10 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 
 /**
- * Abstract class representing an Android sensor.
- *
- * This class provides functionality for checking sensor availability, starting and stopping sensor
- * listening, and handling sensor value changes.
+ * Abstract class representing an Android sensor. This class provides functionality for checking
+ * sensor availability, starting and stopping sensor listening, and handling sensor value changes.
  *
  * @param context The Android context.
  * @param sensorFeature The system feature associated with the sensor.
@@ -40,7 +38,7 @@ abstract class AndroidSensor(
      * Starts listening to the sensor.
      */
     override fun startListening() {
-        // if the sensor doesn't exists we just return form the function
+        // If the sensor doesn't exists we just return form the function
         if(!doesSensorExists){
             return
         }
@@ -75,11 +73,11 @@ abstract class AndroidSensor(
      * @param event - the sensor event that has been triggered
      * */
     override fun onSensorChanged(event: SensorEvent?) {
-        // if the sensor doesn't exists we just return form the function
+        // If the sensor doesn't exists we just return form the function
         if(!doesSensorExists){
             return
         }
-        // if the event is from the sensor we want to handle, we get the values from the event and
+        // If the event is from the sensor we want to handle, we get the values from the event and
         // pass them to the onSensorValuesChanged function
         if(event?.sensor?.type == sensorType){
             onSensorValuesChanged?.invoke(event.values.toList())
