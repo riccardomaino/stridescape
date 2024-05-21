@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -39,10 +38,11 @@ import it.unito.progmob.ui.theme.small
 @Composable
 fun NavigationBar(
     modifier: Modifier = Modifier,
+    floatingActionButtonIcon: @Composable() () -> Unit,
+    onClickFloatingActionButton: () -> Unit,
     onClickHome: () -> Unit,
     onClickMap: () -> Unit,
-    onClickHistory: () -> Unit,
-    onClickPlay: () -> Unit
+    onClickHistory: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -99,15 +99,11 @@ fun NavigationBar(
         }
         FloatingActionButton(
             elevation = FloatingActionButtonDefaults.elevation(),
-            onClick = { onClickPlay() },
+            onClick = { onClickFloatingActionButton() },
             shape = FloatingActionButtonDefaults.extendedFabShape,
             modifier = Modifier.padding(small).size(floatingActionButtonSize)
         ) {
-            Icon(
-                Icons.Filled.PlayArrow,
-                contentDescription = "Localized description",
-                modifier = Modifier.size(large),
-            )
+            floatingActionButtonIcon()
         }
     }
 }

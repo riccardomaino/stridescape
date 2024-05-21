@@ -9,6 +9,7 @@ import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,9 +18,11 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val homeUseCases: HomeUseCases
 ) : ViewModel() {
-    // Queue used to contain a list of permission to request again if the the user has refused them
-    var visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
-        private set
+
+    // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to
+    // request again if the the user has refused them
+    private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
+    val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
 
     // Array of permissions to request computed based on the SDK version
     val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -49,19 +52,8 @@ class HomeViewModel @Inject constructor(
                 isGranted = event.isGranted,
                 permission = event.permission
             )
-
             is HomeEvent.DismissPermissionDialog -> dismissPermissionDialog()
-            is HomeEvent.StartRunningService -> startRunningService()
-            is HomeEvent.StopRunningService -> stopRunningService()
         }
-    }
-
-    private fun stopRunningService() {
-        TODO("Not yet implemented")
-    }
-
-    private fun startRunningService() {
-        TODO("Not yet implemented")
     }
 
     /**
@@ -70,15 +62,15 @@ class HomeViewModel @Inject constructor(
      */
     private fun dismissPermissionDialog() {
         viewModelScope.launch(Dispatchers.Default) {
-            val dismissDialogQueueResult =
-                homeUseCases.dismissPermissionDialogUseCase(visiblePermissionDialogQueue.value.toMutableList())
+            val dismissDialogQueueResult = homeUseCases.dismissPermissionDialogUseCase(
+                    _visiblePermissionDialogQueue.value.toMutableList()
+                )
 
-            visiblePermissionDialogQueue.update {
+            _visiblePermissionDialogQueue.update {
                 dismissDialogQueueResult
             }
         }
     }
-
 
     /**
      * Calls the use case to handle the result of the permission rationale. It adds the permission
@@ -93,12 +85,12 @@ class HomeViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.Default) {
             val permissionDialogQueueResult = homeUseCases.permissionResultUseCase(
-                visiblePermissionDialogQueue.value.toMutableList(),
+                _visiblePermissionDialogQueue.value.toMutableList(),
                 permission,
                 isGranted
             )
 
-            visiblePermissionDialogQueue.update {
+            _visiblePermissionDialogQueue.update {
                 permissionDialogQueueResult
             }
         }

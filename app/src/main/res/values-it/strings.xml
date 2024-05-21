@@ -10,13 +10,13 @@
     <string name="onboarding_page2_description">Tieni traccia della tua posizione con la mappa live! Assicurati di concedere tutti i permessi per permettere una localizzazione precisa.</string>
     <string name="onboarding_page3_description">Accedi a tutti le tue camminate grazie alla cronologia e tieni traccia dei tuoi miglioramenti!</string>
     <string name="onboarding_page3_title">Cronologia</string>
-    <string name="home_user_icon">Icona Utente</string>
-    <string name="home_settings_icon">Icona impostazioni</string>
+    <string name="user_icon">Icona utente</string>
+    <string name="settings_icon">Icona impostazioni</string>
     <string name="home_open_settings">Apri impostazioni</string>
     <string name="home_permissiondialog_grant_permission_btn">Concedi Permesso</string>
     <string name="home_permisisondialog_ok_btn">Ok</string>
     <string name="home_permissiondialog_title">Permesso richiesto</string>
-    <string name="home_permissiondialog_activity_recognition_declined_txt">" Hai negato permanentemente l'autorizzazione per accedere alla tua attività fisica. Vai nelle impostazioni dell'app e concedi l'autorizzazione."</string>
+    <string name="home_permissiondialog_activity_recognition_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua attività fisica. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
     <string name="home_permissiondialog_activity_recognition_txt">E\' necessario accedere alla tua attività fisica per monitorare i tuoi passi</string>
     <string name="home_permissiondialog_fine_location_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua posizione precisa. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione</string>
     <string name="home_permissiondialog_fine_location_txt">E\' necessario accedere alla tua posizione precisa per tracciare le tue camminate</string>
@@ -24,4 +24,7 @@
     <string name="home_permissiondialog_post_notifications_txt">E\' necessario inviarti notiifche per mostrarti aggiornamenti sulle tue camminate</string>
     <string name="onboarding_page2_image_content_description">Immagine di on boarding per la funzionalità di mappa live</string>
     <string name="onboarding_page3_image_content_description">Immagine di on boarding per la funzionalità di cronologia</string>
+    <string name="location_notification_content_title">Tracciamento Posizione</string>
+    <string name="stop_icon">Icona stop</string>
+    <string name="play_icon">Icona avvio</string>
 </resources>

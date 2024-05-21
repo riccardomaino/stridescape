@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,9 +51,7 @@ fun HomeScreen(
     navController: NavController
 ) {
 
-    val dialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
-
-
+    val visiblePermissionDialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
     val permissionsToRequest = homeViewModel.permissionsToRequest
     val context = LocalContext.current
     val mainActivity = context.findActivity()
@@ -71,12 +71,13 @@ fun HomeScreen(
             }
         }
     )
+
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(start = large, end = large, top = small, bottom = small),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -84,7 +85,7 @@ fun HomeScreen(
             ) {
                 Icon(
                     Icons.Default.Person,
-                    contentDescription = stringResource(R.string.home_user_icon),
+                    contentDescription = stringResource(R.string.user_icon),
                 )
                 Text(
                     stringResource(R.string.home_title),
@@ -92,24 +93,30 @@ fun HomeScreen(
                 )
                 Icon(
                     Icons.Default.Settings,
-                    contentDescription = stringResource(R.string.home_settings_icon)
+                    contentDescription = stringResource(R.string.settings_icon)
                 )
             }
         },
         bottomBar = {
             NavigationBar(
+                floatingActionButtonIcon = {
+                    Icon(
+                        Icons.Filled.PlayArrow,
+                        contentDescription = stringResource(R.string.play_icon),
+                        modifier = modifier.size(large),
+                    )
+                },
                 onClickHome = {},
                 onClickMap = {
                     navController.navigate(Route.OnBoardingScreenRoute.route)
                 },
                 onClickHistory = { },
-                onClickPlay = {
+                onClickFloatingActionButton = {
                     multiplePermissionResultLauncher.launch(
                         permissionsToRequest
                     )
                 },
             )
-
         }
     ) { padding ->
         Column(
@@ -121,7 +128,7 @@ fun HomeScreen(
         }
     }
 
-    dialogQueue.reversed().forEach { permission ->
+    visiblePermissionDialogQueue.reversed().forEach { permission ->
         PermissionDialog(
             permissionTextProvider = when (permission) {
                 Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()
