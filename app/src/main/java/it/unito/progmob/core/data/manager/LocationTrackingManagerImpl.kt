@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Implementation of the [LocationTrackingManager] interface that uses the Fused Location Provider API to
- * track the user's location.
+ * Implementation of the [LocationTrackingManager] interface that uses the Fused Location Provider
+ * API to track the user's location based on the Network and GPS providers
  *
  * @param fusedLocationClient The Fused Location Provider Client.
  */
@@ -24,6 +24,13 @@ import javax.inject.Inject
 class LocationTrackingManagerImpl @Inject constructor(
     private val fusedLocationClient: FusedLocationProviderClient
 ) : LocationTrackingManager {
+
+    /**
+     * The reference to the LocationCallback used to retrieve the user's location. We save the
+     * reference in order to stop tracking the user's location by removing the callback from the
+     * [FusedLocationProviderClient].
+     */
+    private var locationCallback: LocationCallback? = null
 
     /**
      * Tracks the user's single location and returns the latitude and longitude as strings.
@@ -47,20 +54,20 @@ class LocationTrackingManagerImpl @Inject constructor(
      * @param intervalMillis The interval in milliseconds at which to track the location.
      * @return A Flow of [Location] objects.
      */
-    override fun trackLocation(intervalMillis: Long): Flow<Location> {
+    override fun startTrackingLocation(intervalMillis: Long): Flow<Location> {
         return callbackFlow {
-
-            val locationCallback = object: LocationCallback(){
-                override fun onLocationResult(locationResult: LocationResult) {
-                    super.onLocationResult(locationResult)
-                    locationResult.locations.lastOrNull()?.let { location ->
-                        launch {
-                            send(location)
+            if(locationCallback == null){
+                locationCallback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        super.onLocationResult(locationResult)
+                        locationResult.locations.lastOrNull()?.let { location ->
+                            launch {
+                                send(location)
+                            }
                         }
                     }
                 }
             }
-
 
             val request = LocationRequest.Builder(intervalMillis)
                 .setMinUpdateIntervalMillis(intervalMillis)
@@ -68,13 +75,25 @@ class LocationTrackingManagerImpl @Inject constructor(
 
             fusedLocationClient.requestLocationUpdates(
                 request,
-                locationCallback,
+                locationCallback!!,
                 Looper.getMainLooper()
             )
 
             awaitClose {
-                fusedLocationClient.removeLocationUpdates(locationCallback)
+                locationCallback?.let {
+                    fusedLocationClient.removeLocationUpdates(it)
+                }
+                locationCallback = null
             }
+        }
+    }
+
+/**
+     * Stops tracking the user's location by removing the callback from the [FusedLocationProviderClient].
+     */
+    override fun stopTrackingLocation() {
+        locationCallback?.let {
+            fusedLocationClient.removeLocationUpdates(it)
         }
     }
 }

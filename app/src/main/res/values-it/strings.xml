@@ -24,7 +24,8 @@
     <string name="home_permissiondialog_post_notifications_txt">E\' necessario inviarti notiifche per mostrarti aggiornamenti sulle tue camminate</string>
     <string name="onboarding_page2_image_content_description">Immagine di on boarding per la funzionalità di mappa live</string>
     <string name="onboarding_page3_image_content_description">Immagine di on boarding per la funzionalità di cronologia</string>
-    <string name="location_notification_content_title">Tracciamento Posizione</string>
+    <string name="location_notification_content_title">Tempo Camminata</string>
     <string name="stop_icon">Icona stop</string>
     <string name="play_icon">Icona avvio</string>
+    <string name="notification_channel_description">Questo canale di notifiche permette di ricevere gli aggiornamenti riguardanti le tue camminate tramite notifica.</string>
 </resources>

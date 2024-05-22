@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
 
 
     <application
@@ -40,8 +41,8 @@
             android:value="${MAPS_API_KEY}" />
 
         <service
-            android:name=".core.domain.service.LocationTrackingService"
-            android:foregroundServiceType="location"/>
+            android:name=".core.domain.service.TrackingService"
+            android:foregroundServiceType="location|health"/>
     </application>
 
 </manifest>

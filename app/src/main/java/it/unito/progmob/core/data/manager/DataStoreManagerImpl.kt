@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import it.unito.progmob.core.domain.manager.DataStoreManager
 import it.unito.progmob.core.domain.Constants
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +19,7 @@ import javax.inject.Inject
  * @param context The application context.
  */
 class DataStoreManagerImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : DataStoreManager {
 
     /**
