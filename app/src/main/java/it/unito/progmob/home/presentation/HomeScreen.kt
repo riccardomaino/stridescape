@@ -24,8 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +37,6 @@ import androidx.navigation.NavController
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.util.findActivity
 import it.unito.progmob.core.presentation.components.NavigationBar
-import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
@@ -48,11 +45,7 @@ import it.unito.progmob.home.presentation.components.PermissionDialog
 import it.unito.progmob.home.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.home.presentation.components.WalkingStats
 import it.unito.progmob.home.presentation.components.WeeklyStats
-import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
-import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
-import it.unito.progmob.ui.theme.medium
-import it.unito.progmob.ui.theme.navigationBarShadow
 import it.unito.progmob.ui.theme.small
 
 
@@ -123,16 +116,16 @@ fun HomeScreen(
                         modifier = Modifier.size(large),
                     )
                 },
-                onClickHome = {},
-                onClickMap = {
-                    navController.navigate(Route.OnBoardingScreenRoute.route)
-                },
-                onClickHistory = { },
+//                onClickMap = {
+//                    navController.navigate(Route.OnBoardingScreenRoute.route)
+//                },
+//                onClickHistory = { },
                 onClickFloatingActionButton = {
                     multiplePermissionResultLauncher.launch(
                         permissionsToRequest
                     )
                 },
+                navigationController = navController,
             )
         }
     ) { padding ->

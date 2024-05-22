@@ -2,7 +2,6 @@ package it.unito.progmob.home.presentation.viewmodel
 
 import android.Manifest
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,10 +51,8 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-
         val calendarInfo = Calendar.getInstance()
-        calendarInfo.time = Date() // yourdate is an object of type Date
-
+        calendarInfo.time = Date() // your date is an object of type Date
         currentDay = MutableStateFlow(calendarInfo[Calendar.DAY_OF_WEEK]-2)
     }
 

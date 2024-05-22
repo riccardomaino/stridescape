@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import it.unito.progmob.R
 import it.unito.progmob.core.presentation.components.NavigationBar
-import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.tracking.presentation.viewmodel.TrackingViewModel
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
@@ -73,11 +72,11 @@ fun TrackingScreen(
                 onClickFloatingActionButton = {
 
                 },
-                onClickHome = {},
-                onClickMap = {
-                    navController.navigate(Route.OnBoardingScreenRoute.route)
-                },
-                onClickHistory = { },
+//                onClickMap = {
+//                    navController.navigate(Route.OnBoardingScreenRoute.route)
+//                },
+//                onClickHistory = { },
+                navigationController = navController
             )
         }
     ){

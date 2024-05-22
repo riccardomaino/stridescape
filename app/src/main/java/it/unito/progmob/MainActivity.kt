@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.viewmodel.MainViewModel
@@ -12,13 +13,22 @@ import it.unito.progmob.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel by viewModels<MainViewModel>()
+
+    private val mainViewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            // Check if the boolean is true at every frame, it shows the splash screen until
+            // the condition is false
+            setKeepOnScreenCondition{
+                !mainViewModel.isReady.value
+            }
+        }
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
-                val startDestination = viewModel.startDestination
+                val startDestination = mainViewModel.startDestination
                 Surface {
                     NavGraph(
                         startDestination = startDestination
