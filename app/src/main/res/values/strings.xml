@@ -27,7 +27,15 @@
     <string name="home_permissiondialog_post_notifications_txt">It is necessary to send you notifications to show you updates on your walks</string>
     <string name="location_notification_content_title">Walking Time</string>
     <string name="tracking_title" translatable="false">Tracking</string>
-    <string name="stop_icon">Stop icon</string>
-    <string name="play_icon">Play icon</string>
     <string name="notification_channel_description">This notification channel allows you to receive updates regarding your walks via notification.</string>
+    <string name="stop_icon">Stop walking icon</string>
+    <string name="walk_icon">Start walking icon</string>
+    <string name="home_weeklystats_title">Your Progresses</string>
+    <string name="home_weeklystats_monday">Mon</string>
+    <string name="home_weeklystats_tuesday">Tue</string>
+    <string name="home_weeklystats_wednesday">Wed</string>
+    <string name="home_weeklystats_thursday">Thu</string>
+    <string name="home_weeklystats_friday">Fri</string>
+    <string name="home_weeklystats_saturday">Sat</string>
+    <string name="home_weeklystats_sunday">Sun</string>
 </resources>

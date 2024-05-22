@@ -3,42 +3,48 @@ package it.unito.progmob.home.presentation
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.navigation.NavController
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.util.findActivity
 import it.unito.progmob.core.presentation.components.NavigationBar
-import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.home.presentation.components.CircularProgressBar
 import it.unito.progmob.home.presentation.components.PermissionDialog
 import it.unito.progmob.home.presentation.components.PostNotificationsPermissionTextProvider
-import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
+import it.unito.progmob.home.presentation.components.WalkingStats
+import it.unito.progmob.home.presentation.components.WeeklyStats
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
 
@@ -47,15 +53,18 @@ import it.unito.progmob.ui.theme.small
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeEvent: (HomeEvent) -> Unit,
-    homeViewModel: HomeViewModel,
-    navController: NavController
+    navController: NavController,
+    visiblePermissionDialogQueue: List<String>,
+    permissionsToRequest: Array<String>,
+    currentDay: Int,
+    steps: Int
 ) {
 
-    val visiblePermissionDialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
-    val permissionsToRequest = homeViewModel.permissionsToRequest
     val context = LocalContext.current
     val mainActivity = context.findActivity()
-    val steps by homeViewModel.stepsCount.collectAsState()
+
+    val weeklyStats = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000)
+    val weeklyTargetStats = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000)
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -75,12 +84,12 @@ fun HomeScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(start = large, end = large, top = small, bottom = small),
+                    .padding(start = large, end = large, bottom = small),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -102,21 +111,21 @@ fun HomeScreen(
             NavigationBar(
                 floatingActionButtonIcon = {
                     Icon(
-                        Icons.Filled.PlayArrow,
-                        contentDescription = stringResource(R.string.play_icon),
-                        modifier = modifier.size(large),
+                        Icons.AutoMirrored.Filled.DirectionsRun,
+                        contentDescription = stringResource(R.string.walk_icon),
+                        modifier = Modifier.size(large),
                     )
                 },
-                onClickHome = {},
-                onClickMap = {
-                    navController.navigate(Route.OnBoardingScreenRoute.route)
-                },
-                onClickHistory = { },
+//                onClickMap = {
+//                    navController.navigate(Route.OnBoardingScreenRoute.route)
+//                },
+//                onClickHistory = { },
                 onClickFloatingActionButton = {
                     multiplePermissionResultLauncher.launch(
                         permissionsToRequest
                     )
                 },
+                navigationController = navController,
             )
         }
     ) { padding ->
@@ -125,7 +134,25 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            CircularProgressBar(steps = steps, targetStepsGoal = 6000)
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = small)
+                    .shadow(small, shape = RoundedCornerShape(large))
+                    .clip(shape = RoundedCornerShape(large))
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                CircularProgressBar(steps = 3200, targetStepsGoal = 6000, radius = 88.dp)
+            }
+            Spacer(modifier = Modifier.height(small))
+            WalkingStats(kcal = 300, km = 10.0, time = "20:30")
+            Spacer(modifier = Modifier.height(small))
+            WeeklyStats(
+                selectedDay = currentDay,
+                weeklySteps = weeklyStats,
+                weeklyTarget = weeklyTargetStats
+            )
         }
     }
 

@@ -27,10 +27,12 @@ mapsSecrets = "2.0.1"
 mapsCompose = "5.0.1"
 playServicesLocation = "21.2.0"
 playServicesMaps = "18.2.0"
+splashScreen = "1.0.1"
 
 [libraries]
 # Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = {group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen"}
 # Test & Debug
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -33,24 +33,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
+import it.unito.progmob.ui.theme.medium
 
 @Composable
 fun CircularProgressBar(
     steps: Int,
     targetStepsGoal: Int,
-    fontSize: TextUnit = 56.sp,
+    fontSize: TextUnit = 48.sp,
     radius: Dp = 96.dp,
     color: Color = MaterialTheme.colorScheme.primary,
+    colorBackground: Color = MaterialTheme.colorScheme.outlineVariant,
     strokeWidth: Dp = large,
     animDuration: Int = 1000,
     animDelay: Int = 0,
+    showStepsInfo: Boolean = true
 ) {
     var animationPlayed by remember {
         mutableStateOf(false)
     }
 
     val currentPercentage = animateFloatAsState(
-        targetValue = if (animationPlayed) ((steps*100)/targetStepsGoal)/100.toFloat() else 0f,
+        targetValue = if (animationPlayed) ((steps * 100) / targetStepsGoal) / 100.toFloat() else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = animDelay
@@ -65,12 +68,17 @@ fun CircularProgressBar(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .fillMaxWidth()
             .size(radius * 2.8f)
-            .padding(horizontal = large)
-            .clip(shape = RoundedCornerShape(extraLarge))
-            .background(MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
+        Canvas(modifier = Modifier.size(radius * 2.2f)) {
+            drawArc(
+                color = colorBackground,
+                startAngle = -90f,
+                sweepAngle = 360f , // radius of the circle
+                useCenter = false,
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+            )
+        }
         // Allows to create various types of shapes
         Canvas(modifier = Modifier.size(radius * 2.2f)) {
             drawArc(
@@ -81,28 +89,31 @@ fun CircularProgressBar(
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
         }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = "Steps",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.outline,
-            )
-            Text(
-                text = steps.toString(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                fontSize = fontSize,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.height(70.dp)
-            )
-            Text(
-                text = "/${targetStepsGoal}",
-                color = MaterialTheme.colorScheme.outline,
-                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                fontWeight = FontWeight.Normal,
-            )
+
+        if (showStepsInfo) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = "Steps",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.outline,
+                )
+                Text(
+                    text = steps.toString(),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    fontSize = fontSize,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.height(70.dp)
+                )
+                Text(
+                    text = "/${targetStepsGoal}",
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Normal,
+                )
+            }
         }
     }
 }
