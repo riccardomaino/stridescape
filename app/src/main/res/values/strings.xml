@@ -7,7 +7,7 @@
     <string name="onboarding_page1_title">Welcome</string>
     <string name="onboarding_page1_image_content_description">On boarding image to welcome users</string>
     <string name="onboarding_page2_description">Keep track on your position with the live map! Make sure to allow all the permissions to ensure a precise localization</string>
-    <string name="onboarding_page2_title">Live Map</string>
+    <string name="onboarding_page2_title">Live map</string>
     <string name="onboarding_page2_image_content_description">On boarding image regarding the live map functionality</string>
     <string name="onboarding_page3_description">Check all your previous walks with the history and keep track on your improvements!</string>
     <string name="onboarding_page3_title">History</string>
@@ -17,7 +17,7 @@
     <string name="home_title" translatable="false">Home</string>
     <string name="home_open_settings">Open settings</string>
     <string name="home_permissiondialog_grant_permission_btn">Grant Permission</string>
-    <string name="home_permisisondialog_ok_btn">Ok</string>
+    <string name="home_permisisondialog_ok_btn">OK</string>
     <string name="home_permissiondialog_title">Permission required</string>
     <string name="home_permissiondialog_activity_recognition_declined_txt">You have been permanently denied permission to access your physical activity. Go to the app settings and grant permission.</string>
     <string name="home_permissiondialog_activity_recognition_txt">It is necessary to access your physical activity to track your steps</string>
@@ -28,8 +28,8 @@
     <string name="location_notification_content_title">Walking Time</string>
     <string name="tracking_title" translatable="false">Tracking</string>
     <string name="notification_channel_description">This notification channel allows you to receive updates regarding your walks via notification.</string>
-    <string name="stop_icon">Stop walking icon</string>
-    <string name="walk_icon">Start walking icon</string>
+    <string name="tracking_stop_icon">Icon used to stop the tracking</string>
+    <string name="home_walk_icon">Navigation icon for tracking section</string>
     <string name="home_weeklystats_title">Your Progresses</string>
     <string name="home_weeklystats_monday">Mon</string>
     <string name="home_weeklystats_tuesday">Tue</string>
@@ -38,4 +38,8 @@
     <string name="home_weeklystats_friday">Fri</string>
     <string name="home_weeklystats_saturday">Sat</string>
     <string name="home_weeklystats_sunday">Sun</string>
+    <string name="onboparding_page4_title">Personal information</string>
+    <string name="onboarding_page4_description">Enter your personal information so we can provide you with more precise data</string>
+    <string name="tracking_play_icon">Icon used to start the tracking</string>
+    <string name="tracking_pause_icon">Icon used to pause the tracking</string>
 </resources>

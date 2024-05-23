@@ -17,7 +17,7 @@ fun PermissionDialog(
     isPermanentlyDeclined: Boolean,
     onDismiss: () -> Unit,
     onOkClick: () -> Unit,
-    onGoToAppSettingsClick: () -> Unit
+    onGoToAppSettingsClick: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -43,7 +43,12 @@ fun PermissionDialog(
             Text(text = stringResource(R.string.home_permissiondialog_title))
         },
         text = {
-            Text(text = permissionTextProvider.getDescription(isPermanentlyDeclined, LocalContext.current))
+            Text(
+                text = permissionTextProvider.getDescription(
+                    isPermanentlyDeclined,
+                    LocalContext.current
+                )
+            )
         },
         modifier = modifier
     )

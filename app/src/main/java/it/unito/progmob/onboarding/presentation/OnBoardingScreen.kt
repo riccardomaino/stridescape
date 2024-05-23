@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    onBoardingEvent: (OnBoardingEvent) -> Unit,
     navController: NavController
 ) {
     Column {
@@ -50,9 +49,8 @@ fun OnBoardingScreen(
                     )
                     2 -> listOf(
                         context.getString(R.string.onboarding_back_btn),
-                        context.getString(R.string.onboarding_getstarted_btn)
+                        context.getString(R.string.onboarding_next_btn)
                     )
-
                     else -> listOf("", "")
                 }
             }
@@ -87,9 +85,7 @@ fun OnBoardingScreen(
                 OnBoardingButton(text = buttonState.value[1], onClick = {
                     coroutineScope.launch {
                         if (pagerState.currentPage == 2) {
-                            // TODO: Navigate to the Home screen
-                            navController.navigate(route = Route.HomeNavigationRoute.route)
-                            onBoardingEvent(OnBoardingEvent.SaveOnBoardingEntry)
+                            navController.navigate(route = Route.OnBoardingProfileScreenRoute.route)
                         } else {
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }

@@ -1,24 +1,19 @@
 package it.unito.progmob.home.presentation.components
 
-import android.provider.CalendarContract
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.outlined.LocalFireDepartment
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,10 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
-import it.unito.progmob.ui.theme.medium
-import it.unito.progmob.ui.theme.navigationBarShadow
 import it.unito.progmob.ui.theme.small
-import java.sql.Time
 
 @Composable
 fun WalkingStats(
@@ -65,7 +57,7 @@ fun WalkingStats(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    Icons.Filled.LocalFireDepartment,
+                    Icons.Outlined.LocalFireDepartment,
                     contentDescription = "Localized description",
                     modifier = Modifier.size(extraLarge),
                     tint = Color.Red
@@ -90,7 +82,7 @@ fun WalkingStats(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    Icons.Filled.Map,
+                    Icons.Outlined.Map,
                     contentDescription = "Localized description",
                     modifier = Modifier.size(extraLarge),
                     tint = Color(0xFF0C9B12)
@@ -115,7 +107,7 @@ fun WalkingStats(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    Icons.Filled.Timer,
+                    Icons.Outlined.Timer,
                     contentDescription = "Localized description",
                     modifier = Modifier.size(extraLarge),
                     tint = Color(0xFFFF9800)

@@ -6,7 +6,7 @@
     <string name="onboarding_getstarted_btn">Inizia</string>
     <string name="onboarding_page1_description">Tieni traccia dei tuoi passi, delle calorie e altro ancora! Con Stridescape puoi monitorare le tue attività quotidiane e migliorare la tua salute.</string>
     <string name="onboarding_page1_title">Benvenuto</string>
-    <string name="onboarding_page2_title">Mappa Live</string>
+    <string name="onboarding_page2_title">Mappa live</string>
     <string name="onboarding_page2_description">Tieni traccia della tua posizione con la mappa live! Assicurati di concedere tutti i permessi per permettere una localizzazione precisa.</string>
     <string name="onboarding_page3_description">Accedi a tutti le tue camminate grazie alla cronologia e tieni traccia dei tuoi miglioramenti!</string>
     <string name="onboarding_page3_title">Cronologia</string>
@@ -24,8 +24,8 @@
     <string name="home_permissiondialog_post_notifications_txt">E\' necessario inviarti notiifche per mostrarti aggiornamenti sulle tue camminate</string>
     <string name="onboarding_page2_image_content_description">Immagine di on boarding per la funzionalità di mappa live</string>
     <string name="onboarding_page3_image_content_description">Immagine di on boarding per la funzionalità di cronologia</string>
-    <string name="stop_icon">Icona di stop camminata</string>
-    <string name="walk_icon">Icona avvio camminata</string>
+    <string name="tracking_stop_icon">Icona utilizzata per fermare il tracciamento</string>
+    <string name="home_walk_icon">Icona di navigazione per sezione tracking</string>
     <string name="home_weeklystats_title">I Tuoi Progressi</string>
     <string name="home_weeklystats_monday">Lun</string>
     <string name="home_weeklystats_tuesday">Mar</string>
@@ -36,4 +36,8 @@
     <string name="home_weeklystats_sunday">Dom</string>
     <string name="location_notification_content_title">Tempo Camminata</string>
     <string name="notification_channel_description">Questo canale di notifiche permette di ricevere gli aggiornamenti riguardanti le tue camminate tramite notifica.</string>
+    <string name="onboparding_page4_title">Informazioini personali</string>
+    <string name="onboarding_page4_description">Inserisci le tue informazioni personali per poterti fornire dati più precisi</string>
+    <string name="tracking_play_icon">Icona utilizzata per avviare il tracciamento</string>
+    <string name="tracking_pause_icon">Icona utilizzata per mettere in pausa il tracciamento</string>
 </resources>

@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases,
 ) : ViewModel() {
 
-    var startDestination by mutableStateOf(Route.StartNavigationRoute.route)
+    var startDestination by mutableStateOf(Route.OnBoardingNavigationRoute.route)
         private set
 
     private val _isReady = MutableStateFlow(false)
@@ -30,9 +30,9 @@ class MainViewModel @Inject constructor(
     init {
         onBoardingUseCases.readOnboardingEntryUseCase().onEach { shouldStartFromHomeScreen ->
             startDestination = if(shouldStartFromHomeScreen) {
-                Route.HomeNavigationRoute.route
+                Route.MainNavigationRoute.route
             } else {
-                Route.StartNavigationRoute.route
+                Route.OnBoardingNavigationRoute.route
             }
             delay(600)
             _isReady.value = true

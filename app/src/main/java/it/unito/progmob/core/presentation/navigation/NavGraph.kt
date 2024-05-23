@@ -1,5 +1,6 @@
 package it.unito.progmob.core.presentation.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,34 +11,48 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import it.unito.progmob.home.presentation.HomeScreen
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
+import it.unito.progmob.onboarding.presentation.OnBoardingProfileScreen
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
 import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
+import it.unito.progmob.tracking.presentation.TrackingScreen
+import it.unito.progmob.tracking.presentation.viewmodel.TrackingViewModel
 
 
 @Composable
 fun NavGraph(
-    startDestination: String
+    startDestination: String,
 ) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
         navigation(
-            route = Route.StartNavigationRoute.route,
+            route = Route.OnBoardingNavigationRoute.route,
             startDestination = Route.OnBoardingScreenRoute.route
         ) {
             composable(
                 route = Route.OnBoardingScreenRoute.route
             ) {
-                val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
                 OnBoardingScreen(
-                    onBoardingEvent = onBoardingViewModel::onEvent,
                     navController = navController
                 )
             }
+            composable(
+                route = Route.OnBoardingProfileScreenRoute.route
+            ) {
+                val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
+
+                OnBoardingProfileScreen(
+                    onBoardingEvent = onBoardingViewModel::onEvent,
+                    navController = navController,
+                    userHeight = onBoardingViewModel.height,
+                    userWeight = onBoardingViewModel.weight,
+                    userName = onBoardingViewModel.name
+                )
+            }
         }
-        
+
         navigation(
-            route = Route.HomeNavigationRoute.route,
+            route = Route.MainNavigationRoute.route,
             startDestination = Route.HomeScreenRoute.route
         ) {
             composable(
@@ -49,6 +64,8 @@ fun NavGraph(
                 val steps by homeViewModel.stepsCount.collectAsState()
                 val currentDay by homeViewModel.currentDay.collectAsState()
 
+                Log.d("NavGraph", "visiblePermissionDialogQueue: $visiblePermissionDialogQueue")
+
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
                     navController = navController,
@@ -56,6 +73,16 @@ fun NavGraph(
                     permissionsToRequest = permissionsToRequest,
                     currentDay = currentDay,
                     steps = steps
+                )
+            }
+
+            composable(
+                route = Route.TrackingScreenRoute.route
+            ) {
+                val trackingViewModel = hiltViewModel<TrackingViewModel>()
+                TrackingScreen(
+                    trackingEvent = trackingViewModel::onEvent,
+                    navController = navController
                 )
             }
         }

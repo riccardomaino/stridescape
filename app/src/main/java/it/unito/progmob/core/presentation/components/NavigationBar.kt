@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.floatingActionButtonSize
 import it.unito.progmob.ui.theme.large
@@ -97,7 +98,7 @@ fun NavigationBar(
                             contentDescription = "Localized description",
                             modifier = Modifier
                                 .size(large),
-                            tint = if (navigationController.currentDestination?.route == "stepsViewNavigationScreen") MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+                            tint = if (navigationController.currentDestination?.route == Route.HomeScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }

@@ -1,5 +1,6 @@
 package it.unito.progmob.onboarding.presentation.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,37 +12,34 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
-    private val onBoardingUseCases: OnBoardingUseCases
+    private val onBoardingUseCases: OnBoardingUseCases,
 ) : ViewModel() {
+
+    val weight = mutableStateOf("")
+    val height = mutableStateOf("")
+    val name = mutableStateOf("")
+
     /**
      * Handles OnBoarding events emitted from the UI.
      * @param event The OnBoardingEvent to be processed.
      */
     fun onEvent(event: OnBoardingEvent) {
         when (event) {
-            is OnBoardingEvent.SaveOnBoardingEntry -> saveOnboardingEntry()
-            is OnBoardingEvent.ReadOnBoardingEntry -> readOnboardingEntry()
+            is OnBoardingEvent.SaveEntries -> saveEntries()
         }
     }
+
 
     /**
-     * Calls the use case to save the onboarding entry value to the user preferences DataStore.
-     * This method launch a coroutine, using Dispatchers.IO, to perform the use case
+     * Calls the use cases to save all the user preferences entries values to the user preferences DataStore.
+     * This method launch a coroutine, using Dispatchers.IO, which launch all the others coroutines to perform the work
      */
-    private fun saveOnboardingEntry() {
+    private fun saveEntries() {
         viewModelScope.launch(Dispatchers.IO) {
-            onBoardingUseCases.saveOnboardingEntryUseCase()
+            launch { onBoardingUseCases.saveUserNameUseCase(name.value) }
+            launch { onBoardingUseCases.saveUserHeightUseCase(height.value) }
+            launch { onBoardingUseCases.saveUserHeightUseCase(weight.value) }
+            launch { onBoardingUseCases.saveOnboardingEntryUseCase() }
         }
     }
-
-    /**
-     * Calls the use case to read the onboarding entry value from the user preferences DataStore.
-     * This method launch a coroutine, using Dispatchers.IO, to perform the use case
-     */
-    private fun readOnboardingEntry() {
-        viewModelScope.launch(Dispatchers.IO) {
-            onBoardingUseCases.readOnboardingEntryUseCase()
-        }
-    }
-
 }

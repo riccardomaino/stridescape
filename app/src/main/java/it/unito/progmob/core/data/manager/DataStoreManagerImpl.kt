@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import it.unito.progmob.core.domain.manager.DataStoreManager
@@ -41,6 +42,67 @@ class DataStoreManagerImpl @Inject constructor(
             preferences[PreferencesKeys.ONBOARDING_ENTRY] ?: false
         }
     }
+
+    /**
+     * Saves the user weight to DataStore.
+     */
+    override suspend fun saveUserWeight(weight: String) {
+        context.datastore.edit { preferences ->
+            preferences[PreferencesKeys.USER_WEIGHT] = weight
+        }
+    }
+
+    /**
+     * Reads the user weight from DataStore.
+     *
+     * @return A Flow of booleans representing the user weight.
+     */
+    override fun readUserWeight(): Flow<String> {
+        return context.datastore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_WEIGHT] ?: ""
+        }
+    }
+
+    /**
+     * Saves the user height to DataStore.
+     */
+    override suspend fun saveUserHeight(height: String) {
+        context.datastore.edit { preferences ->
+            preferences[PreferencesKeys.USER_HEIGHT] = height
+        }
+    }
+
+
+    /**
+     * Reads the user height from DataStore.
+     *
+     * @return A Flow of booleans representing the user height.
+     */
+    override fun readUserHeight(): Flow<String> {
+        return context.datastore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_HEIGHT] ?: ""
+        }
+    }
+
+    /**
+     * Saves the user name to DataStore.
+     */
+    override suspend fun saveUserName(name: String) {
+        context.datastore.edit { preferences ->
+            preferences[PreferencesKeys.USER_NAME] = name
+        }
+    }
+
+    /**
+     * Reads the user name from DataStore.
+     *
+     * @return A Flow of booleans representing the user name.
+     */
+    override fun readUserName(): Flow<String> {
+        return context.datastore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_NAME] ?: ""
+        }
+    }
 }
 
 /**
@@ -51,8 +113,11 @@ private val Context.datastore: DataStore<Preferences> by preferencesDataStore(na
 /**
  * Object to hold the keys used in DataStore.
  */
-private object PreferencesKeys {
+object PreferencesKeys {
     val ONBOARDING_ENTRY = booleanPreferencesKey(name = Constants.ONBOARDING_ENTRY)
+    val USER_WEIGHT = stringPreferencesKey(name = Constants.USER_WEIGHT)
+    val USER_HEIGHT = stringPreferencesKey(name = Constants.USER_HEIGHT)
+    val USER_NAME = stringPreferencesKey(name = Constants.USER_NAME)
 }
 
 

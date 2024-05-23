@@ -23,7 +23,13 @@ import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.domain.usecase.PermissionResultUseCase
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
 import it.unito.progmob.onboarding.domain.usecase.ReadOnboardingEntryUseCase
+import it.unito.progmob.onboarding.domain.usecase.ReadUserHeightUseCase
+import it.unito.progmob.onboarding.domain.usecase.ReadUserNameUseCase
+import it.unito.progmob.onboarding.domain.usecase.ReadUserWeightUseCase
 import it.unito.progmob.onboarding.domain.usecase.SaveOnboardingEntryUseCase
+import it.unito.progmob.onboarding.domain.usecase.SaveUserHeightUseCase
+import it.unito.progmob.onboarding.domain.usecase.SaveUserNameUseCase
+import it.unito.progmob.onboarding.domain.usecase.SaveUserWeightUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -79,7 +85,16 @@ object AppModule {
         dataStoreManager: DataStoreManager
     ) = OnBoardingUseCases(
         ReadOnboardingEntryUseCase(dataStoreManager),
-        SaveOnboardingEntryUseCase(dataStoreManager)
+        SaveOnboardingEntryUseCase(dataStoreManager),
+
+        SaveUserNameUseCase(dataStoreManager),
+        ReadUserNameUseCase(dataStoreManager),
+
+        SaveUserHeightUseCase(dataStoreManager),
+        ReadUserHeightUseCase(dataStoreManager),
+
+        SaveUserWeightUseCase(dataStoreManager),
+        ReadUserWeightUseCase(dataStoreManager)
     )
 
     @Provides

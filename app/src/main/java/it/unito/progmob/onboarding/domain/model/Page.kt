@@ -8,7 +8,7 @@ data class Page(
     val title: String,
     val description: String,
     val imageContentDescription: String = title,
-    @DrawableRes val image: Int
+    @DrawableRes val image: Int?
 )
 
 fun getOnboardingPages(
@@ -31,7 +31,12 @@ fun getOnboardingPages(
             title = context.getString(R.string.onboarding_page3_title),
             description = context.getString(R.string.onboarding_page3_description),
             image = R.drawable.history
-        )
+        ),
+//        Page(
+//            title = context.getString(R.string.onboparding_page4_title),
+//            description = context.getString(R.string.onboarding_page4_description),
+//            image = null
+//        )
     )
 
     return pages

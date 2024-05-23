@@ -41,15 +41,17 @@ fun OnBoardingTop(
                 .padding(start = large, end = large, top = medium)
                 .fillMaxHeight(fraction = 0.6f)
         ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(topStart = large, topEnd = large)),
-                painter = painterResource(id = page.image),
-                contentDescription = page.imageContentDescription,
-                contentScale = ContentScale.Crop,
+            page.image?.let { painterResource(id = it) }?.let {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(shape = RoundedCornerShape(topStart = large, topEnd = large)),
+                    painter = it,
+                    contentDescription = page.imageContentDescription,
+                    contentScale = ContentScale.Crop,
 
-            )
+                    )
+            }
         }
         Spacer(modifier = Modifier.height(large))
         Text(

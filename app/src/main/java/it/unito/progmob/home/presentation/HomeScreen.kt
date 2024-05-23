@@ -1,6 +1,7 @@
 package it.unito.progmob.home.presentation
 
 import android.Manifest
+import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -24,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,10 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.util.findActivity
 import it.unito.progmob.core.presentation.components.NavigationBar
+import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.home.domain.util.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
@@ -63,8 +68,13 @@ fun HomeScreen(
     val context = LocalContext.current
     val mainActivity = context.findActivity()
 
+
     val weeklyStats = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000)
     val weeklyTargetStats = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000)
+
+    val allPermissionsGranted = remember {
+        mutableStateOf(false)
+    }
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -81,6 +91,7 @@ fun HomeScreen(
             }
         }
     )
+
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -112,18 +123,25 @@ fun HomeScreen(
                 floatingActionButtonIcon = {
                     Icon(
                         Icons.AutoMirrored.Filled.DirectionsRun,
-                        contentDescription = stringResource(R.string.walk_icon),
+                        contentDescription = stringResource(R.string.home_walk_icon),
                         modifier = Modifier.size(large),
                     )
                 },
-//                onClickMap = {
-//                    navController.navigate(Route.OnBoardingScreenRoute.route)
-//                },
-//                onClickHistory = { },
                 onClickFloatingActionButton = {
                     multiplePermissionResultLauncher.launch(
                         permissionsToRequest
                     )
+
+                    allPermissionsGranted.value = permissionsToRequest.all { permission ->
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            permission
+                        ) == PackageManager.PERMISSION_GRANTED
+                    }
+
+                    if (allPermissionsGranted.value) {
+                        navController.navigate(Route.TrackingScreenRoute.route)
+                    }
                 },
                 navigationController = navController,
             )
@@ -156,7 +174,7 @@ fun HomeScreen(
         }
     }
 
-    visiblePermissionDialogQueue.reversed().forEach { permission ->
+    visiblePermissionDialogQueue.reversed().forEach() { permission ->
         PermissionDialog(
             permissionTextProvider = when (permission) {
                 Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()
@@ -164,7 +182,10 @@ fun HomeScreen(
                 Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionTextProvider()
                 else -> return@forEach
             },
-            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(mainActivity, permission),
+            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
+                mainActivity,
+                permission
+            ),
             onDismiss = {
                 homeEvent(HomeEvent.DismissPermissionDialog)
             },

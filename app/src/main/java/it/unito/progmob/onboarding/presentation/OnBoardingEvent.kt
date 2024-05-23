@@ -1,6 +1,5 @@
 package it.unito.progmob.onboarding.presentation
 
 sealed class OnBoardingEvent {
-    data object SaveOnBoardingEntry : OnBoardingEvent()
-    data object ReadOnBoardingEntry : OnBoardingEvent()
+    data object SaveEntries: OnBoardingEvent()
 }
