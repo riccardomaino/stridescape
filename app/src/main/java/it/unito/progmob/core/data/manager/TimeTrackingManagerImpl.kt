@@ -1,13 +1,10 @@
 package it.unito.progmob.core.data.manager
 
-import android.util.Log
 import it.unito.progmob.core.domain.manager.TimeTrackingManager
-import it.unito.progmob.core.domain.service.TrackingService
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.isActive
 import kotlinx.coroutines.isActive
 
 class TimeTrackingManagerImpl : TimeTrackingManager {
@@ -18,7 +15,6 @@ class TimeTrackingManagerImpl : TimeTrackingManager {
             while(currentCoroutineContext().isActive){
                 timeElapsed += 1000L
                 delay(1000)
-                Log.d(TAG, "Elapsed time: $timeElapsed")
                 emit(timeElapsed)
             }
         }
@@ -40,6 +36,6 @@ class TimeTrackingManagerImpl : TimeTrackingManager {
 
 
     companion object {
-        private val TAG = Companion::class.java.simpleName.toString()
+        private val TAG = TimeTrackingManagerImpl::class.java.simpleName
     }
 }

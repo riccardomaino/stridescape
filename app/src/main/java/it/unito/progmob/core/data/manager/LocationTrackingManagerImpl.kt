@@ -58,15 +58,15 @@ class LocationTrackingManagerImpl @Inject constructor(
     override fun startTrackingLocation(intervalMillis: Long): Flow<Location> {
         return callbackFlow {
             if(locationCallback == null){
-                Log.d("Location", "LocationCallback is null")
+                Log.d(TAG, "Creating the first time the LocationCallback")
                 locationCallback = object : LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult) {
                         super.onLocationResult(locationResult)
-                        Log.d("Location", "LocationResult: ${locationResult.locations}")
+                        Log.d(TAG, "Before sending to Flow ${locationResult.locations}")
                         locationResult.locations.lastOrNull()?.let { location ->
                             launch {
                                 send(location)
-                                Log.d("Location", "Location: ${location.latitude}, ${location.longitude}")
+                                Log.d(TAG, "After sending to Flow: ${location.latitude}, ${location.longitude}")
                             }
                         }
                     }
@@ -99,5 +99,9 @@ class LocationTrackingManagerImpl @Inject constructor(
         locationCallback?.let {
             fusedLocationClient.removeLocationUpdates(it)
         }
+    }
+
+    companion object{
+        private val TAG = LocationTrackingManagerImpl::class.java.simpleName.toString()
     }
 }

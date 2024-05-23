@@ -139,7 +139,9 @@ class TrackingService : Service(){
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(getString(R.string.location_notification_content_title))
             .setContentText("00:00:00")
-            .setStyle(NotificationCompat.BigTextStyle())
+            .setStyle(NotificationCompat.BigTextStyle().setBigContentTitle(
+                "Latitude: 0.0, Longitude: 0.0"
+            ))
             .setContentIntent(getTrackingNotificationPendingIntent())
             .setAutoCancel(false)
             .setOngoing(true)
@@ -166,16 +168,16 @@ class TrackingService : Service(){
 
             val updatedNotification = notification
                 .setContentText(TimeUtils.formatMillisTime(time, "HH:mm:ss"))
+                .setStyle(NotificationCompat.BigTextStyle().setBigContentTitle(
+                    "Latitude: ${location.latitude}, Longitude: ${location.longitude}"
+                ))
             notificationManager.notify(
                 NOTIFICATION_ID,
                 updatedNotification.build()
             )
             Log.d(TAG, "WalkState 'latestPoint': ${_walkState.value.pathPoints.lastOrNull().toString()}")
-            Log.d(TAG, "WalkState 'isTracking': ${_walkState.value.isTracking}")
-            Log.d(TAG, "WalkState 'timeInMillis': ${_walkState.value.timeInMillis}")
-            Log.d(TAG, "WalkState 'speedInKMH': ${_walkState.value.speedInKMH}")
             Log.d(TAG, "WalkState 'distanceInMeters': ${_walkState.value.distanceInMeters}")
-            Log.d(TAG, "I'm working in thread ${Thread.currentThread().name}")
+            Log.d(TAG, "Working in thread ${Thread.currentThread().name}")
         }.launchIn(trackingServiceScope)
 
 
@@ -186,9 +188,9 @@ class TrackingService : Service(){
 //            .onEach { location ->
 //                val newPathPoint = PathPoint(location.latitude, location.longitude)
 //                addPathPoint(newPathPoint)
-//
 //                val latitude = location.latitude.toString()
 //                val longitude = location.longitude.toString()
+//                Log.d(TAG, "LatestPoint: $latitude, $longitude")
 //                val updatedNotification = notification
 //                    .setContentText("Latitude: $latitude, Longitude: $longitude")
 //                notificationManager.notify(
@@ -237,6 +239,8 @@ class TrackingService : Service(){
      * service.
      */
     private fun stop(){
+        coroutineJob?.cancel()
+        coroutineJob = null
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
         stopSelf() // Stops the service
     }
@@ -282,13 +286,13 @@ class TrackingService : Service(){
             Log.e(TAG, "Access Fine Location permission is not granted")
             hasPermissions = false
         }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            val activityRecognitionPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
-            if(activityRecognitionPermission == PackageManager.PERMISSION_DENIED){
-                Log.e(TAG, "Activity recognition permission is not granted")
-                hasPermissions = false
-            }
-        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+//            val activityRecognitionPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+//            if(activityRecognitionPermission == PackageManager.PERMISSION_DENIED){
+//                Log.e(TAG, "Activity recognition permission is not granted")
+//                hasPermissions = false
+//            }
+//        }
         return hasPermissions
     }
 
@@ -296,7 +300,7 @@ class TrackingService : Service(){
      * Companion object containing constants used by the service.
      */
     companion object {
-        private val TAG = Companion::class.java.simpleName.toString()
+        private val TAG = TrackingService::class.java.simpleName
         const val NOTIFICATION_CHANNEL_ID = "location_tracking_channel"
         const val NOTIFICATION_CHANNEL_NAME = "Tracking notifications"
         const val NOTIFICATION_ID = 1
