@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.unito.progmob.core.stepscounter.MeasurableSensor
+import it.unito.progmob.tracking.domain.stepscounter.MeasurableSensor
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeUseCases: HomeUseCases,
-    private val stepCounterSensor: MeasurableSensor
+    private val homeUseCases: HomeUseCases
 ) : ViewModel() {
 
     // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to

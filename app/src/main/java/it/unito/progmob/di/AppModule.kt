@@ -16,8 +16,8 @@ import it.unito.progmob.core.domain.manager.DataStoreManager
 import it.unito.progmob.core.domain.manager.TrackingServiceManager
 import it.unito.progmob.core.domain.manager.LocationTrackingManager
 import it.unito.progmob.core.domain.manager.TimeTrackingManager
-import it.unito.progmob.core.stepscounter.MeasurableSensor
-import it.unito.progmob.core.stepscounter.StepCounterSensor
+import it.unito.progmob.tracking.domain.stepscounter.MeasurableSensor
+import it.unito.progmob.tracking.domain.stepscounter.StepCounterSensor
 import it.unito.progmob.home.domain.usecase.DismissPermissionDialogUseCase
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.domain.usecase.PermissionResultUseCase
@@ -70,14 +70,11 @@ object AppModule {
         @ApplicationContext context: Context
     ): TrackingServiceManager = TrackingServiceManagerImpl(context)
 
-
     @Provides
     @Singleton
     fun provideStepCounterSensor(
         @ApplicationContext context: Context
-    ): MeasurableSensor {
-        return StepCounterSensor(context)
-    }
+    ): MeasurableSensor = StepCounterSensor(context)
 
     @Provides
     @Singleton

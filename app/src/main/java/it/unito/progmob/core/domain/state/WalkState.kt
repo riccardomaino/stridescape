@@ -7,5 +7,6 @@ data class WalkState(
     val distanceInMeters: Int = 0,
     val timeInMillis: Long = 0L,
     val speedInKMH : Float = 0f,
+    val steps: Int = 0,
     val pathPoints: List<PathPoint> = emptyList()
 )

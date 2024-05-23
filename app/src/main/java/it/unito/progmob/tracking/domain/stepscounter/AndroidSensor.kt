@@ -1,4 +1,4 @@
-package it.unito.progmob.core.stepscounter
+package it.unito.progmob.tracking.domain.stepscounter
 
 import android.content.Context
 import android.hardware.Sensor

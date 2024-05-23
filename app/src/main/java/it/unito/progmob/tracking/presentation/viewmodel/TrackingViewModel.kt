@@ -61,13 +61,13 @@ class TrackingViewModel @Inject constructor(
 
     private fun resumeTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
-            trackingUseCases
+            trackingUseCases.resumeTrackingUseCase()
         }
     }
 
     private fun pauseTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
-
+            trackingUseCases.pauseTrackingUseCase()
         }
     }
 

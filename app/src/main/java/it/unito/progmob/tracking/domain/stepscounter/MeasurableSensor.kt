@@ -1,4 +1,4 @@
-package it.unito.progmob.core.stepscounter
+package it.unito.progmob.tracking.domain.stepscounter
 
 /**
  * Abstract class representing a measurable sensor.

@@ -25,7 +25,7 @@
     <string name="home_permissiondialog_fine_location_txt">It is necessary to access your precise location to track your walks</string>
     <string name="home_permissiondialog_post_notifications_declined_txt">You have permanently denied permission to send you notifications. Go to the app settings and grant permission.</string>
     <string name="home_permissiondialog_post_notifications_txt">It is necessary to send you notifications to show you updates on your walks</string>
-    <string name="location_notification_content_title">Walking Time</string>
+    <string name="notification_content_title">Walking Stats</string>
     <string name="tracking_title" translatable="false">Tracking</string>
     <string name="notification_channel_description">This notification channel allows you to receive updates regarding your walks via notification.</string>
     <string name="tracking_stop_icon">Icon used to stop the tracking</string>

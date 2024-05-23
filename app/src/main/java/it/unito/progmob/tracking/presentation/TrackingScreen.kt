@@ -173,28 +173,28 @@ fun TrackingScreen(
                         Text(text = "Start", modifier = modifier.padding(vertical = small))
                     }
                 } else {
-                    Row {
+                    Row(modifier = modifier.fillMaxWidth()) {
                         Button(
                             onClick = {
                                 trackingEvent(TrackingEvent.StopTrackingService)
                                 trackingStarted = false
                             },
                             modifier = modifier
-                                .fillMaxWidth()
+                                .fillMaxWidth(0.4f)
                                 .padding(horizontal = large, vertical = medium)
                         ) {
                             Text(text = "Stop", modifier = modifier.padding(vertical = small))
                         }
-//                        Button(
-//                            onClick = {
-//                                trackingEvent(TrackingEvent.PauseTrackingService)
-//                            },
-//                            modifier = modifier
-//                                .fillMaxWidth()
-//                                .padding(horizontal = large, vertical = medium)
-//                        ) {
-//                            Text(text = "Pause", modifier = modifier.padding(vertical = small))
-//                        }
+                        Button(
+                            onClick = {
+                                trackingEvent(TrackingEvent.PauseTrackingService)
+                            },
+                            modifier = modifier
+                                .fillMaxWidth(0.4f)
+                                .padding(horizontal = large, vertical = medium)
+                        ) {
+                            Text(text = "Pause", modifier = modifier.padding(vertical = small))
+                        }
                     }
                 }
             }
