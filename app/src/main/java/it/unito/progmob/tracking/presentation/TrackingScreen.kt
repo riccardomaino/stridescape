@@ -69,6 +69,9 @@ fun TrackingScreen(
             )
         )
     }
+    var trackingStarted by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -94,62 +97,7 @@ fun TrackingScreen(
                     contentDescription = stringResource(R.string.settings_icon)
                 )
             }
-        },
-        floatingActionButton = {
-//            Row {
-//                FloatingActionButton(
-//                    containerColor = MaterialTheme.colorScheme.errorContainer,
-//                    elevation = FloatingActionButtonDefaults.elevation(),
-//                    onClick = { },
-//                    shape = FloatingActionButtonDefaults.extendedFabShape,
-//                    modifier = Modifier
-//                        .padding(small)
-//                        .size(floatingActionButtonSize)
-//                ) {
-//                    Icon(
-//                        Icons.Filled.Stop,
-//                        contentDescription = stringResource(R.string.tracking_stop_icon),
-//                        modifier = Modifier.size(large),
-//                    )
-//                }
-//                FloatingActionButton(
-//                    containerColor = MaterialTheme.colorScheme.primary,
-//                    elevation = FloatingActionButtonDefaults.elevation(),
-//                    onClick = { },
-//                    shape = FloatingActionButtonDefaults.extendedFabShape,
-//                    modifier = Modifier
-//                        .padding(small)
-//                        .size(floatingActionButtonSize)
-//                ) {
-//                    Icon(
-//                        Icons.Filled.PlayArrow,
-//                        contentDescription = stringResource(R.string.tracking_play_icon),
-//                        modifier = Modifier.size(large),
-//                    )
-//                }
-//
-//
-//            }
-        },
-//        bottomBar = {
-//            NavigationBar(
-//                floatingActionButtonIcon = {
-//                    Icon(
-//                        Icons.Filled.Stop,
-//                        contentDescription = stringResource(R.string.tracking_stop_icon),
-//                        modifier = modifier.size(large).background(Color.Transparent),
-//                    )
-//                },
-//                onClickFloatingActionButton = {
-//
-//                },
-////                onClickMap = {
-////                    navController.navigate(Route.OnBoardingScreenRoute.route)
-////                },
-////                onClickHistory = { },
-//                navigationController = navController
-//            )
-//        }
+        }
     ) { padding ->
         Box(
             modifier = modifier.padding(padding)
@@ -212,19 +160,43 @@ fun TrackingScreen(
                         content = "00:23:00"
                     )
                 }
-
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = large, vertical = medium)
-                ) {
-                    Text(text = "Start", modifier = modifier.padding(vertical = small))
+                if (!trackingStarted) {
+                    Button(
+                        onClick = {
+                            trackingEvent(TrackingEvent.StartTrackingService)
+                            trackingStarted = true
+                        },
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = large, vertical = medium)
+                    ) {
+                        Text(text = "Start", modifier = modifier.padding(vertical = small))
+                    }
+                } else {
+                    Row {
+                        Button(
+                            onClick = {
+                                trackingEvent(TrackingEvent.StopTrackingService)
+                                trackingStarted = false
+                            },
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = large, vertical = medium)
+                        ) {
+                            Text(text = "Stop", modifier = modifier.padding(vertical = small))
+                        }
+//                        Button(
+//                            onClick = {
+//                                trackingEvent(TrackingEvent.PauseTrackingService)
+//                            },
+//                            modifier = modifier
+//                                .fillMaxWidth()
+//                                .padding(horizontal = large, vertical = medium)
+//                        ) {
+//                            Text(text = "Pause", modifier = modifier.padding(vertical = small))
+//                        }
+                    }
                 }
-//                Row {
-//                    Button(onClick = { /*TODO*/ }) {}
-//                    Button(onClick = { /*TODO*/ }) {}
-//                }
             }
 
         }

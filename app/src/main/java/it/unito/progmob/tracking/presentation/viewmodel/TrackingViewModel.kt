@@ -3,12 +3,12 @@ package it.unito.progmob.tracking.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.core.domain.state.CaloriesState
 import it.unito.progmob.core.domain.state.StepsState
-import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import it.unito.progmob.core.domain.state.WalkState
+import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.tracking.presentation.TrackingEvent
+import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -54,26 +54,26 @@ class TrackingViewModel @Inject constructor(
     }
 
     private fun startTrackingService() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.startTrackingUseCase()
         }
     }
 
     private fun resumeTrackingService() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases
         }
     }
 
     private fun pauseTrackingService() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
 
         }
     }
 
     private fun stopTrackingService() {
-        viewModelScope.launch(Dispatchers.Default) {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            trackingUseCases.stopTrackingUseCase()
         }
     }
 

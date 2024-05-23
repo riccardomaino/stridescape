@@ -66,7 +66,7 @@ object AppModule {
     // invece che la classe concreta.
     @Provides
     @Singleton
-    fun provideLocationServiceManager(
+    fun provideTrackingServiceManager(
         @ApplicationContext context: Context
     ): TrackingServiceManager = TrackingServiceManagerImpl(context)
 

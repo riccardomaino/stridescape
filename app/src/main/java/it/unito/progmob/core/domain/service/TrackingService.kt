@@ -30,15 +30,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -119,6 +114,7 @@ class TrackingService : Service(){
     }
 
     override fun onDestroy() {
+        Log.d(TAG, "onDestroy called")
         super.onDestroy()
         trackingServiceScope.cancel()
     }
@@ -175,7 +171,7 @@ class TrackingService : Service(){
                 updatedNotification.build()
             )
             Log.d(TAG, "WalkState 'latestPoint': ${_walkState.value.pathPoints.lastOrNull().toString()}")
-            Log.d(TAG, "WalkState 'distanceInMeters': ${_walkState.value.isTracking}")
+            Log.d(TAG, "WalkState 'isTracking': ${_walkState.value.isTracking}")
             Log.d(TAG, "WalkState 'timeInMillis': ${_walkState.value.timeInMillis}")
             Log.d(TAG, "WalkState 'speedInKMH': ${_walkState.value.speedInKMH}")
             Log.d(TAG, "WalkState 'distanceInMeters': ${_walkState.value.distanceInMeters}")

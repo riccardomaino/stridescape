@@ -3,6 +3,7 @@ package it.unito.progmob.core.data.manager
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Looper
+import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -57,12 +58,15 @@ class LocationTrackingManagerImpl @Inject constructor(
     override fun startTrackingLocation(intervalMillis: Long): Flow<Location> {
         return callbackFlow {
             if(locationCallback == null){
+                Log.d("Location", "LocationCallback is null")
                 locationCallback = object : LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult) {
                         super.onLocationResult(locationResult)
+                        Log.d("Location", "LocationResult: ${locationResult.locations}")
                         locationResult.locations.lastOrNull()?.let { location ->
                             launch {
                                 send(location)
+                                Log.d("Location", "Location: ${location.latitude}, ${location.longitude}")
                             }
                         }
                     }
