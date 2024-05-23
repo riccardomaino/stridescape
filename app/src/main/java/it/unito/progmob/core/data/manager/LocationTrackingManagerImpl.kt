@@ -8,6 +8,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.Priority
 import it.unito.progmob.core.domain.manager.LocationTrackingManager
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -74,6 +75,7 @@ class LocationTrackingManagerImpl @Inject constructor(
             }
 
             val request = LocationRequest.Builder(intervalMillis)
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .setMinUpdateIntervalMillis(intervalMillis)
                 .build()
 

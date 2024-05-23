@@ -117,6 +117,8 @@ class TrackingService : Service(){
         Log.d(TAG, "onDestroy called")
         super.onDestroy()
         trackingServiceScope.cancel()
+        coroutineJob?.cancel()
+        coroutineJob = null
     }
 
     /**
@@ -139,9 +141,6 @@ class TrackingService : Service(){
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(getString(R.string.location_notification_content_title))
             .setContentText("00:00:00")
-            .setStyle(NotificationCompat.BigTextStyle().setBigContentTitle(
-                "Latitude: 0.0, Longitude: 0.0"
-            ))
             .setContentIntent(getTrackingNotificationPendingIntent())
             .setAutoCancel(false)
             .setOngoing(true)
@@ -153,7 +152,7 @@ class TrackingService : Service(){
         }
 
         coroutineJob = combine(
-            locationTrackingManager.startTrackingLocation(1000L),
+            locationTrackingManager.startTrackingLocation(5000L),
             timeTrackingManager.startTrackingTime()
             ){ location, time ->
 
@@ -168,16 +167,10 @@ class TrackingService : Service(){
 
             val updatedNotification = notification
                 .setContentText(TimeUtils.formatMillisTime(time, "HH:mm:ss"))
-                .setStyle(NotificationCompat.BigTextStyle().setBigContentTitle(
-                    "Latitude: ${location.latitude}, Longitude: ${location.longitude}"
-                ))
             notificationManager.notify(
                 NOTIFICATION_ID,
                 updatedNotification.build()
             )
-            Log.d(TAG, "WalkState 'latestPoint': ${_walkState.value.pathPoints.lastOrNull().toString()}")
-            Log.d(TAG, "WalkState 'distanceInMeters': ${_walkState.value.distanceInMeters}")
-            Log.d(TAG, "Working in thread ${Thread.currentThread().name}")
         }.launchIn(trackingServiceScope)
 
 
@@ -257,12 +250,11 @@ class TrackingService : Service(){
             if(prevPathPoint != newPathPoint){
                 _walkState.update { walkState ->
                     walkState.copy(
-                        distanceInMeters = WalkUtils.getDistanceBetweenTwoPathPoints(
-                            prevPathPoint, newPathPoint
-                        ),
+                        distanceInMeters = walkState.distanceInMeters + WalkUtils.getDistanceBetweenTwoPathPoints(prevPathPoint, newPathPoint),
                         pathPoints = walkState.pathPoints + newPathPoint
                     )
                 }
+                Log.d(TAG, "Added New PathPoint: ${newPathPoint}. New Distance: ${_walkState.value.distanceInMeters}m")
             }
         } ?: _walkState.update { walkState ->
                 walkState.copy(
@@ -286,13 +278,13 @@ class TrackingService : Service(){
             Log.e(TAG, "Access Fine Location permission is not granted")
             hasPermissions = false
         }
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-//            val activityRecognitionPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
-//            if(activityRecognitionPermission == PackageManager.PERMISSION_DENIED){
-//                Log.e(TAG, "Activity recognition permission is not granted")
-//                hasPermissions = false
-//            }
-//        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            val activityRecognitionPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+            if(activityRecognitionPermission == PackageManager.PERMISSION_DENIED){
+                Log.e(TAG, "Activity recognition permission is not granted")
+                hasPermissions = false
+            }
+        }
         return hasPermissions
     }
 
