@@ -4,9 +4,10 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Date
-import java.util.Locale
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 object TimeUtils {
     /**
@@ -27,14 +28,17 @@ object TimeUtils {
     }
 
     /**
-     * It turns the time in milliseconds into a human readable string
+     * It turns the time in milliseconds into the HH:mm:ss format
      *
-     * @param timeInMillis
-     * @param pattern the formatter of the string, e.g. "dd MMMM, HH:mm:ss"
+     * @param timeInMillis the time in milliseconds
      * @return a human readable string
      */
-    fun formatMillisTime(timeInMillis: Long, pattern: String): String {
-        val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-        return formatter.format(timeInMillis)
+    fun formatMillisTime(timeInMillis: Long): String {
+        val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
+        return duration.toComponents { hours, minutes, seconds, _ ->
+            "%02d:%02d:%02d".format(hours, minutes, seconds)
+        }
+//        val formatter = SimpleDateFormat(pattern)
+//        return formatter.format(Date(timeInMillis))
     }
 }

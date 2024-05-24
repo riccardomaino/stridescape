@@ -1,45 +1,41 @@
 package it.unito.progmob.core.domain.state
 
-import android.util.Log
 import it.unito.progmob.core.domain.model.PathPoint
 import it.unito.progmob.core.domain.util.WalkUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.math.RoundingMode
 
 class WalkStateHandler {
-    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     /**
      * The [MutableStateFlow] object that holds the current state of the walk. It is exposed to a
      * read-only state flow to prevent external modification of the state.
      */
-    private var _walkState: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
-    val walkState = _walkState.asStateFlow()
+    private val _walkState: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
+    var walkState = _walkState.asStateFlow()
 
-    private var _walkStateFlow: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
-    val walkStateFlow = _walkStateFlow.asStateFlow()
-
-    private var _lastCompletedWalkState: MutableStateFlow<WalkState>? = null
-    val lastWalkState = _lastCompletedWalkState?.asStateFlow()
+    private var _lastCompletedWalkState: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
+    val lastWalkState = _lastCompletedWalkState.asStateFlow()
 
     private var initialSteps: Int? = null
 
     fun trackingServiceStarted(){
-        _walkState = MutableStateFlow(WalkState())
-        _walkStateFlow = MutableStateFlow(WalkState())
+        _walkState.update {
+            it.copy(
+                pathPoints = emptyList(),
+                distanceInMeters = 0,
+                speedInKMH = 0.0f,
+                steps = 0,
+                timeInMillis = 0L
+            )
+        }
         initialSteps = null
     }
 
     fun trackingServiceStopped(){
-        _lastCompletedWalkState = MutableStateFlow(WalkState())
-        _lastCompletedWalkState?.update {lastCompletedWalkState ->
-            lastCompletedWalkState.copy(
+        _lastCompletedWalkState.update {
+            it.copy(
                 pathPoints = _walkState.value.pathPoints,
                 distanceInMeters = _walkState.value.distanceInMeters,
                 speedInKMH = _walkState.value.speedInKMH,
@@ -48,6 +44,7 @@ class WalkStateHandler {
             )
         }
     }
+
 
     /**
      * Updates the [WalkState] according to the newPathPoint received from flow of the location and
@@ -83,13 +80,10 @@ class WalkStateHandler {
                                     .setScale(2, RoundingMode.HALF_UP).toFloat()
                             )
                         }
-                        Log.d(TAG, "updateWalkStatePathPointAndTime(): added PathPoint! Lat:${newPathPoint.latLng.latitude} Long:${newPathPoint.latLng.longitude}")
-                        Log.d(TAG,"updateWalkStatePathPointAndTime(): new distance ${_walkState.value.distanceInMeters}m")
                     }
                 }
             } else  {
                 _walkState.update {walkState ->
-                    Log.d(TAG, "updateWalkStatePathPointAndTime(): added NEW START PathPoint! Lat:${newPathPoint.latLng.latitude} Long:${newPathPoint.latLng.longitude}")
                     walkState.copy(
                         pathPoints = walkState.pathPoints + newPathPoint,
                         speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
@@ -98,7 +92,6 @@ class WalkStateHandler {
                 }
             }
         } ?: _walkState.update { walkState ->
-            Log.d(TAG, "updateWalkStatePathPointAndTime(): added FIRST START PathPoint! Lat:${newPathPoint.latLng.latitude} Long:${newPathPoint.latLng.longitude}")
             walkState.copy(
                 pathPoints = walkState.pathPoints + newPathPoint,
                 speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
@@ -106,14 +99,6 @@ class WalkStateHandler {
             )
         }
     }
-
-//    fun updateWalkStateTime(time: Long){
-//        _walkState.update {
-//            it.copy(
-//                timeInMillis = time
-//            )
-//        }
-//    }
 
     /**
      * Updates the [WalkState] according to the isTracking value
@@ -140,7 +125,6 @@ class WalkStateHandler {
                     steps = newSteps - initialSteps
                 )
             }
-            Log.d(TAG, "updateWalkStateSteps(): updated steps! ${newSteps - initialSteps} steps taken!")
         } ?: {
             initialSteps = newSteps
         }
@@ -157,7 +141,6 @@ class WalkStateHandler {
                 pathPoints = walkState.pathPoints + emptyPoint,
             )
         }
-        Log.d(TAG, "updateWalkStatePathPointPaused(): added EmptyPoint!")
     }
 
 

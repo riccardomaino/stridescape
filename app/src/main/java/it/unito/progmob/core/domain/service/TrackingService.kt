@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * A service that tracks the user's location and displays a notification with the current location.
@@ -69,6 +70,7 @@ class TrackingService : Service() {
      * taken by the user.
      */
     @Inject
+    @Named("StepCounterSensor")
     lateinit var stepCounterSensor: MeasurableSensor
 
     /**
@@ -115,7 +117,7 @@ class TrackingService : Service() {
      * Handles the destruction of the service. This method is called when the service is destroyed.
      */
     override fun onDestroy() {
-        Log.d(TAG, "Fun onDestroy() called")
+        Log.d(TAG, "onDestroy() called")
         stop()
         super.onDestroy()
     }
@@ -126,9 +128,10 @@ class TrackingService : Service() {
      * [LocationTrackingManager].
      */
     private fun start() {
+        Log.d(TAG, "start(): called")
         // Check if the application has all the permissions needed to start the service
         if (applicationContext.hasAllPermissions()) {
-            Log.e(TAG, "start(): there are some permissions which aren't granted")
+            Log.e(TAG, "start(): Error, there are some permissions which aren't granted")
             return
         }
 
@@ -144,18 +147,18 @@ class TrackingService : Service() {
         walkStateHandler.updateWalkStateTracking(true)
 
         // Get the NotificationManager used to notify the notification
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // Create the NotificationCompat.Builder used to build all the notifications
         val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setSmallIcon(R.drawable.icon)
             .setContentTitle(getString(R.string.notification_content_title))
-            .setContentText("Time: 00:00:00 | Steps: 0")
+            .setContentText("Time: 00:00:00")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("Steps: 0"))
             .setContentIntent(getPendingIntent())
             .setAutoCancel(false)
             .setOngoing(true)
-
 
         // Combine the location and time tracking flows to update the walk state and the notification
         combine(
@@ -163,19 +166,15 @@ class TrackingService : Service() {
             timeTrackingManager.startTrackingTime()
         ) { location, time ->
             val newPathPoint = PathPoint.LocationPoint(
-                LatLng(location.latitude, location.longitude),
-                location.speed
+                LatLng(location.latitude, location.longitude), location.speed
             )
-
             // Update the walk state with the new path point and time
             walkStateHandler.updateWalkStatePathPointAndTime(newPathPoint, time)
             // Notify the the updated notification
             val updatedNotification = notification
-                .setContentText("Time: ${TimeUtils.formatMillisTime(time, "HH:mm:ss")}" +
-                        " | Steps: ${walkStateHandler.walkState.value.steps}")
+                .setContentText("Time: ${TimeUtils.formatMillisTime(time)}")
             notificationManager.notify(
-                NOTIFICATION_ID,
-                updatedNotification.build()
+                NOTIFICATION_ID, updatedNotification.build()
             )
         }.launchIn(trackingServiceScope)
 
@@ -189,17 +188,14 @@ class TrackingService : Service() {
                 walkStateHandler.updateWalkStateSteps(newSteps)
                 // Notify the the updated notification
                 val updatedNotification = notification
-                    .setContentText("Time: ${TimeUtils.formatMillisTime(walkStateHandler.walkState.value.timeInMillis, "hh:mm:ss")} " +
-                            " | Steps: ${walkStateHandler.walkState.value.steps}"
-                    )
+                    .setStyle(NotificationCompat.BigTextStyle().bigText("Steps: ${walkStateHandler.walkState.value.steps}"))
                 notificationManager.notify(
-                    NOTIFICATION_ID,
-                    updatedNotification.build()
+                    NOTIFICATION_ID, updatedNotification.build()
                 )
             }
         }
 
-        if(!hasBeenResumed) {
+        if (!hasBeenResumed) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 startForeground(
                     NOTIFICATION_ID,
@@ -208,29 +204,25 @@ class TrackingService : Service() {
                 )
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(
-                    NOTIFICATION_ID,
-                    notification.build(),
-                    FOREGROUND_SERVICE_TYPE_LOCATION
+                    NOTIFICATION_ID, notification.build(), FOREGROUND_SERVICE_TYPE_LOCATION
                 )
             } else {
                 startForeground(NOTIFICATION_ID, notification.build())
             }
-            Log.d(TAG, "start(): starting the foreground service")
         }
     }
 
 
     private fun resume() {
+        Log.d(TAG, "resume() called")
         hasBeenResumed = true
-        Log.d(TAG, "resume(): setting hasBeenResumed = true")
         start()
     }
 
     private fun pause() {
+        Log.d(TAG, "pause() called")
         trackingServiceScope.cancel()
-        Log.d(TAG, "pause(): cancelled all coroutines in the trackingServiceScope")
         stepCounterSensor.stopListening()
-        Log.d(TAG, "pause(): stop listening to the StepCounterSensor")
         // Update the walk state isTracking field to false
         walkStateHandler.updateWalkStateTracking(false)
         // Update the walk state path adding an empty point
@@ -238,17 +230,14 @@ class TrackingService : Service() {
     }
 
     /**
-     * Stops the location tracking service. This method removes the notification and stops the
-     * service.
+     * Stops the tracking service. This method removes the notification and stops the service.
      */
     private fun stop() {
+        Log.d(TAG, "stop() called")
         trackingServiceScope.cancel()
-        Log.d(TAG, "stop(): cancelled all coroutines in the trackingServiceScope")
         timeTrackingManager.stopTrackingTime()
-        Log.d(TAG, "stop(): reset the timer to zero")
         stepCounterSensor.stopListening()
-        Log.d(TAG, "stop(): stop listening to the StepCounterSensor")
-        // hasBeenResumed = false
+        hasBeenResumed = false
         walkStateHandler.updateWalkStateTracking(false)
         walkStateHandler.updateWalkStatePathPointPaused()
         walkStateHandler.trackingServiceStopped()

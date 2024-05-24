@@ -64,8 +64,6 @@ object AppModule {
     @Singleton
     fun provideTimeTrackingManager(): TimeTrackingManager = TimeTrackingManagerImpl()
 
-    // Potrebbe essere un @Binds invece che un @Provides. @Binds permette di iniettare l'interfaccia
-    // invece che la classe concreta.
     @Provides
     @Singleton
     fun provideTrackingServiceManager(
@@ -78,13 +76,14 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("StepCounterSensor")
     fun provideStepCounterSensor(
         @ApplicationContext context: Context
     ): MeasurableSensor = StepCounterSensor(context)
 
-    @Named("accelerometer")
     @Provides
     @Singleton
+    @Named("AccelerometerSensor")
     fun provideAccelerometerSensor(
         @ApplicationContext context: Context
     ): MeasurableSensor = AccelerometerSensor(context)

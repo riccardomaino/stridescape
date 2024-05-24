@@ -5,21 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
-import it.unito.progmob.core.domain.state.WalkStateHandler
 import it.unito.progmob.core.domain.state.WalkState
+import it.unito.progmob.core.domain.state.WalkStateHandler
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.tracking.presentation.TrackingEvent
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
@@ -33,29 +31,32 @@ import kotlin.math.sqrt
 @HiltViewModel
 class TrackingViewModel @Inject constructor(
     private val trackingUseCases: TrackingUseCases,
-    @Named("accelerometer") private val accelerometerSensor: MeasurableSensor,
-    private val stepCounterSensor: MeasurableSensor,
+    @Named("AccelerometerSensor") private val accelerometerSensor: MeasurableSensor,
+    @Named("StepCounterSensor") private val stepCounterSensor: MeasurableSensor,
     private val walkStateHandler: WalkStateHandler
 ): ViewModel() {
     // The StateFlow of the WalkState obtained through the WalkStateHandler
-    private val _walkState: StateFlow<WalkState> = walkStateHandler.walkStateFlow
+    private val _walkState: StateFlow<WalkState> = walkStateHandler.walkState
 
     // The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
     private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
-    val uiTrackingState: StateFlow<UiTrackingState> = combine(_walkState, _uiTrackingState) { walkState, _ ->
-        Log.d(TAG, "UI UPDATE: $walkState")
-        UiTrackingState(
-            isTracking = walkState.isTracking,
-            distanceInMeters = walkState.distanceInMeters,
-            speedInKMH = walkState.speedInKMH,
-            pathPoints = walkState.pathPoints,
-            steps = walkState.steps,
-            caloriesBurnt = WalkUtils.getCaloriesBurnt(userWeight, walkState.distanceInMeters)
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiTrackingState())
+    val uiTrackingState: StateFlow<UiTrackingState> = _uiTrackingState.asStateFlow()
+//    val uiTrackingState: StateFlow<UiTrackingState> = combine(_walkState, _uiTrackingState) { walkState, _ ->
+//        Log.d(TAG, "UI UPDATE: $walkState")
+//        UiTrackingState(
+//            isTracking = walkState.isTracking,
+//            distanceInMeters = walkState.distanceInMeters,
+//            speedInKMH = walkState.speedInKMH,
+//            pathPoints = walkState.pathPoints,
+//            steps = walkState.steps,
+//            caloriesBurnt = WalkUtils.getCaloriesBurnt(userWeight, walkState.distanceInMeters)
+//        )
+//    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), UiTrackingState())
 
-    // The user weight and height are used to calculate the calories burnt
+    // The user weight used to calculate the calories burnt
     private var userWeight: Float = 0.0f
+
+    // The user height used to calculate the calories burnt
     private var userHeight: Int = 0
 
 
@@ -78,10 +79,19 @@ class TrackingViewModel @Inject constructor(
             }
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            logging()
-        }
-
+        _walkState.onEach { walkState ->
+            Log.d(TAG, "UI WALK UPDATE: $walkState")
+            _uiTrackingState.update {
+                it.copy(
+                    isTracking = walkState.isTracking,
+                    distanceInMeters = walkState.distanceInMeters,
+                    speedInKMH = walkState.speedInKMH,
+                    pathPoints = walkState.pathPoints,
+                    steps = walkState.steps,
+                    caloriesBurnt = WalkUtils.getCaloriesBurnt(userWeight, walkState.distanceInMeters)
+                )
+            }
+        }.launchIn(viewModelScope)
 
         accelerometerSensor.startListening()
         stepCounterSensor.startListening()
@@ -121,13 +131,6 @@ class TrackingViewModel @Inject constructor(
             is TrackingEvent.ResumeTrackingService-> resumeTrackingService()
             is TrackingEvent.PauseTrackingService -> pauseTrackingService()
             is TrackingEvent.StopTrackingService -> stopTrackingService()
-        }
-    }
-
-    private suspend fun logging(){
-        while(true) {
-            delay(5000)
-            Log.d(TAG, "UI REFERENCE TO WALKSTATE: ${_walkState.value}")
         }
     }
 
