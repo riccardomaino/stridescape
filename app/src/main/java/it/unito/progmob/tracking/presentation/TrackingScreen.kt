@@ -82,6 +82,9 @@ fun TrackingScreen(
     var trackingStarted by remember {
         mutableStateOf(false)
     }
+    var trackingPause by remember {
+        mutableStateOf(false)
+    }
     val uiTrackingState by uiTrackingState.collectAsState()
 
     Scaffold(
@@ -185,37 +188,38 @@ fun TrackingScreen(
                         Text(text = "Start", modifier = modifier.padding(vertical = small))
                     }
                 } else {
-                    Row(modifier = modifier.fillMaxWidth()) {
+                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                         Button(
                             onClick = {
                                 trackingEvent(TrackingEvent.StopTrackingService)
-                                trackingStarted = false
                             },
                             modifier = modifier
-                                .fillMaxWidth(0.4f)
-                                .padding(horizontal = large, vertical = medium)
+                                .padding(horizontal = large, vertical = medium),
                         ) {
                             Text(text = "Stop", modifier = modifier.padding(vertical = small))
                         }
-                        Button(
-                            onClick = {
-                                trackingEvent(TrackingEvent.PauseTrackingService)
-                            },
-                            modifier = modifier
-                                .fillMaxWidth(0.4f)
-                                .padding(horizontal = large, vertical = medium)
-                        ) {
-                            Text(text = "Pause", modifier = modifier.padding(vertical = small))
-                        }
-                        Button(
-                            onClick = {
-                                trackingEvent(TrackingEvent.ResumeTrackingService)
-                            },
-                            modifier = modifier
-                                .fillMaxWidth(0.4f)
-                                .padding(horizontal = large, vertical = medium)
-                        ) {
-                            Text(text = "Resume", modifier = modifier.padding(vertical = small))
+                        if(trackingPause) {
+                            Button(
+                                onClick = {
+                                    trackingEvent(TrackingEvent.ResumeTrackingService)
+                                    trackingPause = false
+                                },
+                                modifier = modifier
+                                    .padding(horizontal = large, vertical = medium)
+                            ) {
+                                Text(text = "Resume", modifier = modifier.padding(vertical = small))
+                            }
+                        } else {
+                            Button(
+                                onClick = {
+                                    trackingEvent(TrackingEvent.PauseTrackingService)
+                                    trackingPause = true
+                                },
+                                modifier = modifier
+                                    .padding(horizontal = large, vertical = medium)
+                            ) {
+                                Text(text = "Pause", modifier = modifier.padding(vertical = small))
+                            }
                         }
                     }
                 }
