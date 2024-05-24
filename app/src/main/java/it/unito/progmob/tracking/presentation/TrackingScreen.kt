@@ -1,8 +1,12 @@
 package it.unito.progmob.tracking.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -10,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.DirectionsWalk
@@ -19,12 +24,14 @@ import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,17 +51,20 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import it.unito.progmob.R
 import it.unito.progmob.tracking.presentation.components.WalkingStat
+import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TrackingScreen(
     modifier: Modifier = Modifier,
     trackingEvent: (TrackingEvent) -> Unit,
-    navController: NavController
+    navController: NavController,
+    uiTrackingState: StateFlow<UiTrackingState>
 ) {
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
@@ -72,6 +82,7 @@ fun TrackingScreen(
     var trackingStarted by remember {
         mutableStateOf(false)
     }
+    val uiTrackingState by uiTrackingState.collectAsState()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -102,6 +113,7 @@ fun TrackingScreen(
         Box(
             modifier = modifier.padding(padding)
         ) {
+            ShowMapLoadingProgressBar(isMapLoaded)
             GoogleMap(
                 modifier = modifier
                     .fillMaxSize()
@@ -133,7 +145,7 @@ fun TrackingScreen(
                         iconContentDescription = " ",
                         color = Color.Blue,
                         title = "Steps",
-                        content = 300.toString()
+                        content = uiTrackingState.steps.toString()
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
@@ -141,7 +153,7 @@ fun TrackingScreen(
                         iconContentDescription = " ",
                         color = Color.Red,
                         title = "Calories",
-                        content = 120.toString()
+                        content = uiTrackingState.caloriesBurnt.toString()
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
@@ -149,7 +161,7 @@ fun TrackingScreen(
                         iconContentDescription = " ",
                         title = "Km.",
                         color = Color(0xFF0C9B12),
-                        content = 120.toString()
+                        content = (uiTrackingState.distanceInMeters/1000).toString()
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
@@ -211,6 +223,23 @@ fun TrackingScreen(
 
         }
     }
+}
 
-
+@Composable
+private fun BoxScope.ShowMapLoadingProgressBar(
+    isMapLoaded: Boolean = false
+) {
+    AnimatedVisibility(
+        modifier = Modifier
+            .matchParentSize(),
+        visible = !isMapLoaded,
+        enter = EnterTransition.None,
+        exit = fadeOut(),
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .wrapContentSize()
+        )
+    }
 }

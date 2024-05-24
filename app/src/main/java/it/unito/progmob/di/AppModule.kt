@@ -16,6 +16,7 @@ import it.unito.progmob.core.domain.manager.DataStoreManager
 import it.unito.progmob.core.domain.manager.TrackingServiceManager
 import it.unito.progmob.core.domain.manager.LocationTrackingManager
 import it.unito.progmob.core.domain.manager.TimeTrackingManager
+import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
 import it.unito.progmob.home.domain.usecase.DismissPermissionDialogUseCase
@@ -35,6 +36,7 @@ import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StopTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -75,6 +77,13 @@ object AppModule {
     fun provideStepCounterSensor(
         @ApplicationContext context: Context
     ): MeasurableSensor = StepCounterSensor(context)
+
+    @Named("accelerometer")
+    @Provides
+    @Singleton
+    fun provideAccelerometerSensor(
+        @ApplicationContext context: Context
+    ): MeasurableSensor = AccelerometerSensor(context)
 
     @Provides
     @Singleton

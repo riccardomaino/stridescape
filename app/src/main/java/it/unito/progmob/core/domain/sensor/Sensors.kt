@@ -11,3 +11,11 @@ class StepCounterSensor(
     sensorFeature = PackageManager.FEATURE_SENSOR_STEP_COUNTER,
     sensorType = Sensor.TYPE_STEP_COUNTER
 )
+
+class AccelerometerSensor(
+    context: Context
+): AndroidSensor(
+    context = context,
+    sensorFeature = PackageManager.FEATURE_SENSOR_ACCELEROMETER,
+    sensorType = Sensor.TYPE_ACCELEROMETER
+)
