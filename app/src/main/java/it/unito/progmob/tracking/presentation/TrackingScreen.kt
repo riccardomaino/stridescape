@@ -195,6 +195,16 @@ fun TrackingScreen(
                         ) {
                             Text(text = "Pause", modifier = modifier.padding(vertical = small))
                         }
+                        Button(
+                            onClick = {
+                                trackingEvent(TrackingEvent.ResumeTrackingService)
+                            },
+                            modifier = modifier
+                                .fillMaxWidth(0.4f)
+                                .padding(horizontal = large, vertical = medium)
+                        ) {
+                            Text(text = "Resume", modifier = modifier.padding(vertical = small))
+                        }
                     }
                 }
             }

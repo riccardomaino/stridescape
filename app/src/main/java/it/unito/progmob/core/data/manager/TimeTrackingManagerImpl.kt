@@ -20,15 +20,6 @@ class TimeTrackingManagerImpl : TimeTrackingManager {
         }
     }
 
-    override fun resumeTrackingTime() {
-        startTrackingTime()
-    }
-
-    override fun pauseTrackingTime() {
-        TODO("Not yet implemented")
-    }
-
-
     override fun stopTrackingTime() {
         timeElapsed = 0L
     }
