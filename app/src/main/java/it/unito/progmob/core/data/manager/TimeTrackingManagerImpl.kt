@@ -13,8 +13,8 @@ class TimeTrackingManagerImpl : TimeTrackingManager {
     override fun startTrackingTime(): Flow<Long> {
         return flow {
             while(currentCoroutineContext().isActive){
-                timeElapsed += 1000L
                 delay(1000)
+                timeElapsed += 1000L
                 emit(timeElapsed)
             }
         }

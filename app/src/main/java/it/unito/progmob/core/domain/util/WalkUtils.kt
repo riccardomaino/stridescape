@@ -11,13 +11,13 @@ object WalkUtils {
      * @param firstPathPoint the first PathPoint
      * @param secondPathPoint the second PathPoint
      */
-    fun getDistanceBetweenTwoPathPoints(firstPathPoint: PathPoint, secondPathPoint: PathPoint): Int {
+    fun getDistanceBetweenTwoPathPoints(firstPathPoint: PathPoint.LocationPoint, secondPathPoint: PathPoint.LocationPoint): Int {
         val result = FloatArray(1) // Float array used to store the result from the Location.distanceBetween method
         Location.distanceBetween(
-            firstPathPoint.latitude,
-            firstPathPoint.longitude,
-            secondPathPoint.latitude,
-            secondPathPoint.longitude,
+            firstPathPoint.latLng.latitude,
+            firstPathPoint.latLng.longitude,
+            secondPathPoint.latLng.latitude,
+            secondPathPoint.latLng.longitude,
             result
         )
         return result[0].roundToInt()

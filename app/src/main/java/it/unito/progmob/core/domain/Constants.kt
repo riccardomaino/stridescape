@@ -8,4 +8,7 @@ object Constants {
     const val USER_HEIGHT = "user_height"
     const val USER_NAME = "user_name"
 
+    // Tracking Service
+    const val LOCATION_TRACKING_INTERVAL = 5000L
+
 }

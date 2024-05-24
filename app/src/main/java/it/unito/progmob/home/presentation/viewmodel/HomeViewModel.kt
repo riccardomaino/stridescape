@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.unito.progmob.tracking.domain.stepscounter.MeasurableSensor
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
@@ -32,22 +31,17 @@ class HomeViewModel @Inject constructor(
     var stepsCount = MutableStateFlow(0)
 
     // Array of permissions to request computed based on the SDK version
-    val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        arrayOf(
-            Manifest.permission.ACTIVITY_RECOGNITION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
+    val permissionsToRequest = mutableListOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+    ).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.POST_NOTIFICATIONS
-        )
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        arrayOf(
-            Manifest.permission.ACTIVITY_RECOGNITION,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    } else {
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    }
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
+        }
+    }.toTypedArray()
+
 
     init {
         val calendarInfo = Calendar.getInstance()

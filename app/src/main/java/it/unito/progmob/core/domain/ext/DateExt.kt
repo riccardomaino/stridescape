@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.util
+package it.unito.progmob.core.domain.ext
 
 import java.util.Calendar
 import java.util.Date

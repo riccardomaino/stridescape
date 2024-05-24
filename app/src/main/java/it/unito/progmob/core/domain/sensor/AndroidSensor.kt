@@ -1,4 +1,4 @@
-package it.unito.progmob.tracking.domain.stepscounter
+package it.unito.progmob.core.domain.sensor
 
 import android.content.Context
 import android.hardware.Sensor
@@ -44,7 +44,7 @@ abstract class AndroidSensor(
         }
         // Initialize the sensor manager and sensor if they are not already initialized (first time
         // we call this function).
-        if(!::sensorManager.isInitialized && sensor == null) {
+        if(!this::sensorManager.isInitialized && sensor == null) {
             sensorManager = context.getSystemService(SensorManager::class.java) as SensorManager
             sensor = sensorManager.getDefaultSensor(sensorType)
         }
@@ -61,7 +61,7 @@ abstract class AndroidSensor(
     override fun stopListening() {
         // if the sensor doesn't exists or the sensor manager is not initialized we just return
         // form the function
-        if(!doesSensorExists || !::sensorManager.isInitialized){
+        if(!this.doesSensorExists || !this::sensorManager.isInitialized){
             return
         }
         // Now we unregister the listener from the sensor

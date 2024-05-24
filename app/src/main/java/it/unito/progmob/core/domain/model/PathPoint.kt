@@ -1,7 +1,8 @@
 package it.unito.progmob.core.domain.model
 
-data class PathPoint(
-    val latitude: Double,
-    val longitude: Double,
-    val speed: Float
-)
+import com.google.android.gms.maps.model.LatLng
+
+sealed interface PathPoint {
+    data class LocationPoint(val latLng: LatLng, val speed: Float) : PathPoint
+    data object EmptyPoint : PathPoint
+}

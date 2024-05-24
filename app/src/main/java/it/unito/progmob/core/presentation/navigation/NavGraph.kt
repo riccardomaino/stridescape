@@ -80,6 +80,7 @@ fun NavGraph(
                 route = Route.TrackingScreenRoute.route
             ) {
                 val trackingViewModel = hiltViewModel<TrackingViewModel>()
+                val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
                     navController = navController

@@ -1,10 +1,10 @@
 package it.unito.progmob.tracking.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.state.CaloriesState
-import it.unito.progmob.core.domain.state.StepsState
 import it.unito.progmob.core.domain.state.WalkState
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.tracking.presentation.TrackingEvent
@@ -23,22 +23,21 @@ class TrackingViewModel @Inject constructor(
 ): ViewModel() {
     // State of the walk as a MutableStateFlow which is NOT exposed to the UI
     private val _walkState = MutableStateFlow(WalkState())
+    // private val _walkState = TrackingService._walkState
 
     // State of the calories as a MutableStateFlow which is NOT exposed to the UI
     private val _caloriesState = MutableStateFlow(CaloriesState())
 
-    // State of the steps as a MutableStateFlow which is NOT exposed to the UI
-    private val _stepsState = MutableStateFlow(StepsState())
-
     // Total state is a combination of the previous three states which is exposed as a StateFlow to the UI
-    private val _uiTrackingState = MutableStateFlow(UiTrackingState())
-    val uiTrackingState = combine(_walkState, _stepsState, _caloriesState, _uiTrackingState) { walkState, stepsState, caloriesState, uiTrackingState ->
-        uiTrackingState.copy(
-            isTracking = true,
+//    private val _uiTrackingState = MutableStateFlow(UiTrackingState())
+    val uiTrackingState = combine(_walkState, _caloriesState) { walkState, caloriesState ->
+        Log.d(TAG, "Reference to WalkState: $walkState")
+        UiTrackingState(
+            isTracking = walkState.isTracking,
             distanceInMeters = walkState.distanceInMeters,
             speedInKMH = walkState.speedInKMH,
             pathPoints = walkState.pathPoints,
-            steps = stepsState.steps,
+            steps = walkState.steps,
             caloriesBurnt = caloriesState.caloriesBurnt
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiTrackingState())
@@ -75,6 +74,10 @@ class TrackingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.stopTrackingUseCase()
         }
+    }
+
+    companion object{
+        private val TAG = TrackingViewModel::class.java.simpleName
     }
 
 }
