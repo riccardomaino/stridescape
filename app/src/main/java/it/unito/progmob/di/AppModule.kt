@@ -19,18 +19,18 @@ import it.unito.progmob.core.domain.manager.TimeTrackingManager
 import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
+import it.unito.progmob.core.domain.state.WalkStateHandler
 import it.unito.progmob.home.domain.usecase.DismissPermissionDialogUseCase
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.domain.usecase.PermissionResultUseCase
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
-import it.unito.progmob.onboarding.domain.usecase.ReadOnboardingEntryUseCase
-import it.unito.progmob.onboarding.domain.usecase.ReadUserHeightUseCase
-import it.unito.progmob.onboarding.domain.usecase.ReadUserNameUseCase
-import it.unito.progmob.onboarding.domain.usecase.ReadUserWeightUseCase
-import it.unito.progmob.onboarding.domain.usecase.SaveOnboardingEntryUseCase
-import it.unito.progmob.onboarding.domain.usecase.SaveUserHeightUseCase
-import it.unito.progmob.onboarding.domain.usecase.SaveUserNameUseCase
-import it.unito.progmob.onboarding.domain.usecase.SaveUserWeightUseCase
+import it.unito.progmob.core.domain.usecase.ReadOnboardingEntryUseCase
+import it.unito.progmob.core.domain.usecase.ReadUserHeightEntryUseCase
+import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
+import it.unito.progmob.core.domain.usecase.SaveOnboardingEntryUseCase
+import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
+import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
+import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -74,6 +74,10 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providesWalkStateHandler() = WalkStateHandler()
+
+    @Provides
+    @Singleton
     fun provideStepCounterSensor(
         @ApplicationContext context: Context
     ): MeasurableSensor = StepCounterSensor(context)
@@ -92,15 +96,9 @@ object AppModule {
     ) = OnBoardingUseCases(
         ReadOnboardingEntryUseCase(dataStoreManager),
         SaveOnboardingEntryUseCase(dataStoreManager),
-
-        SaveUserNameUseCase(dataStoreManager),
-        ReadUserNameUseCase(dataStoreManager),
-
-        SaveUserHeightUseCase(dataStoreManager),
-        ReadUserHeightUseCase(dataStoreManager),
-
-        SaveUserWeightUseCase(dataStoreManager),
-        ReadUserWeightUseCase(dataStoreManager)
+        SaveUserNameEntryUseCase(dataStoreManager),
+        SaveUserWeightEntryUseCase(dataStoreManager),
+        SaveUserHeightEntryUseCase(dataStoreManager)
     )
 
     @Provides
@@ -113,11 +111,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTrackingUseCases(
+        dataStoreManager: DataStoreManager,
         trackingServiceManager: TrackingServiceManager
     ) = TrackingUseCases(
         StartTrackingUseCase(trackingServiceManager),
         ResumeTrackingUseCase(trackingServiceManager),
         PauseTrackingUseCase(trackingServiceManager),
-        StopTrackingUseCase(trackingServiceManager)
+        StopTrackingUseCase(trackingServiceManager),
+        ReadUserWeightEntryUseCase(dataStoreManager),
+        ReadUserHeightEntryUseCase(dataStoreManager)
     )
 }

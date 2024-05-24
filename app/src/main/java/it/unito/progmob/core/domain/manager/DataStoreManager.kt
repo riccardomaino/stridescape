@@ -5,13 +5,10 @@ import kotlinx.coroutines.flow.Flow
 interface DataStoreManager {
     suspend fun saveOnboardingEntry()
     fun readOnboardingEntry(): Flow<Boolean>
-
-    suspend fun saveUserWeight(weight: String)
-    fun readUserWeight(): Flow<String>
-    suspend fun saveUserHeight(height: String)
-    fun readUserHeight(): Flow<String>
-    suspend fun saveUserName(name: String)
-    fun readUserName(): Flow<String>
-
-
+    suspend fun saveUserWeightEntry(weight: String)
+    fun readUserWeightEntry(): Flow<String>
+    suspend fun saveUserHeightEntry(height: String)
+    fun readUserHeightEntry(): Flow<String>
+    suspend fun saveUserNameEntry(name: String)
+    fun readUserNameEntry(): Flow<String>
 }

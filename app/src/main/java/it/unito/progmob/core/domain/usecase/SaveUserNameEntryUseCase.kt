@@ -1,18 +1,18 @@
-package it.unito.progmob.onboarding.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import it.unito.progmob.core.domain.manager.DataStoreManager
 
-class SaveUserHeightUseCase (
+class SaveUserNameEntryUseCase (
     private val dataStoreManager: DataStoreManager
 ) {
 
     /**
-     * Saves the user height value to the preferences DataStore. This function can be invoked
+     * Saves the user name value to the preferences DataStore. This function can be invoked
      * using the use case instance itself due to the overload operator `invoke`.
      */
     suspend operator fun invoke(
-        height: String
+        name: String
     ) {
-        dataStoreManager.saveUserHeight(height)
+        dataStoreManager.saveUserNameEntry(name)
     }
 }

@@ -1,9 +1,9 @@
-package it.unito.progmob.onboarding.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import it.unito.progmob.core.domain.manager.DataStoreManager
 import kotlinx.coroutines.flow.Flow
 
-class ReadUserWeightUseCase (
+class ReadUserWeightEntryUseCase (
     private val dataStoreManager: DataStoreManager
 ) {
     /**
@@ -12,6 +12,6 @@ class ReadUserWeightUseCase (
      * @return A Flow representing the current state of the user weight in the DataStore
      */
     operator fun invoke(): Flow<String> {
-        return dataStoreManager.readUserWeight()
+        return dataStoreManager.readUserWeightEntry()
     }
 }

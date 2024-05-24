@@ -34,7 +34,7 @@
     <string name="home_weeklystats_friday">Ven</string>
     <string name="home_weeklystats_saturday">Sab</string>
     <string name="home_weeklystats_sunday">Dom</string>
-    <string name="notification_content_title">Statistiche Camminata</string>
+    <string name="notification_content_title">Statistiche camminata</string>
     <string name="notification_channel_description">Questo canale di notifiche permette di ricevere gli aggiornamenti riguardanti le tue camminate tramite notifica.</string>
     <string name="onboparding_page4_title">Informazioini personali</string>
     <string name="onboarding_page4_description">Inserisci le tue informazioni personali per poterti fornire dati più precisi</string>

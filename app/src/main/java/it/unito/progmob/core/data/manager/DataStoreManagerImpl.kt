@@ -46,9 +46,9 @@ class DataStoreManagerImpl @Inject constructor(
     /**
      * Saves the user weight to DataStore.
      */
-    override suspend fun saveUserWeight(weight: String) {
+    override suspend fun saveUserWeightEntry(weight: String) {
         context.datastore.edit { preferences ->
-            preferences[PreferencesKeys.USER_WEIGHT] = weight
+            preferences[PreferencesKeys.USER_WEIGHT_ENTRY] = weight
         }
     }
 
@@ -57,18 +57,18 @@ class DataStoreManagerImpl @Inject constructor(
      *
      * @return A Flow of booleans representing the user weight.
      */
-    override fun readUserWeight(): Flow<String> {
+    override fun readUserWeightEntry(): Flow<String> {
         return context.datastore.data.map { preferences ->
-            preferences[PreferencesKeys.USER_WEIGHT] ?: ""
+            preferences[PreferencesKeys.USER_WEIGHT_ENTRY] ?: ""
         }
     }
 
     /**
      * Saves the user height to DataStore.
      */
-    override suspend fun saveUserHeight(height: String) {
+    override suspend fun saveUserHeightEntry(height: String) {
         context.datastore.edit { preferences ->
-            preferences[PreferencesKeys.USER_HEIGHT] = height
+            preferences[PreferencesKeys.USER_HEIGHT_ENTRY] = height
         }
     }
 
@@ -78,18 +78,18 @@ class DataStoreManagerImpl @Inject constructor(
      *
      * @return A Flow of booleans representing the user height.
      */
-    override fun readUserHeight(): Flow<String> {
+    override fun readUserHeightEntry(): Flow<String> {
         return context.datastore.data.map { preferences ->
-            preferences[PreferencesKeys.USER_HEIGHT] ?: ""
+            preferences[PreferencesKeys.USER_HEIGHT_ENTRY] ?: ""
         }
     }
 
     /**
      * Saves the user name to DataStore.
      */
-    override suspend fun saveUserName(name: String) {
+    override suspend fun saveUserNameEntry(name: String) {
         context.datastore.edit { preferences ->
-            preferences[PreferencesKeys.USER_NAME] = name
+            preferences[PreferencesKeys.USER_NAME_ENTRY] = name
         }
     }
 
@@ -98,9 +98,9 @@ class DataStoreManagerImpl @Inject constructor(
      *
      * @return A Flow of booleans representing the user name.
      */
-    override fun readUserName(): Flow<String> {
+    override fun readUserNameEntry(): Flow<String> {
         return context.datastore.data.map { preferences ->
-            preferences[PreferencesKeys.USER_NAME] ?: ""
+            preferences[PreferencesKeys.USER_NAME_ENTRY] ?: ""
         }
     }
 }
@@ -115,9 +115,9 @@ private val Context.datastore: DataStore<Preferences> by preferencesDataStore(na
  */
 object PreferencesKeys {
     val ONBOARDING_ENTRY = booleanPreferencesKey(name = Constants.ONBOARDING_ENTRY)
-    val USER_WEIGHT = stringPreferencesKey(name = Constants.USER_WEIGHT)
-    val USER_HEIGHT = stringPreferencesKey(name = Constants.USER_HEIGHT)
-    val USER_NAME = stringPreferencesKey(name = Constants.USER_NAME)
+    val USER_NAME_ENTRY = stringPreferencesKey(name = Constants.USER_NAME_ENTRY)
+    val USER_WEIGHT_ENTRY = stringPreferencesKey(name = Constants.USER_WEIGHT_ENTRY)
+    val USER_HEIGHT_ENTRY = stringPreferencesKey(name = Constants.USER_HEIGHT_ENTRY)
 }
 
 

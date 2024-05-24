@@ -1,8 +1,8 @@
-package it.unito.progmob.onboarding.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import it.unito.progmob.core.domain.manager.DataStoreManager
 
-class SaveUserWeightUseCase (
+class SaveUserWeightEntryUseCase (
     private val dataStoreManager: DataStoreManager
 ) {
 
@@ -13,6 +13,6 @@ class SaveUserWeightUseCase (
     suspend operator fun invoke(
         weight: String
     ) {
-        dataStoreManager.saveUserWeight(weight)
+        dataStoreManager.saveUserWeightEntry(weight)
     }
 }

@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
         Manifest.permission.ACCESS_FINE_LOCATION,
     ).apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.POST_NOTIFICATIONS
+            add(Manifest.permission.POST_NOTIFICATIONS)
             add(Manifest.permission.ACTIVITY_RECOGNITION)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             add(Manifest.permission.ACTIVITY_RECOGNITION)

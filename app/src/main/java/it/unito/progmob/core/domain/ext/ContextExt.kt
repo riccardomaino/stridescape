@@ -17,6 +17,11 @@ private val allPermissions = mutableListOf(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         add(Manifest.permission.FOREGROUND_SERVICE_LOCATION)
         add(Manifest.permission.FOREGROUND_SERVICE_HEALTH)
+        add(Manifest.permission.POST_NOTIFICATIONS)
+        add(Manifest.permission.ACTIVITY_RECOGNITION)
+        add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        add(Manifest.permission.POST_NOTIFICATIONS)
         add(Manifest.permission.ACTIVITY_RECOGNITION)
         add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

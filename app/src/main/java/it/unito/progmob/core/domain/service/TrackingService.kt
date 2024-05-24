@@ -23,20 +23,15 @@ import it.unito.progmob.core.domain.manager.TimeTrackingManager
 import it.unito.progmob.core.domain.model.PathPoint
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
-import it.unito.progmob.core.domain.state.WalkState
+import it.unito.progmob.core.domain.state.WalkStateHandler
 import it.unito.progmob.core.domain.util.TimeUtils
-import it.unito.progmob.core.domain.util.WalkUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.RoundingMode
 import javax.inject.Inject
 
 /**
@@ -62,11 +57,19 @@ class TrackingService : Service() {
     lateinit var timeTrackingManager: TimeTrackingManager
 
     /**
+     * The [WalkStateHandler] is field injected by Dagger since a Service is an Android
+     * component and we can only use field injection. It is used to handle the state containing the
+     * walking state
+     */
+    @Inject
+    lateinit var walkStateHandler: WalkStateHandler
+
+    /**
      * The [StepCounterSensor] object represent the sensor used used to track the number of steps
      * taken by the user.
      */
     @Inject
-    lateinit var stepCounter: MeasurableSensor
+    lateinit var stepCounterSensor: MeasurableSensor
 
     /**
      * The service uses a [CoroutineScope] in which to launch various coroutines that will collects
@@ -80,26 +83,10 @@ class TrackingService : Service() {
 
 
     /**
-     * The [MutableStateFlow] object that holds the current state of the walk. It is exposed to a
-     * read-only state flow to prevent external modification of the state.
-     */
-    private val _walkState = MutableStateFlow(WalkState())
-    val walkState = _walkState.asStateFlow()
-
-
-    /**
-     * The initial number of steps measured by the sensor when the service is started. We have to
-     * take in account that in order to compute the correct number of steps since that the step
-     * counter sensor is a cumulative sensor that counts the number of steps since the device was
-     * booted.
-     */
-    private var initialSteps: Int = 0
-
-    /**
      * A flag that indicates if the service is resumed or not. This flag is used to check if the
      * service is resumed or not in order to start the service in the correct way.
      */
-    private var isResumed = false
+    private var hasBeenResumed = false
 
 
     /**
@@ -119,10 +106,9 @@ class TrackingService : Service() {
             Actions.ACTION_RESUME.name -> resume()
         }
 
-        // Returning the flag START_STICKY means that the service will be restarted if it is killed
-        // by the system or killed due to low memory
+        // Returning START_STICKY flag, so the service will be restarted if it's killed by the
+        // system or killed due to low memory
         return START_STICKY
-        // return super.onStartCommand(intent, flags, startId)
     }
 
     /**
@@ -130,18 +116,7 @@ class TrackingService : Service() {
      */
     override fun onDestroy() {
         Log.d(TAG, "Fun onDestroy() called")
-        trackingServiceScope.cancel()
-        Log.d(TAG, "Cancelled all coroutines in the trackingServiceScope")
-        timeTrackingManager.stopTrackingTime()
-        Log.d(TAG, "Resetting the timer to zero")
-        stepCounter.stopListening()
-        Log.d(TAG, "Stopping listening to step counter sensor")
-        initialSteps = 0
-        isResumed = false
-        updateWalkingStateTracking(false)
-        updateWalkingStatePathPaused()
-        stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
-        stopSelf() // Stops the service
+        stop()
         super.onDestroy()
     }
 
@@ -151,19 +126,22 @@ class TrackingService : Service() {
      * [LocationTrackingManager].
      */
     private fun start() {
-        Log.d(TAG, "Fun start() called")
-        // Create a new coroutine scope with a SupervisorJob and the IO dispatcher
-        trackingServiceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
         // Check if the application has all the permissions needed to start the service
         if (applicationContext.hasAllPermissions()) {
-            Log.e(TAG, "There are some permissions which aren't granted")
-            stop()
+            Log.e(TAG, "start(): there are some permissions which aren't granted")
             return
         }
 
-        // Update the walk state setting the isTracking field to true
-        updateWalkingStateTracking(true)
+        // Create a new coroutine scope with a SupervisorJob and the IO dispatcher
+        trackingServiceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+        // If the service is not resumed, update the state to the initial value
+        if (!hasBeenResumed) {
+            walkStateHandler.trackingServiceStarted()
+        }
+
+        // Update the walk state isTracking field to true
+        walkStateHandler.updateWalkStateTracking(true)
 
         // Get the NotificationManager used to notify the notification
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -174,7 +152,7 @@ class TrackingService : Service() {
             .setSmallIcon(R.drawable.icon)
             .setContentTitle(getString(R.string.notification_content_title))
             .setContentText("Time: 00:00:00 | Steps: 0")
-            .setContentIntent(getTrackingNotificationPendingIntent())
+            .setContentIntent(getPendingIntent())
             .setAutoCancel(false)
             .setOngoing(true)
 
@@ -188,16 +166,13 @@ class TrackingService : Service() {
                 LatLng(location.latitude, location.longitude),
                 location.speed
             )
-            updateWalkingStatePath(newPathPoint, time)
+
+            // Update the walk state with the new path point and time
+            walkStateHandler.updateWalkStatePathPointAndTime(newPathPoint, time)
+            // Notify the the updated notification
             val updatedNotification = notification
-                .setContentText(
-                    "Time: ${
-                        TimeUtils.formatMillisTime(
-                            time,
-                            "hh:mm:ss"
-                        )
-                    } | Steps: ${_walkState.value.steps}"
-                )
+                .setContentText("Time: ${TimeUtils.formatMillisTime(time, "HH:mm:ss")}" +
+                        " | Steps: ${walkStateHandler.walkState.value.steps}")
             notificationManager.notify(
                 NOTIFICATION_ID,
                 updatedNotification.build()
@@ -207,18 +182,15 @@ class TrackingService : Service() {
 
         // Start listening to the step counter sensor in a new coroutine in the same scope
         trackingServiceScope.launch {
-            stepCounter.startListening()
-            stepCounter.setOnSensorValueChangedListener { sensorData ->
-                val stepsValue = sensorData[0].toInt()
-                updateWalkingStateSteps(stepsValue)
+            stepCounterSensor.startListening()
+            stepCounterSensor.setOnSensorValueChangedListener { sensorData ->
+                val newSteps = sensorData[0].toInt()
+                // Update the walk state with the new steps
+                walkStateHandler.updateWalkStateSteps(newSteps)
+                // Notify the the updated notification
                 val updatedNotification = notification
-                    .setContentText(
-                        "Time: ${
-                            TimeUtils.formatMillisTime(
-                                _walkState.value.timeInMillis,
-                                "hh:mm:ss"
-                            )
-                        } | Steps: ${_walkState.value.steps}"
+                    .setContentText("Time: ${TimeUtils.formatMillisTime(walkStateHandler.walkState.value.timeInMillis, "hh:mm:ss")} " +
+                            " | Steps: ${walkStateHandler.walkState.value.steps}"
                     )
                 notificationManager.notify(
                     NOTIFICATION_ID,
@@ -227,7 +199,7 @@ class TrackingService : Service() {
             }
         }
 
-        if(!isResumed) {
+        if(!hasBeenResumed) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 startForeground(
                     NOTIFICATION_ID,
@@ -243,24 +215,26 @@ class TrackingService : Service() {
             } else {
                 startForeground(NOTIFICATION_ID, notification.build())
             }
-            isResumed = true
+            Log.d(TAG, "start(): starting the foreground service")
         }
     }
 
 
     private fun resume() {
-        Log.d(TAG, "Fun resume() called")
+        hasBeenResumed = true
+        Log.d(TAG, "resume(): setting hasBeenResumed = true")
         start()
     }
 
     private fun pause() {
-        Log.d(TAG, "Fun pause() called")
         trackingServiceScope.cancel()
-        Log.d(TAG, "Cancelled all coroutines in the trackingServiceScope")
-        stepCounter.stopListening()
-        Log.d(TAG, "Stopping listening to step counter sensor")
-        updateWalkingStateTracking(false)
-        updateWalkingStatePathPaused()
+        Log.d(TAG, "pause(): cancelled all coroutines in the trackingServiceScope")
+        stepCounterSensor.stopListening()
+        Log.d(TAG, "pause(): stop listening to the StepCounterSensor")
+        // Update the walk state isTracking field to false
+        walkStateHandler.updateWalkStateTracking(false)
+        // Update the walk state path adding an empty point
+        walkStateHandler.updateWalkStatePathPointPaused()
     }
 
     /**
@@ -268,118 +242,21 @@ class TrackingService : Service() {
      * service.
      */
     private fun stop() {
-        Log.d(TAG, "Fun stop() called")
         trackingServiceScope.cancel()
+        Log.d(TAG, "stop(): cancelled all coroutines in the trackingServiceScope")
         timeTrackingManager.stopTrackingTime()
-        stepCounter.stopListening()
-        initialSteps = 0
-        isResumed = false
-        updateWalkingStateTracking(false)
-        updateWalkingStatePathPaused()
+        Log.d(TAG, "stop(): reset the timer to zero")
+        stepCounterSensor.stopListening()
+        Log.d(TAG, "stop(): stop listening to the StepCounterSensor")
+        // hasBeenResumed = false
+        walkStateHandler.updateWalkStateTracking(false)
+        walkStateHandler.updateWalkStatePathPointPaused()
+        walkStateHandler.trackingServiceStopped()
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
         stopSelf() // Stops the service
     }
 
-
-    /**
-     * Updates the [WalkState] according to the isTracking value
-     *
-     * @param isTracking the new value of the isTracking field to update the [WalkState]
-     */
-    private fun updateWalkingStateTracking(isTracking: Boolean) {
-        _walkState.update {
-            it.copy(
-                isTracking = isTracking
-            )
-        }
-    }
-
-    /**
-     * Updates the [WalkState] according to the newPathPoint received from flow of the location
-     *
-     * @param newPathPoint the new [PathPoint] used to update the [WalkState]
-     */
-    private fun updateWalkingStatePath(
-        newPathPoint: PathPoint.LocationPoint,
-        time: Long,
-        pathPointsAccuracy: Int = 5
-    ) {
-        // Update the milliseconds time in the walk state
-        _walkState.update {
-            it.copy(
-                timeInMillis = time
-            )
-        }
-        // Update the distance in meters, path points and speed in the walk state
-        val previousPathPoint = _walkState.value.pathPoints.lastOrNull()
-        previousPathPoint?.let { prevPathPoint ->
-            if (prevPathPoint is PathPoint.LocationPoint) {
-                if(prevPathPoint != newPathPoint){
-                    val distanceBetweenPathPoints = WalkUtils.getDistanceBetweenTwoPathPoints(prevPathPoint, newPathPoint)
-                    if (distanceBetweenPathPoints > pathPointsAccuracy) {
-                        _walkState.update { walkState ->
-                            walkState.copy(
-                                distanceInMeters = walkState.distanceInMeters + distanceBetweenPathPoints,
-                                pathPoints = walkState.pathPoints + newPathPoint,
-                                speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
-                                    .setScale(2, RoundingMode.HALF_UP).toFloat()
-                            )
-                        }
-                        Log.d(TAG, "Added CONTINUOUSLY WALKING PathPoint! Lat:${newPathPoint.latLng.latitude} Long:${newPathPoint.latLng.longitude}.")
-                        Log.d(TAG,"CONTINUOUSLY WALKING Distance: ${_walkState.value.distanceInMeters}m")
-                    }
-                }
-            } else  {
-                _walkState.update {walkState ->
-                    Log.d(TAG, "Added NEW START PathPoint! Lat:${newPathPoint.latLng.latitude} Long:${newPathPoint.latLng.longitude}.")
-                    walkState.copy(
-                        pathPoints = walkState.pathPoints + newPathPoint,
-                        speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
-                            .setScale(2, RoundingMode.HALF_UP).toFloat()
-                    )
-                }
-            }
-        } ?: _walkState.update { walkState ->
-            Log.d(TAG, "Added START PathPoint! Lat:${newPathPoint.latLng.latitude} Long:${newPathPoint.latLng.longitude}.")
-            walkState.copy(
-                pathPoints = walkState.pathPoints + newPathPoint,
-                speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
-                    .setScale(2, RoundingMode.HALF_UP).toFloat()
-            )
-        }
-    }
-
-    /**
-     * Updates the [WalkState] adding an empty [PathPoint] in order to know when the user paused,
-     * useful to not draw and compute the distance during the time that the user paused the tracking.
-     */
-    private fun updateWalkingStatePathPaused() {
-        _walkState.update { walkState ->
-            val emptyPoint = PathPoint.EmptyPoint
-            walkState.copy(
-                pathPoints = walkState.pathPoints + emptyPoint,
-            )
-        }
-    }
-
-    /**
-     * Updates the [WalkState] according to the stepsValue received from the step counter sensor
-     *
-     * @param stepsValue the new number of steps taken by the user to update the [WalkState]
-     */
-    private fun updateWalkingStateSteps(stepsValue: Int) {
-        if (initialSteps == 0) {
-            initialSteps = stepsValue
-        }
-        _walkState.update {
-            it.copy(
-                steps = stepsValue - initialSteps
-            )
-        }
-    }
-
-
-    private fun getTrackingNotificationPendingIntent(): PendingIntent {
+    private fun getPendingIntent(): PendingIntent {
         return TaskStackBuilder.create(this).run {
             addNextIntentWithParentStack(Intent(this@TrackingService, MainActivity::class.java))
             getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)!!
@@ -399,7 +276,6 @@ class TrackingService : Service() {
      * Companion object containing constants used by the service.
      */
     companion object {
-//        val _walkState = MutableStateFlow(WalkState())
         private val TAG = TrackingService::class.java.simpleName
         const val NOTIFICATION_CHANNEL_ID = "location_tracking_channel"
         const val NOTIFICATION_CHANNEL_NAME = "Tracking notifications"

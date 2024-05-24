@@ -1,5 +1,6 @@
 package it.unito.progmob.onboarding.presentation.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,9 +16,9 @@ class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases,
 ) : ViewModel() {
 
-    val weight = mutableStateOf("")
-    val height = mutableStateOf("")
-    val name = mutableStateOf("")
+    val userName: MutableState<String> = mutableStateOf("")
+    val userWeight: MutableState<String> = mutableStateOf("")
+    val userHeight: MutableState<String> = mutableStateOf("")
 
     /**
      * Handles OnBoarding events emitted from the UI.
@@ -36,9 +37,9 @@ class OnBoardingViewModel @Inject constructor(
      */
     private fun saveEntries() {
         viewModelScope.launch(Dispatchers.IO) {
-            launch { onBoardingUseCases.saveUserNameUseCase(name.value) }
-            launch { onBoardingUseCases.saveUserHeightUseCase(height.value) }
-            launch { onBoardingUseCases.saveUserHeightUseCase(weight.value) }
+            launch { onBoardingUseCases.saveUserNameEntryUseCase(userName.value) }
+            launch { onBoardingUseCases.saveUserHeightEntryUseCase(userHeight.value) }
+            launch { onBoardingUseCases.saveUserWeightEntryUseCase(userWeight.value) }
             launch { onBoardingUseCases.saveOnboardingEntryUseCase() }
         }
     }

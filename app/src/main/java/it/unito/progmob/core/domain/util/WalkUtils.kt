@@ -2,6 +2,7 @@ package it.unito.progmob.core.domain.util
 
 import android.location.Location
 import it.unito.progmob.core.domain.model.PathPoint
+import java.math.RoundingMode
 import kotlin.math.roundToInt
 
 object WalkUtils {
@@ -11,8 +12,12 @@ object WalkUtils {
      * @param firstPathPoint the first PathPoint
      * @param secondPathPoint the second PathPoint
      */
-    fun getDistanceBetweenTwoPathPoints(firstPathPoint: PathPoint.LocationPoint, secondPathPoint: PathPoint.LocationPoint): Int {
-        val result = FloatArray(1) // Float array used to store the result from the Location.distanceBetween method
+    fun getDistanceBetweenTwoPathPoints(
+        firstPathPoint: PathPoint.LocationPoint,
+        secondPathPoint: PathPoint.LocationPoint
+    ): Int {
+        val result =
+            FloatArray(1) // Float array used to store the result from the Location.distanceBetween method
         Location.distanceBetween(
             firstPathPoint.latLng.latitude,
             firstPathPoint.latLng.longitude,
@@ -30,7 +35,7 @@ object WalkUtils {
      * @param weightInKg the weight of the user in kilograms
      * @param distanceInMeters the distance covered by the user in meters
      */
-    fun getCaloriesBurnt(weightInKg: Float, distanceInMeters: Int): Float {
-        return (0.75f*weightInKg) * (distanceInMeters/1000f)
-    }
+    fun getCaloriesBurnt(weightInKg: Float, distanceInMeters: Int): Int =
+        ((0.75f * weightInKg) * (distanceInMeters / 1000f)).toBigDecimal()
+            .setScale(2, RoundingMode.HALF_UP).toInt()
 }

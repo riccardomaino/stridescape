@@ -1,4 +1,4 @@
-package it.unito.progmob.onboarding.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import it.unito.progmob.core.domain.manager.DataStoreManager
 

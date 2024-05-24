@@ -44,9 +44,9 @@ fun NavGraph(
                 OnBoardingProfileScreen(
                     onBoardingEvent = onBoardingViewModel::onEvent,
                     navController = navController,
-                    userHeight = onBoardingViewModel.height,
-                    userWeight = onBoardingViewModel.weight,
-                    userName = onBoardingViewModel.name
+                    userName = onBoardingViewModel.userName,
+                    userHeight = onBoardingViewModel.userHeight,
+                    userWeight = onBoardingViewModel.userWeight
                 )
             }
         }

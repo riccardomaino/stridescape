@@ -1,9 +1,9 @@
-package it.unito.progmob.onboarding.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
 import it.unito.progmob.core.domain.manager.DataStoreManager
 
-class ReadUserHeightUseCase(
+class ReadUserHeightEntryUseCase(
     private val dataStoreManager: DataStoreManager
 ) {
     /**
@@ -12,6 +12,6 @@ class ReadUserHeightUseCase(
      * @return A Flow representing the current state of the user height  in the DataStore
      */
     operator fun invoke(): Flow<String> {
-        return dataStoreManager.readUserHeight()
+        return dataStoreManager.readUserHeightEntry()
     }
 }
