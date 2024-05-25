@@ -42,4 +42,16 @@
     <string name="onboarding_page4_description">Enter your personal information so we can provide you with more precise data</string>
     <string name="tracking_play_icon">Icon used to start the tracking</string>
     <string name="tracking_pause_icon">Icon used to pause the tracking</string>
+    <string name="tracking_steps_walking_stat_icon_desc">Icon for the amount of steps perfomed</string>
+    <string name="tracking_steps_walking_stat_title">Steps</string>
+    <string name="tracking_calories_walking_stat_icon_desc">Icon for calories burnt</string>
+    <string name="tracking_calories_walking_stat_title">Calories</string>
+    <string name="tracking_distance_walking_stat_icon_desc">Icon for distance travelled</string>
+    <string name="tracking_distance_walking_stat_title">Km.</string>
+    <string name="tracking_time_walking_stat_icon_desc">Icon for the elapsed time</string>
+    <string name="tracking_time_walking_stat_title">Time</string>
+    <string name="tracking_start_btn">Start</string>
+    <string name="tracking_stop_btn">Stop</string>
+    <string name="tracking_pause_btn">Pause</string>
+    <string name="tracking_resume_btn">Resume</string>
 </resources>

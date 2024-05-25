@@ -1,6 +1,5 @@
 package it.unito.progmob.core.presentation.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,7 +39,6 @@ fun NavGraph(
                 route = Route.OnBoardingProfileScreenRoute.route
             ) {
                 val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
-
                 OnBoardingProfileScreen(
                     onBoardingEvent = onBoardingViewModel::onEvent,
                     navController = navController,
@@ -59,13 +57,10 @@ fun NavGraph(
                 route = Route.HomeScreenRoute.route
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
-                val visiblePermissionDialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
                 val permissionsToRequest = homeViewModel.permissionsToRequest
+                val visiblePermissionDialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
                 val steps by homeViewModel.stepsCount.collectAsState()
                 val currentDay by homeViewModel.currentDay.collectAsState()
-
-                Log.d("NavGraph", "visiblePermissionDialogQueue: $visiblePermissionDialogQueue")
-
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
                     navController = navController,
@@ -84,7 +79,7 @@ fun NavGraph(
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
                     navController = navController,
-                    uiTrackingState = trackingViewModel.uiTrackingState
+                    uiTrackingState = uiTrackingState
                 )
             }
         }

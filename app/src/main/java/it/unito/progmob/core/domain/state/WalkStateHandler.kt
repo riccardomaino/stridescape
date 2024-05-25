@@ -15,9 +15,6 @@ class WalkStateHandler {
     private val _walkState: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
     var walkState = _walkState.asStateFlow()
 
-    private var _lastCompletedWalkState: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
-    val lastWalkState = _lastCompletedWalkState.asStateFlow()
-
     private var initialSteps: Int? = null
 
     fun trackingServiceStarted(){
@@ -32,19 +29,6 @@ class WalkStateHandler {
         }
         initialSteps = null
     }
-
-    fun trackingServiceStopped(){
-        _lastCompletedWalkState.update {
-            it.copy(
-                pathPoints = _walkState.value.pathPoints,
-                distanceInMeters = _walkState.value.distanceInMeters,
-                speedInKMH = _walkState.value.speedInKMH,
-                steps = _walkState.value.steps,
-                timeInMillis = _walkState.value.timeInMillis
-            )
-        }
-    }
-
 
     /**
      * Updates the [WalkState] according to the newPathPoint received from flow of the location and

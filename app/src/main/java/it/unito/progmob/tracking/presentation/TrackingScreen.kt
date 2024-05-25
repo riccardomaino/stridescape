@@ -31,7 +31,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,13 +49,14 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.tracking.presentation.components.WalkingStat
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
-import kotlinx.coroutines.flow.StateFlow
+import java.math.RoundingMode
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -64,8 +64,11 @@ fun TrackingScreen(
     modifier: Modifier = Modifier,
     trackingEvent: (TrackingEvent) -> Unit,
     navController: NavController,
-    uiTrackingState: StateFlow<UiTrackingState>
+    uiTrackingState: UiTrackingState
 ) {
+    var switchStartStopBtn by remember { mutableStateOf(true) }
+    var switchPauseResumeBtn by remember { mutableStateOf(true) }
+
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
     var isMapLoaded by remember { mutableStateOf(false) }
@@ -79,13 +82,7 @@ fun TrackingScreen(
             )
         )
     }
-    var trackingStarted by remember {
-        mutableStateOf(false)
-    }
-    var trackingPause by remember {
-        mutableStateOf(false)
-    }
-    val uiTrackingState by uiTrackingState.collectAsState()
+
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -145,80 +142,97 @@ fun TrackingScreen(
                     WalkingStat(
                         modifier = modifier,
                         icon = Icons.AutoMirrored.Outlined.DirectionsWalk,
-                        iconContentDescription = " ",
+                        iconContentDescription = stringResource(R.string.tracking_steps_walking_stat_icon_desc),
                         color = Color.Blue,
-                        title = "Steps",
+                        title = stringResource(R.string.tracking_steps_walking_stat_title),
                         content = uiTrackingState.steps.toString()
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
                         icon = Icons.Outlined.LocalFireDepartment,
-                        iconContentDescription = " ",
+                        iconContentDescription = stringResource(R.string.tracking_calories_walking_stat_icon_desc),
                         color = Color.Red,
-                        title = "Calories",
+                        title = stringResource(R.string.tracking_calories_walking_stat_title),
                         content = uiTrackingState.caloriesBurnt.toString()
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
                         icon = Icons.Outlined.Map,
-                        iconContentDescription = " ",
-                        title = "Km.",
+                        iconContentDescription = stringResource(R.string.tracking_distance_walking_stat_icon_desc),
+                        title = stringResource(R.string.tracking_distance_walking_stat_title),
                         color = Color(0xFF0C9B12),
-                        content = (uiTrackingState.distanceInMeters/1000).toString()
+                        content = (uiTrackingState.distanceInMeters.toFloat() / 1000.toFloat()).toBigDecimal()
+                            .setScale(1, RoundingMode.HALF_UP).toString()
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
                         icon = Icons.Outlined.Timer,
-                        iconContentDescription = " ",
+                        iconContentDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
                         color = Color(0xFFFF9800),
-                        title = "Time",
-                        content = "00:23:00"
+                        title = stringResource(R.string.tracking_time_walking_stat_title),
+                        content = TimeUtils.formatMillisTime(uiTrackingState.timeInMillis)
                     )
                 }
-                if (!trackingStarted) {
+                if (switchStartStopBtn) {
                     Button(
                         onClick = {
+                            switchStartStopBtn = !switchStartStopBtn
                             trackingEvent(TrackingEvent.StartTrackingService)
-                            trackingStarted = true
                         },
                         modifier = modifier
                             .fillMaxWidth()
                             .padding(horizontal = large, vertical = medium)
                     ) {
-                        Text(text = "Start", modifier = modifier.padding(vertical = small))
+                        Text(
+                            text = stringResource(R.string.tracking_start_btn),
+                            modifier = modifier.padding(vertical = small)
+                        )
                     }
                 } else {
-                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
                         Button(
                             onClick = {
+                                switchStartStopBtn = !switchStartStopBtn
                                 trackingEvent(TrackingEvent.StopTrackingService)
                             },
                             modifier = modifier
                                 .padding(horizontal = large, vertical = medium),
                         ) {
-                            Text(text = "Stop", modifier = modifier.padding(vertical = small))
+                            Text(
+                                text = stringResource(R.string.tracking_stop_btn),
+                                modifier = modifier.padding(vertical = small)
+                            )
                         }
-                        if(trackingPause) {
+                        if (switchPauseResumeBtn) {
                             Button(
                                 onClick = {
-                                    trackingEvent(TrackingEvent.ResumeTrackingService)
-                                    trackingPause = false
+                                    switchPauseResumeBtn = !switchPauseResumeBtn
+                                    trackingEvent(TrackingEvent.PauseTrackingService)
                                 },
                                 modifier = modifier
                                     .padding(horizontal = large, vertical = medium)
                             ) {
-                                Text(text = "Resume", modifier = modifier.padding(vertical = small))
+                                Text(
+                                    text = stringResource(R.string.tracking_pause_btn),
+                                    modifier = modifier.padding(vertical = small)
+                                )
                             }
                         } else {
                             Button(
                                 onClick = {
-                                    trackingEvent(TrackingEvent.PauseTrackingService)
-                                    trackingPause = true
+                                    switchPauseResumeBtn = !switchPauseResumeBtn
+                                    trackingEvent(TrackingEvent.ResumeTrackingService)
                                 },
                                 modifier = modifier
                                     .padding(horizontal = large, vertical = medium)
                             ) {
-                                Text(text = "Pause", modifier = modifier.padding(vertical = small))
+                                Text(
+                                    text = stringResource(R.string.tracking_resume_btn),
+                                    modifier = modifier.padding(vertical = small)
+                                )
                             }
                         }
                     }

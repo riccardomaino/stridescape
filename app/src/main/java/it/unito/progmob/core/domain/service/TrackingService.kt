@@ -130,7 +130,7 @@ class TrackingService : Service() {
     private fun start() {
         Log.d(TAG, "start(): called")
         // Check if the application has all the permissions needed to start the service
-        if (applicationContext.hasAllPermissions()) {
+        if (!this.hasAllPermissions()) {
             Log.e(TAG, "start(): Error, there are some permissions which aren't granted")
             return
         }
@@ -240,7 +240,6 @@ class TrackingService : Service() {
         hasBeenResumed = false
         walkStateHandler.updateWalkStateTracking(false)
         walkStateHandler.updateWalkStatePathPointPaused()
-        walkStateHandler.trackingServiceStopped()
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
         stopSelf() // Stops the service
     }

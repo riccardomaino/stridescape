@@ -13,11 +13,9 @@ import it.unito.progmob.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val mainViewModel by viewModels<MainViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val mainViewModel by viewModels<MainViewModel>()
         installSplashScreen().apply {
             // Check if the boolean is true at every frame, it shows the splash screen until
             // the condition is false
