@@ -7,7 +7,7 @@ import it.unito.progmob.core.domain.repository.WalkRepository
 class UpsertPathPointUseCase(
     private val walkRepository: WalkRepository
 ) {
-    suspend operator fun invoke(newPathPoint: PathPoint, walkId: Long) {
+    suspend operator fun invoke(walkId: Long, newPathPoint: PathPoint) {
         val pathPointEntity = PathPointEntity(
             walkId = walkId,
             pathPoint = newPathPoint

@@ -68,7 +68,6 @@ fun NavigationBar(
                     )
                 )
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -76,7 +75,6 @@ fun NavigationBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
@@ -90,15 +88,16 @@ fun NavigationBar(
 
                     }
                     IconButton(onClick = {
-                        if (navigationController.currentDestination?.route != "stepsViewNavigationScreen")
-                            navigationController.navigate("stepsViewNavigationScreen")
+                        if (navigationController.currentDestination?.route != Route.HomeScreenRoute.route)
+                            navigationController.navigate(Route.HomeScreenRoute.route)
                     }) {
                         Icon(
                             Icons.Filled.Home,
                             contentDescription = "Localized description",
                             modifier = Modifier
                                 .size(large),
-                            tint = if (navigationController.currentDestination?.route == Route.HomeScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+                            tint = if (navigationController.currentDestination?.route == Route.HomeScreenRoute.route)
+                                MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }

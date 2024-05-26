@@ -1,12 +1,11 @@
 package it.unito.progmob.tracking.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.domain.model.Walk
 import it.unito.progmob.tracking.domain.service.WalkHandler
-import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.tracking.presentation.TrackingEvent
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
@@ -26,8 +25,8 @@ class TrackingViewModel @Inject constructor(
     private val trackingUseCases: TrackingUseCases,
     private val walkHandler: WalkHandler
 ): ViewModel() {
-    // The StateFlow of the WalkState obtained through the WalkStateHandler
-    private val _walk: StateFlow<Walk> = walkHandler.walk
+    // The StateFlow of the WalkState obtained through the WalkHandler
+    private val walk: StateFlow<Walk> = walkHandler.walk
 
     // The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
     private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
@@ -54,7 +53,7 @@ class TrackingViewModel @Inject constructor(
             }
         }
 
-        _walk.onEach { walkState ->
+        walk.onEach { walkState ->
             _uiTrackingState.update {
                 it.copy(
                     isTracking = walkState.isTracking,
@@ -98,16 +97,12 @@ class TrackingViewModel @Inject constructor(
 
     private fun stopTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
-            launch {
-                Log.d(TAG, "Saving to the database ...")
-                val walkId = trackingUseCases.upsertWalkUseCase(uiTrackingState.value)
-                uiTrackingState.value.pathPoints.forEach { pathPoint ->
-                    trackingUseCases.upsertPathPointUseCase(pathPoint, walkId)
-                }
+            trackingUseCases.stopTrackingUseCase()
+            val walkId = trackingUseCases.upsertWalkUseCase(uiTrackingState.value)
+            uiTrackingState.value.pathPoints.forEach { pathPoint ->
+                trackingUseCases.upsertPathPointUseCase(walkId, pathPoint)
             }
-            launch {
-                trackingUseCases.stopTrackingUseCase()
-            }
+            walkHandler.trackingServiceStopped()
         }
     }
 

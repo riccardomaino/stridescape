@@ -34,8 +34,8 @@ import it.unito.progmob.ui.theme.small
 @Composable
 fun WalkingStats(
     modifier: Modifier = Modifier,
-    kcal: Int,
-    km: Double,
+    kcal: String,
+    km: String,
     time: String
 ) {
     Box(
@@ -63,7 +63,7 @@ fun WalkingStats(
                     tint = Color.Red
                 )
                 Text(
-                    text = kcal.toString(),
+                    text = kcal,
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                     ),
@@ -88,7 +88,7 @@ fun WalkingStats(
                     tint = Color(0xFF0C9B12)
                 )
                 Text(
-                    text = km.toString(),
+                    text = km,
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                     ),
@@ -130,5 +130,5 @@ fun WalkingStats(
 @Preview(showBackground = true)
 @Composable
 private fun WalkingStatsPreview() {
-    WalkingStats(kcal = 300, km = 10.0, time = "20:00")
+    WalkingStats(kcal = 300.toString(), km = 10.0.toString(), time = "20:00")
 }

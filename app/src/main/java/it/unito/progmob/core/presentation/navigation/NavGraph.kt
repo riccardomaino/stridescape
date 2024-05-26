@@ -1,7 +1,6 @@
 package it.unito.progmob.core.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.AnimationScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,20 +43,20 @@ fun NavGraph(
                 exitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 },
                 popEnterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 popExitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 }
             ) {
                 OnBoardingScreen(
@@ -69,26 +68,26 @@ fun NavGraph(
                 enterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 exitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
+                        animationSpec = tween(200, delayMillis = 90)
                     ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
                 },
                 popEnterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 popExitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 }
             ) {
                 val onBoardingViewModel = hiltViewModel<OnBoardingViewModel>()
@@ -111,40 +110,46 @@ fun NavGraph(
                 enterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 exitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 },
                 popEnterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 popExitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 }
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
                 val permissionsToRequest = homeViewModel.permissionsToRequest
                 val visiblePermissionDialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
-                val steps by homeViewModel.stepsCount.collectAsState()
-                val currentDay by homeViewModel.currentDay.collectAsState()
+                val currentDayOfWeek by homeViewModel.currentDayOfWeek.collectAsState()
+                val stepsCurrentDay by homeViewModel.stepsCurrentDay.collectAsState()
+                val caloriesCurrentDay by homeViewModel.caloriesCurrentDay.collectAsState()
+                val distanceCurrentDay by homeViewModel.distanceCurrentDay.collectAsState()
+                val timeCurrentDay by homeViewModel.timeCurrentDay.collectAsState()
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
                     navController = navController,
                     visiblePermissionDialogQueue = visiblePermissionDialogQueue,
                     permissionsToRequest = permissionsToRequest,
-                    currentDay = currentDay,
-                    steps = steps
+                    currentDayOfWeek = currentDayOfWeek,
+                    stepsCurrentDay = stepsCurrentDay,
+                    caloriesCurrentDay = caloriesCurrentDay,
+                    distanceCurrentDay = distanceCurrentDay,
+                    timeCurrentDay = timeCurrentDay
                 )
             }
 
@@ -153,26 +158,26 @@ fun NavGraph(
                 enterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 exitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 },
                 popEnterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
                 },
                 popExitTransition = {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                        animationSpec = tween(700, delayMillis = 90)
-                    ) + fadeOut(animationSpec = tween(220, delayMillis = 90))
+                        animationSpec = tween(200, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 }
             ) {
                 val trackingViewModel = hiltViewModel<TrackingViewModel>()

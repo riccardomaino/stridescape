@@ -34,6 +34,10 @@ import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.UpsertPathPointUseCase
 import it.unito.progmob.core.domain.usecase.UpsertWalkUseCase
+import it.unito.progmob.home.domain.usecase.GetCurrentDayCaloriesUseCase
+import it.unito.progmob.home.domain.usecase.GetCurrentDayDistanceUseCase
+import it.unito.progmob.home.domain.usecase.GetCurrentDayStepsUseCase
+import it.unito.progmob.home.domain.usecase.GetCurrentDayTimeUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -105,9 +109,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideHomeUseCases() = HomeUseCases(
+    fun provideHomeUseCases(
+        walkRepository: WalkRepository
+    ) = HomeUseCases(
         DismissPermissionDialogUseCase(),
-        PermissionResultUseCase()
+        PermissionResultUseCase(),
+        GetCurrentDayStepsUseCase(walkRepository),
+        GetCurrentDayCaloriesUseCase(walkRepository),
+        GetCurrentDayDistanceUseCase(walkRepository),
+        GetCurrentDayTimeUseCase(walkRepository)
     )
 
     @Provides

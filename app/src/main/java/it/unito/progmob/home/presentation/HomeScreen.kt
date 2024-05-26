@@ -1,7 +1,6 @@
 package it.unito.progmob.home.presentation
 
 import android.Manifest
-import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -25,8 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,13 +33,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.ext.findActivity
+import it.unito.progmob.core.domain.ext.hasAllPermissions
+import it.unito.progmob.core.domain.ext.openAppSettings
+import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.core.presentation.components.NavigationBar
 import it.unito.progmob.core.presentation.navigation.Route
-import it.unito.progmob.core.domain.ext.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.home.presentation.components.CircularProgressBar
@@ -61,8 +60,11 @@ fun HomeScreen(
     navController: NavController,
     visiblePermissionDialogQueue: List<String>,
     permissionsToRequest: Array<String>,
-    currentDay: Int,
-    steps: Int
+    currentDayOfWeek: Int,
+    stepsCurrentDay: Int,
+    caloriesCurrentDay: Int,
+    distanceCurrentDay: Int,
+    timeCurrentDay: Long
 ) {
 
     val context = LocalContext.current
@@ -72,9 +74,9 @@ fun HomeScreen(
     val weeklyStats = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000)
     val weeklyTargetStats = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000)
 
-    val allPermissionsGranted = remember {
-        mutableStateOf(false)
-    }
+//    val allPermissionsGranted = remember {
+//        mutableStateOf(false)
+//    }
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -128,20 +130,27 @@ fun HomeScreen(
                     )
                 },
                 onClickFloatingActionButton = {
-                    multiplePermissionResultLauncher.launch(
-                        permissionsToRequest
-                    )
-
-                    allPermissionsGranted.value = permissionsToRequest.all { permission ->
-                        ContextCompat.checkSelfPermission(
-                            context,
-                            permission
-                        ) == PackageManager.PERMISSION_GRANTED
-                    }
-
-                    if (allPermissionsGranted.value) {
+                    if(context.hasAllPermissions()){
                         navController.navigate(Route.TrackingScreenRoute.route)
+                    }else{
+                        multiplePermissionResultLauncher.launch(
+                            permissionsToRequest
+                        )
                     }
+//                    multiplePermissionResultLauncher.launch(
+//                        permissionsToRequest
+//                    )
+
+//                    allPermissionsGranted.value = permissionsToRequest.all { permission ->
+//                        ContextCompat.checkSelfPermission(
+//                            context,
+//                            permission
+//                        ) == PackageManager.PERMISSION_GRANTED
+//                    }
+
+//                    if (allPermissionsGranted.value) {
+//                        navController.navigate(Route.TrackingScreenRoute.route)
+//                    }
                 },
                 navigationController = navController,
             )
@@ -161,13 +170,17 @@ fun HomeScreen(
                     .clip(shape = RoundedCornerShape(large))
                     .background(MaterialTheme.colorScheme.surface)
             ) {
-                CircularProgressBar(steps = 3200, targetStepsGoal = 6000, radius = 88.dp)
+                CircularProgressBar(steps = stepsCurrentDay, targetStepsGoal = 6000, radius = 88.dp)
             }
             Spacer(modifier = Modifier.height(small))
-            WalkingStats(kcal = 300, km = 10.0, time = "20:30")
+            WalkingStats(
+                kcal = caloriesCurrentDay.toString(),
+                km = WalkUtils.formatDistanceToKm(distanceCurrentDay),
+                time = TimeUtils.formatMillisTime(timeCurrentDay)
+            )
             Spacer(modifier = Modifier.height(small))
             WeeklyStats(
-                selectedDay = currentDay,
+                selectedDay = currentDayOfWeek,
                 weeklySteps = weeklyStats,
                 weeklyTarget = weeklyTargetStats
             )

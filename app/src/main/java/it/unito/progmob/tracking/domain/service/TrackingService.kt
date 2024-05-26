@@ -12,18 +12,18 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import it.unito.progmob.MainActivity
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.Constants.LOCATION_TRACKING_INTERVAL
 import it.unito.progmob.core.domain.ext.hasAllPermissions
-import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
-import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
-import it.unito.progmob.tracking.domain.model.PathPoint
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
 import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils
+import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
+import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
+import it.unito.progmob.tracking.domain.model.PathPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -137,11 +137,6 @@ class TrackingService : Service() {
         // Create a new coroutine scope with a SupervisorJob and the IO dispatcher
         trackingServiceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-        // If the service is not resumed, update the state to the initial value
-        if (!hasBeenResumed) {
-            walkHandler.trackingServiceStarted()
-        }
-
         // Update the walk state isTracking field to true
         walkHandler.updateWalkTracking(true)
 
@@ -165,7 +160,9 @@ class TrackingService : Service() {
             timeTrackingManager.startTrackingTime()
         ) { location, time ->
             val newPathPoint = PathPoint.LocationPoint(
-                location.latitude, location.longitude, location.speed
+                lat = location.latitude,
+                lng = location.longitude,
+                speed = WalkUtils.convertSpeedToKmH(location.speed)
             )
             // Update the walk state with the new path point and time
             walkHandler.updateWalkPathPointAndTime(newPathPoint, time)
@@ -236,9 +233,7 @@ class TrackingService : Service() {
         trackingServiceScope.cancel()
         timeTrackingManager.stopTrackingTime()
         stepCounterSensor.stopListening()
-        hasBeenResumed = false
         walkHandler.updateWalkTracking(false)
-        walkHandler.updateWalkPathPointPaused()
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
         stopSelf() // Stops the service
     }

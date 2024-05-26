@@ -13,7 +13,7 @@ class GetWalksWithPathPointsUseCase(
     operator fun invoke(
         walkOrder: WalkOrder = WalkOrder.Date(WalkOrderType.Descending)
     ): Flow<List<WalkWithPathPoints>> {
-        return walksRepository.getWalksWithPathPoints().map { walks ->
+        return walksRepository.findWalksWithPathPoints().map { walks ->
             when (walkOrder.orderType) {
                 is WalkOrderType.Ascending -> {
                     when(walkOrder) {

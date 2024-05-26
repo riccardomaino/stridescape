@@ -1,12 +1,11 @@
 package it.unito.progmob.tracking.domain.service
 
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.domain.model.PathPoint
 import it.unito.progmob.tracking.domain.model.Walk
-import it.unito.progmob.core.domain.util.WalkUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.math.RoundingMode
 
 class WalkHandler {
     /**
@@ -18,9 +17,10 @@ class WalkHandler {
 
     private var initialSteps: Int? = null
 
-    fun trackingServiceStarted(){
+    fun trackingServiceStopped(){
         _walk.update {
             it.copy(
+                isTracking = false,
                 pathPoints = emptyList(),
                 distanceInMeters = 0,
                 speedInKMH = 0.0f,
@@ -61,8 +61,7 @@ class WalkHandler {
                             walkState.copy(
                                 distanceInMeters = walkState.distanceInMeters + distanceBetweenPathPoints,
                                 pathPoints = walkState.pathPoints + newPathPoint,
-                                speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
-                                    .setScale(2, RoundingMode.HALF_UP).toFloat()
+                                speedInKMH = WalkUtils.convertSpeedToKmH(newPathPoint.speed)
                             )
                         }
                     }
@@ -71,16 +70,14 @@ class WalkHandler {
                 _walk.update { walkState ->
                     walkState.copy(
                         pathPoints = walkState.pathPoints + newPathPoint,
-                        speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
-                            .setScale(2, RoundingMode.HALF_UP).toFloat()
+                        speedInKMH = WalkUtils.convertSpeedToKmH(newPathPoint.speed)
                     )
                 }
             }
         } ?: _walk.update { walkState ->
             walkState.copy(
                 pathPoints = walkState.pathPoints + newPathPoint,
-                speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
-                    .setScale(2, RoundingMode.HALF_UP).toFloat()
+                speedInKMH = WalkUtils.convertSpeedToKmH(newPathPoint.speed)
             )
         }
     }

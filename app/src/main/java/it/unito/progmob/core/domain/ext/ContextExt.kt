@@ -8,28 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 
-
-//private val allPermissions = mutableListOf(
-//    Manifest.permission.ACCESS_FINE_LOCATION,
-//    Manifest.permission.ACCESS_COARSE_LOCATION,
-//    Manifest.permission.FOREGROUND_SERVICE
-//).apply {
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-//        add(Manifest.permission.FOREGROUND_SERVICE_LOCATION)
-//        add(Manifest.permission.FOREGROUND_SERVICE_HEALTH)
-//        add(Manifest.permission.POST_NOTIFICATIONS)
-//        add(Manifest.permission.ACTIVITY_RECOGNITION)
-//        add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-//    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//        add(Manifest.permission.POST_NOTIFICATIONS)
-//        add(Manifest.permission.ACTIVITY_RECOGNITION)
-//        add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-//    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//        add(Manifest.permission.ACTIVITY_RECOGNITION)
-//        add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-//    }
-//}.toTypedArray()
-
 private val allPermissions = mutableListOf(
     Manifest.permission.ACCESS_FINE_LOCATION
 ).apply {

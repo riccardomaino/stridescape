@@ -25,10 +25,22 @@ class HomeViewModel @Inject constructor(
     private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
 
-    private val _currentDay = MutableStateFlow(DateUtils.getCurrentDayOfWeek())
-    val currentDay = _currentDay.asStateFlow()
+    private val _currentDayOfWeek = MutableStateFlow(DateUtils.getCurrentDayOfWeek())
+    val currentDayOfWeek = _currentDayOfWeek.asStateFlow()
 
-    var stepsCount = MutableStateFlow(0)
+    private val currentDay = DateUtils.getCurrentDate(pattern = "dd/MM/yyyy")
+
+    val stepsCurrentDay = homeUseCases.getCurrentDayStepsUseCase(currentDay, viewModelScope)
+    // val stepsCurrentDay = _stepsCurrentDay.asStateFlow()
+
+    val caloriesCurrentDay = homeUseCases.getCurrentDayCaloriesUseCase(currentDay, viewModelScope)
+    // val caloriesCurrentDay = _caloriesCurrentDay.asStateFlow()
+
+    val distanceCurrentDay = homeUseCases.getCurrentDayDistanceUseCase(currentDay, viewModelScope)
+    // val distanceCurrentDay = _distanceCurrentDay.asStateFlow()
+
+    val timeCurrentDay = homeUseCases.getCurrentDayTimeUseCase(currentDay, viewModelScope)
+    // val timeCurrentDay = _timeCurrentDay.asStateFlow()
 
     // Array of permissions to request computed based on the SDK version
     val permissionsToRequest = mutableListOf(
@@ -41,6 +53,24 @@ class HomeViewModel @Inject constructor(
             add(Manifest.permission.ACTIVITY_RECOGNITION)
         }
     }.toTypedArray()
+
+//    init{
+//        viewModelScope.launch(Dispatchers.IO){
+//
+//            launch {
+//                homeUseCases.getCurrentDayStepsUseCase(currentDay)
+//            }
+//            launch {
+//                homeUseCases.getCurrentDayCaloriesUseCase(currentDay)
+//            }
+//            launch {
+//                homeUseCases.getCurrentDayDistanceUseCase(currentDay)
+//            }
+//            launch {
+//                homeUseCases.getCurrentDayTimeUseCase(currentDay)
+//            }
+//        }
+//    }
 
     /**
      * Handles Home events emitted from the UI.

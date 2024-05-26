@@ -10,8 +10,24 @@ import kotlinx.coroutines.flow.Flow
 class WalkRepositoryImpl(
     private val walkDao: WalkDao
 ): WalkRepository {
-    override fun getWalksWithPathPoints(): Flow<List<WalkWithPathPoints>> {
-        return walkDao.getWalksWithPathPoints()
+    override fun findWalksWithPathPoints(): Flow<List<WalkWithPathPoints>> {
+        return walkDao.findWalksWithPathPoints()
+    }
+
+    override fun findStepsByDate(currentDay: String): Flow<Int> {
+        return walkDao.findStepsByDate(currentDay)
+    }
+
+    override fun findCaloriesByDate(currentDay: String): Flow<Int> {
+        return walkDao.findCaloriesByDate(currentDay)
+    }
+
+    override fun findDistanceByDate(currentDay: String): Flow<Int> {
+        return walkDao.findDistanceByDate(currentDay)
+    }
+
+    override fun findTimeByDate(currentDay: String): Flow<Long> {
+        return walkDao.findTimeByDate(currentDay)
     }
 
     override suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long {

@@ -28,13 +28,6 @@ class LocationTrackingManagerImpl @Inject constructor(
 ) : LocationTrackingManager {
 
     /**
-     * The reference to the LocationCallback used to retrieve the user's location. We save the
-     * reference in order to stop tracking the user's location by removing the callback from the
-     * [FusedLocationProviderClient].
-     */
-    private var locationCallback: LocationCallback? = null
-
-    /**
      * Tracks the user's single location and returns the latitude and longitude as strings.
      *
      * @param onSuccess A callback that receives the latitude and longitude as strings.
@@ -58,16 +51,14 @@ class LocationTrackingManagerImpl @Inject constructor(
      */
     override fun startTrackingLocation(intervalMillis: Long): Flow<Location> {
         return callbackFlow {
-            if(locationCallback == null){
-                Log.d(TAG, "Creating the first time the LocationCallback")
-                locationCallback = object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult) {
-                        super.onLocationResult(locationResult)
-                        locationResult.locations.lastOrNull()?.let { location ->
-                            launch {
-                                send(location)
-                                Log.d(TAG, "Sending Location to Flow: ${location.latitude}, ${location.longitude}")
-                            }
+            // Defining the LocationCallback used to retrieve the user's location.
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    super.onLocationResult(locationResult)
+                    locationResult.locations.lastOrNull()?.let { location ->
+                        launch {
+                            send(location)
+                            Log.d(TAG, "LocationCallback: sending new location (${location.latitude}, ${location.longitude})")
                         }
                     }
                 }
@@ -80,27 +71,14 @@ class LocationTrackingManagerImpl @Inject constructor(
 
             fusedLocationClient.requestLocationUpdates(
                 request,
-                locationCallback!!,
+                locationCallback,
                 Looper.getMainLooper()
             )
 
             awaitClose {
-                Log.d(TAG, "Removing the LocationCallback from the awaitClose{} block")
-                locationCallback?.let {
-                    fusedLocationClient.removeLocationUpdates(it)
-                }
-                locationCallback = null
+                Log.d(TAG, "awaitClose: removing the LocationCallback")
+                fusedLocationClient.removeLocationUpdates(locationCallback)
             }
-        }
-    }
-
-    /**
-     * Stops tracking the user's location by removing the callback from the [FusedLocationProviderClient].
-     */
-    override fun stopTrackingLocation() {
-        Log.d(TAG, "Removing the LocationCallback from the stopTrackingLocation()")
-        locationCallback?.let {
-            fusedLocationClient.removeLocationUpdates(it)
         }
     }
 

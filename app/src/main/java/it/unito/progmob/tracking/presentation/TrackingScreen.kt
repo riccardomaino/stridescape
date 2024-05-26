@@ -59,6 +59,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.presentation.components.WalkingStat
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import it.unito.progmob.ui.theme.doubleExtraLarge
@@ -66,7 +67,6 @@ import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
-import java.math.RoundingMode
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -171,8 +171,7 @@ fun TrackingScreen(
                         iconContentDescription = stringResource(R.string.tracking_distance_walking_stat_icon_desc),
                         title = stringResource(R.string.tracking_distance_walking_stat_title),
                         color = Color(0xFF0C9B12),
-                        content = (uiTrackingState.distanceInMeters.toFloat() / 1000.toFloat()).toBigDecimal()
-                            .setScale(1, RoundingMode.HALF_UP).toString()
+                        content = WalkUtils.formatDistanceToKm(uiTrackingState.distanceInMeters)
                     )
                     VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
                     WalkingStat(
