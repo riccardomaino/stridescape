@@ -82,8 +82,8 @@ fun OnBoardingProfileScreen(
                     text = stringResource(R.string.onboarding_getstarted_btn),
                     onClick = {
                         coroutineScope.launch {
-                            navController.navigate(route = Route.OnBoardingProfileScreenRoute.route) {
-                                popUpTo(Route.OnBoardingScreenRoute.route) { inclusive = true }
+                            navController.navigate(route = Route.HomeScreenRoute.route) {
+                                popUpTo(Route.HomeScreenRoute.route) { inclusive = true }
                             }
                         }
                         onBoardingEvent(OnBoardingEvent.SaveEntries)

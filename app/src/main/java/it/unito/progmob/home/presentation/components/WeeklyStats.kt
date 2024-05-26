@@ -1,6 +1,5 @@
 package it.unito.progmob.home.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,16 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import it.unito.progmob.R
-import it.unito.progmob.ui.theme.extraLarge
-import it.unito.progmob.ui.theme.extraSmall
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
-import it.unito.progmob.ui.theme.navigationBarShadow
 import it.unito.progmob.ui.theme.small
 
 @Composable

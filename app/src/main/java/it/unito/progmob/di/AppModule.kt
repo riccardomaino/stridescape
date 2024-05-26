@@ -34,10 +34,10 @@ import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.UpsertPathPointUseCase
 import it.unito.progmob.core.domain.usecase.UpsertWalkUseCase
-import it.unito.progmob.home.domain.usecase.GetCurrentDayCaloriesUseCase
-import it.unito.progmob.home.domain.usecase.GetCurrentDayDistanceUseCase
-import it.unito.progmob.home.domain.usecase.GetCurrentDayStepsUseCase
-import it.unito.progmob.home.domain.usecase.GetCurrentDayTimeUseCase
+import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
+import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
+import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
+import it.unito.progmob.home.domain.usecase.GetDayTimeUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -114,10 +114,10 @@ object AppModule {
     ) = HomeUseCases(
         DismissPermissionDialogUseCase(),
         PermissionResultUseCase(),
-        GetCurrentDayStepsUseCase(walkRepository),
-        GetCurrentDayCaloriesUseCase(walkRepository),
-        GetCurrentDayDistanceUseCase(walkRepository),
-        GetCurrentDayTimeUseCase(walkRepository)
+        GetDayStepsUseCase(walkRepository),
+        GetDayCaloriesUseCase(walkRepository),
+        GetDayDistanceUseCase(walkRepository),
+        GetDayTimeUseCase(walkRepository)
     )
 
     @Provides

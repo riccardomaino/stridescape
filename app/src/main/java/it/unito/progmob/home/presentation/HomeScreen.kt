@@ -112,7 +112,7 @@ fun HomeScreen(
                 )
                 Text(
                     stringResource(R.string.home_title),
-                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
                 )
                 Icon(
                     Icons.Default.Settings,
@@ -187,7 +187,7 @@ fun HomeScreen(
         }
     }
 
-    visiblePermissionDialogQueue.reversed().forEach() { permission ->
+    visiblePermissionDialogQueue.reversed().forEach { permission ->
         PermissionDialog(
             permissionTextProvider = when (permission) {
                 Manifest.permission.ACTIVITY_RECOGNITION -> ActivityRecognitionPermissionTextProvider()

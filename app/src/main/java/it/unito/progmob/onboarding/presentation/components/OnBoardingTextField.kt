@@ -37,6 +37,7 @@ fun OnBoardingTextField(
         )
         Spacer(modifier = modifier.height(small))
         OutlinedTextField(
+            singleLine = true,
             value = value,
             onValueChange = onValueChange,
             suffix = { Text(text = suffix, style = MaterialTheme.typography.titleMedium) },

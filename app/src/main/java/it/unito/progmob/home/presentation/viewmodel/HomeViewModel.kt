@@ -10,7 +10,9 @@ import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,16 +32,16 @@ class HomeViewModel @Inject constructor(
 
     private val currentDay = DateUtils.getCurrentDate(pattern = "dd/MM/yyyy")
 
-    val stepsCurrentDay = homeUseCases.getCurrentDayStepsUseCase(currentDay, viewModelScope)
+    val stepsCurrentDay = homeUseCases.getDayStepsUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
     // val stepsCurrentDay = _stepsCurrentDay.asStateFlow()
 
-    val caloriesCurrentDay = homeUseCases.getCurrentDayCaloriesUseCase(currentDay, viewModelScope)
+    val caloriesCurrentDay = homeUseCases.getDayCaloriesUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
     // val caloriesCurrentDay = _caloriesCurrentDay.asStateFlow()
 
-    val distanceCurrentDay = homeUseCases.getCurrentDayDistanceUseCase(currentDay, viewModelScope)
+    val distanceCurrentDay = homeUseCases.getDayDistanceUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
     // val distanceCurrentDay = _distanceCurrentDay.asStateFlow()
 
-    val timeCurrentDay = homeUseCases.getCurrentDayTimeUseCase(currentDay, viewModelScope)
+    val timeCurrentDay = homeUseCases.getDayTimeUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
     // val timeCurrentDay = _timeCurrentDay.asStateFlow()
 
     // Array of permissions to request computed based on the SDK version

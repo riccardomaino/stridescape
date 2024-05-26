@@ -6,8 +6,8 @@ package it.unito.progmob.home.domain.usecase
 data class HomeUseCases(
     val dismissPermissionDialogUseCase: DismissPermissionDialogUseCase,
     val permissionResultUseCase: PermissionResultUseCase,
-    val getCurrentDayStepsUseCase: GetCurrentDayStepsUseCase,
-    val getCurrentDayCaloriesUseCase: GetCurrentDayCaloriesUseCase,
-    val getCurrentDayDistanceUseCase: GetCurrentDayDistanceUseCase,
-    val getCurrentDayTimeUseCase: GetCurrentDayTimeUseCase
+    val getDayStepsUseCase: GetDayStepsUseCase,
+    val getDayCaloriesUseCase: GetDayCaloriesUseCase,
+    val getDayDistanceUseCase: GetDayDistanceUseCase,
+    val getDayTimeUseCase: GetDayTimeUseCase
 )
