@@ -23,9 +23,10 @@ class HomeViewModel @Inject constructor(
     // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to
     // request again if the the user has refused them
     private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
-    lateinit var currentDay: MutableStateFlow<Int>
-
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
+
+    private val _currentDay = MutableStateFlow(DateUtils.getCurrentDayOfWeek())
+    val currentDay = _currentDay.asStateFlow()
 
     var stepsCount = MutableStateFlow(0)
 
@@ -40,11 +41,6 @@ class HomeViewModel @Inject constructor(
             add(Manifest.permission.ACTIVITY_RECOGNITION)
         }
     }.toTypedArray()
-
-
-    init {
-       currentDay.value = DateUtils.getCurrentDayOfWeek()
-    }
 
     /**
      * Handles Home events emitted from the UI.
