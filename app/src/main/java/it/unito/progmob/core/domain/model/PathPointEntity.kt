@@ -6,7 +6,7 @@ import it.unito.progmob.tracking.domain.model.PathPoint
 
 @Entity(tableName = "path_points")
 data class PathPointEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val walkId: Long,
     val pathPoint: PathPoint
 )

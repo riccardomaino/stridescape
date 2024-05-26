@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface PathPoint {
-    data class LocationPoint(val latLng: LatLng, val speed: Float) : PathPoint
+    @Serializable
+    data class LocationPoint(val lat: Double, val lng: Double, val speed: Float) : PathPoint
+    @Serializable
     data object EmptyPoint : PathPoint
 }

@@ -97,12 +97,13 @@ class TrackingViewModel @Inject constructor(
     }
 
     private fun stopTrackingService() {
-        val savedState = _uiTrackingState.value.copy()
-        Log.d(TAG, "SAVED STATE: $savedState")
-
         viewModelScope.launch(Dispatchers.IO) {
             launch {
                 Log.d(TAG, "Saving to the database ...")
+                val walkId = trackingUseCases.upsertWalkUseCase(uiTrackingState.value)
+                uiTrackingState.value.pathPoints.forEach { pathPoint ->
+                    trackingUseCases.upsertPathPointUseCase(pathPoint, walkId)
+                }
             }
             launch {
                 trackingUseCases.stopTrackingUseCase()

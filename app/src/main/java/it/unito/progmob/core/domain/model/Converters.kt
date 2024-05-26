@@ -12,10 +12,4 @@ class Converters {
 
     @TypeConverter
     fun toPathPoint(value: String): PathPoint = Json.decodeFromString<PathPoint>(value)
-
-    @TypeConverter
-    fun fromLatLng(latLng: LatLng): String = Json.encodeToString(latLng)
-
-    @TypeConverter
-    fun toLatLng(value: String): LatLng = Json.decodeFromString<LatLng>(value)
 }

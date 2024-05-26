@@ -165,7 +165,7 @@ class TrackingService : Service() {
             timeTrackingManager.startTrackingTime()
         ) { location, time ->
             val newPathPoint = PathPoint.LocationPoint(
-                LatLng(location.latitude, location.longitude), location.speed
+                location.latitude, location.longitude, location.speed
             )
             // Update the walk state with the new path point and time
             walkHandler.updateWalkPathPointAndTime(newPathPoint, time)

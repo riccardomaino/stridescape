@@ -13,6 +13,7 @@ import it.unito.progmob.tracking.data.manager.TrackingServiceManagerImpl
 import it.unito.progmob.tracking.data.manager.LocationTrackingManagerImpl
 import it.unito.progmob.tracking.data.manager.TimeTrackingManagerImpl
 import it.unito.progmob.core.domain.manager.DataStoreManager
+import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.tracking.domain.manager.TrackingServiceManager
 import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
 import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
@@ -31,6 +32,8 @@ import it.unito.progmob.core.domain.usecase.SaveOnboardingEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
+import it.unito.progmob.core.domain.usecase.UpsertPathPointUseCase
+import it.unito.progmob.core.domain.usecase.UpsertWalkUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -111,13 +114,16 @@ object AppModule {
     @Singleton
     fun provideTrackingUseCases(
         dataStoreManager: DataStoreManager,
-        trackingServiceManager: TrackingServiceManager
+        trackingServiceManager: TrackingServiceManager,
+        walkRepository: WalkRepository
     ) = TrackingUseCases(
         StartTrackingUseCase(trackingServiceManager),
         ResumeTrackingUseCase(trackingServiceManager),
         PauseTrackingUseCase(trackingServiceManager),
         StopTrackingUseCase(trackingServiceManager),
         ReadUserWeightEntryUseCase(dataStoreManager),
-        ReadUserHeightEntryUseCase(dataStoreManager)
+        ReadUserHeightEntryUseCase(dataStoreManager),
+        UpsertPathPointUseCase(walkRepository),
+        UpsertWalkUseCase(walkRepository)
     )
 }

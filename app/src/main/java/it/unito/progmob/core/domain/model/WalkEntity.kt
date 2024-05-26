@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "walks")
 data class WalkEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val weekDay: Int,
     val date: String,
     val steps: Int,

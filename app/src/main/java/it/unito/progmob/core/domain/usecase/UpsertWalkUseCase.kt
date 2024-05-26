@@ -8,10 +8,10 @@ import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import java.time.Instant
 
-class UpsertNewWalkUseCase(
+class UpsertWalkUseCase(
     private val walkRepository: WalkRepository
 ) {
-    suspend operator fun invoke(uiTrackingState: UiTrackingState) {
+    suspend operator fun invoke(uiTrackingState: UiTrackingState): Long {
         val newWalkEntity = WalkEntity(
             weekDay = DateUtils.getCurrentDayOfWeek(),
             date = getCurrentDate(),
@@ -21,12 +21,12 @@ class UpsertNewWalkUseCase(
             calories = uiTrackingState.caloriesBurnt,
             averageSpeed = getAverageSpeed(uiTrackingState.pathPoints)
         )
-        walkRepository.upsertNewWalk(newWalkEntity)
+        return walkRepository.upsertNewWalk(newWalkEntity)
     }
 
     private fun getCurrentDate(): String {
         val currentTimeStamp = Instant.now().epochSecond
-        return TimeUtils.formatEpochTime(currentTimeStamp, "dd/mm/yyyy")
+        return TimeUtils.formatEpochTime(currentTimeStamp, "dd/MM/yyyy")
     }
 
     private fun getAverageSpeed(pathPoints: List<PathPoint>): Float {

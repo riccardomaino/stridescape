@@ -19,10 +19,10 @@ object WalkUtils {
         val result =
             FloatArray(1) // Float array used to store the result from the Location.distanceBetween method
         Location.distanceBetween(
-            firstPathPoint.latLng.latitude,
-            firstPathPoint.latLng.longitude,
-            secondPathPoint.latLng.latitude,
-            secondPathPoint.latLng.longitude,
+            firstPathPoint.lat,
+            firstPathPoint.lng,
+            secondPathPoint.lat,
+            secondPathPoint.lng,
             result
         )
         return result[0].roundToInt()
