@@ -1,7 +1,7 @@
 package it.unito.progmob.core.domain.util
 
 import android.location.Location
-import it.unito.progmob.core.domain.model.PathPoint
+import it.unito.progmob.tracking.domain.model.PathPoint
 import java.math.RoundingMode
 import kotlin.math.roundToInt
 

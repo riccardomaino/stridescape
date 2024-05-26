@@ -1,6 +1,6 @@
-package it.unito.progmob.core.data.manager
+package it.unito.progmob.tracking.data.manager
 
-import it.unito.progmob.core.domain.manager.TimeTrackingManager
+import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

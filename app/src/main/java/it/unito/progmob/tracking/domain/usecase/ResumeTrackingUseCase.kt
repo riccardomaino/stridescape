@@ -1,6 +1,6 @@
 package it.unito.progmob.tracking.domain.usecase
 
-import it.unito.progmob.core.domain.manager.TrackingServiceManager
+import it.unito.progmob.tracking.domain.manager.TrackingServiceManager
 import javax.inject.Inject
 
 class ResumeTrackingUseCase @Inject constructor(

@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,9 +43,7 @@ class HomeViewModel @Inject constructor(
 
 
     init {
-        val calendarInfo = Calendar.getInstance()
-        calendarInfo.time = Date() // your date is an object of type Date
-        currentDay = MutableStateFlow(calendarInfo[Calendar.DAY_OF_WEEK]-2)
+       currentDay.value = DateUtils.getCurrentDayOfWeek()
     }
 
     /**

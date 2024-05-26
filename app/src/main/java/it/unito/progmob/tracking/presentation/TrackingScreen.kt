@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,8 +25,12 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,8 +49,10 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
@@ -53,6 +62,7 @@ import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.tracking.presentation.components.WalkingStat
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import it.unito.progmob.ui.theme.doubleExtraLarge
+import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
@@ -183,26 +193,39 @@ fun TrackingScreen(
                             .fillMaxWidth()
                             .padding(horizontal = large, vertical = medium)
                     ) {
+
                         Text(
                             text = stringResource(R.string.tracking_start_btn),
+                            style = MaterialTheme.typography.titleMedium,
                             modifier = modifier.padding(vertical = small)
                         )
                     }
                 } else {
                     Row(
-                        modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(vertical = medium),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Button(
                             onClick = {
                                 switchStartStopBtn = !switchStartStopBtn
                                 trackingEvent(TrackingEvent.StopTrackingService)
                             },
-                            modifier = modifier
-                                .padding(horizontal = large, vertical = medium),
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.errorContainer),
+                            modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
                         ) {
+                            Icon(
+                                Icons.Outlined.Stop,
+                                modifier = modifier.size(extraLarge),
+                                contentDescription = stringResource(R.string.settings_icon),
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                            Spacer(modifier = Modifier.width(small))
                             Text(
                                 text = stringResource(R.string.tracking_stop_btn),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = modifier.padding(vertical = small)
                             )
                         }
@@ -212,11 +235,18 @@ fun TrackingScreen(
                                     switchPauseResumeBtn = !switchPauseResumeBtn
                                     trackingEvent(TrackingEvent.PauseTrackingService)
                                 },
-                                modifier = modifier
-                                    .padding(horizontal = large, vertical = medium)
+                                modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
                             ) {
+                                Icon(
+                                    Icons.Outlined.Pause,
+                                    modifier = modifier.size(extraLarge),
+                                    contentDescription = stringResource(R.string.settings_icon),
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                                Spacer(modifier = Modifier.width(small))
                                 Text(
                                     text = stringResource(R.string.tracking_pause_btn),
+                                    style = MaterialTheme.typography.titleMedium,
                                     modifier = modifier.padding(vertical = small)
                                 )
                             }
@@ -226,11 +256,18 @@ fun TrackingScreen(
                                     switchPauseResumeBtn = !switchPauseResumeBtn
                                     trackingEvent(TrackingEvent.ResumeTrackingService)
                                 },
-                                modifier = modifier
-                                    .padding(horizontal = large, vertical = medium)
+                                modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
                             ) {
+                                Icon(
+                                    Icons.Outlined.PlayArrow,
+                                    modifier = modifier.size(extraLarge),
+                                    contentDescription = stringResource(R.string.settings_icon),
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                                Spacer(modifier = Modifier.width(small))
                                 Text(
                                     text = stringResource(R.string.tracking_resume_btn),
+                                    style = MaterialTheme.typography.titleMedium,
                                     modifier = modifier.padding(vertical = small)
                                 )
                             }

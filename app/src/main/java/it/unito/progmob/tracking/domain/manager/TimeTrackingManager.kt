@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.manager
+package it.unito.progmob.tracking.domain.manager
 
 import kotlinx.coroutines.flow.Flow
 

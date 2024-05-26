@@ -28,11 +28,14 @@ mapsCompose = "5.0.1"
 playServicesLocation = "21.2.0"
 playServicesMaps = "18.2.0"
 splashScreen = "1.0.1"
+kotlinxSerialization = "1.6.3"
+kotlinxSerializationPlugIn = "2.0.0"
 
 [libraries]
 # Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = {group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen"}
+kotlinx-serialization = {group= "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
 # Test & Debug
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -81,3 +84,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 maps-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsSecrets" }
+kotlinx-serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugIn"}

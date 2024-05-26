@@ -1,7 +1,6 @@
-package it.unito.progmob.core.domain.manager
+package it.unito.progmob.tracking.domain.manager
 
 import android.location.Location
-import com.google.android.gms.location.LocationCallback
 import kotlinx.coroutines.flow.Flow
 
 interface LocationTrackingManager {

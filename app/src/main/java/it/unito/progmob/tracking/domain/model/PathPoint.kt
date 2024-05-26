@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.model
+package it.unito.progmob.tracking.domain.model
 
 import com.google.android.gms.maps.model.LatLng
 

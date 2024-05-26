@@ -1,6 +1,6 @@
 package it.unito.progmob.tracking.presentation.state
 
-import it.unito.progmob.core.domain.model.PathPoint
+import it.unito.progmob.tracking.domain.model.PathPoint
 
 data class UiTrackingState(
     val isTracking: Boolean = false,

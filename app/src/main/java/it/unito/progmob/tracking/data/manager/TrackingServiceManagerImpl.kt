@@ -1,10 +1,10 @@
-package it.unito.progmob.core.data.manager
+package it.unito.progmob.tracking.data.manager
 
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import it.unito.progmob.core.domain.manager.TrackingServiceManager
-import it.unito.progmob.core.domain.service.TrackingService
+import it.unito.progmob.tracking.domain.manager.TrackingServiceManager
+import it.unito.progmob.tracking.domain.service.TrackingService
 import javax.inject.Inject
 
 class TrackingServiceManagerImpl @Inject constructor(

@@ -6,8 +6,8 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 import it.unito.progmob.R
-import it.unito.progmob.core.domain.service.TrackingService.Companion.NOTIFICATION_CHANNEL_ID
-import it.unito.progmob.core.domain.service.TrackingService.Companion.NOTIFICATION_CHANNEL_NAME
+import it.unito.progmob.tracking.domain.service.TrackingService.Companion.NOTIFICATION_CHANNEL_ID
+import it.unito.progmob.tracking.domain.service.TrackingService.Companion.NOTIFICATION_CHANNEL_NAME
 
 @HiltAndroidApp
 class StridescapeApp : Application() {

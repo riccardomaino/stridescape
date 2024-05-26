@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.manager
+package it.unito.progmob.tracking.domain.manager
 
 interface TrackingServiceManager {
     fun startTrackingService()

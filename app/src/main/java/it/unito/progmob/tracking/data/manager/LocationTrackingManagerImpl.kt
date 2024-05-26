@@ -1,4 +1,4 @@
-package it.unito.progmob.core.data.manager
+package it.unito.progmob.tracking.data.manager
 
 import android.annotation.SuppressLint
 import android.location.Location
@@ -9,7 +9,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import it.unito.progmob.core.domain.manager.LocationTrackingManager
+import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

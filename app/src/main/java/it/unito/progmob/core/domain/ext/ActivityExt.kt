@@ -1,4 +1,4 @@
-package it.unito.progmob.home.domain.util
+package it.unito.progmob.core.domain.ext
 
 import android.app.Activity
 import android.content.Intent

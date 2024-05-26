@@ -9,17 +9,17 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.unito.progmob.core.data.manager.DataStoreManagerImpl
-import it.unito.progmob.core.data.manager.TrackingServiceManagerImpl
-import it.unito.progmob.core.data.manager.LocationTrackingManagerImpl
-import it.unito.progmob.core.data.manager.TimeTrackingManagerImpl
+import it.unito.progmob.tracking.data.manager.TrackingServiceManagerImpl
+import it.unito.progmob.tracking.data.manager.LocationTrackingManagerImpl
+import it.unito.progmob.tracking.data.manager.TimeTrackingManagerImpl
 import it.unito.progmob.core.domain.manager.DataStoreManager
-import it.unito.progmob.core.domain.manager.TrackingServiceManager
-import it.unito.progmob.core.domain.manager.LocationTrackingManager
-import it.unito.progmob.core.domain.manager.TimeTrackingManager
+import it.unito.progmob.tracking.domain.manager.TrackingServiceManager
+import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
+import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
 import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
-import it.unito.progmob.core.domain.state.WalkStateHandler
+import it.unito.progmob.tracking.domain.service.WalkHandler
 import it.unito.progmob.home.domain.usecase.DismissPermissionDialogUseCase
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.domain.usecase.PermissionResultUseCase
@@ -72,7 +72,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesWalkStateHandler() = WalkStateHandler()
+    fun providesWalkHandler() = WalkHandler()
 
     @Provides
     @Singleton

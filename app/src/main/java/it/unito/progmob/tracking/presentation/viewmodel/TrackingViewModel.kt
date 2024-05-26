@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.unito.progmob.core.domain.state.WalkState
-import it.unito.progmob.core.domain.state.WalkStateHandler
+import it.unito.progmob.tracking.domain.model.Walk
+import it.unito.progmob.tracking.domain.service.WalkHandler
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.tracking.presentation.TrackingEvent
@@ -24,10 +24,10 @@ import javax.inject.Inject
 @HiltViewModel
 class TrackingViewModel @Inject constructor(
     private val trackingUseCases: TrackingUseCases,
-    private val walkStateHandler: WalkStateHandler
+    private val walkHandler: WalkHandler
 ): ViewModel() {
     // The StateFlow of the WalkState obtained through the WalkStateHandler
-    private val _walkState: StateFlow<WalkState> = walkStateHandler.walkState
+    private val _walk: StateFlow<Walk> = walkHandler.walk
 
     // The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
     private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
@@ -54,7 +54,7 @@ class TrackingViewModel @Inject constructor(
             }
         }
 
-        _walkState.onEach { walkState ->
+        _walk.onEach { walkState ->
             _uiTrackingState.update {
                 it.copy(
                     isTracking = walkState.isTracking,

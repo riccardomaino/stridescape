@@ -42,7 +42,7 @@ import it.unito.progmob.R
 import it.unito.progmob.core.domain.ext.findActivity
 import it.unito.progmob.core.presentation.components.NavigationBar
 import it.unito.progmob.core.presentation.navigation.Route
-import it.unito.progmob.home.domain.util.openAppSettings
+import it.unito.progmob.core.domain.ext.openAppSettings
 import it.unito.progmob.home.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.home.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.home.presentation.components.CircularProgressBar

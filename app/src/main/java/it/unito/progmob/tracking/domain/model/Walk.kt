@@ -1,8 +1,6 @@
-package it.unito.progmob.core.domain.state
+package it.unito.progmob.tracking.domain.model
 
-import it.unito.progmob.core.domain.model.PathPoint
-
-data class WalkState(
+data class Walk(
     val isTracking: Boolean = false,
     val distanceInMeters: Int = 0,
     val timeInMillis: Long = 0L,

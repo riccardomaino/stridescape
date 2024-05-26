@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.service
+package it.unito.progmob.tracking.domain.service
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -18,12 +18,11 @@ import it.unito.progmob.MainActivity
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.Constants.LOCATION_TRACKING_INTERVAL
 import it.unito.progmob.core.domain.ext.hasAllPermissions
-import it.unito.progmob.core.domain.manager.LocationTrackingManager
-import it.unito.progmob.core.domain.manager.TimeTrackingManager
-import it.unito.progmob.core.domain.model.PathPoint
+import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
+import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
+import it.unito.progmob.tracking.domain.model.PathPoint
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
-import it.unito.progmob.core.domain.state.WalkStateHandler
 import it.unito.progmob.core.domain.util.TimeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,12 +57,12 @@ class TrackingService : Service() {
     lateinit var timeTrackingManager: TimeTrackingManager
 
     /**
-     * The [WalkStateHandler] is field injected by Dagger since a Service is an Android
+     * The [WalkHandler] is field injected by Dagger since a Service is an Android
      * component and we can only use field injection. It is used to handle the state containing the
      * walking state
      */
     @Inject
-    lateinit var walkStateHandler: WalkStateHandler
+    lateinit var walkHandler: WalkHandler
 
     /**
      * The [StepCounterSensor] object represent the sensor used used to track the number of steps
@@ -140,11 +139,11 @@ class TrackingService : Service() {
 
         // If the service is not resumed, update the state to the initial value
         if (!hasBeenResumed) {
-            walkStateHandler.trackingServiceStarted()
+            walkHandler.trackingServiceStarted()
         }
 
         // Update the walk state isTracking field to true
-        walkStateHandler.updateWalkStateTracking(true)
+        walkHandler.updateWalkTracking(true)
 
         // Get the NotificationManager used to notify the notification
         val notificationManager =
@@ -169,7 +168,7 @@ class TrackingService : Service() {
                 LatLng(location.latitude, location.longitude), location.speed
             )
             // Update the walk state with the new path point and time
-            walkStateHandler.updateWalkStatePathPointAndTime(newPathPoint, time)
+            walkHandler.updateWalkPathPointAndTime(newPathPoint, time)
             // Notify the the updated notification
             val updatedNotification = notification
                 .setContentText("Time: ${TimeUtils.formatMillisTime(time)}")
@@ -185,10 +184,10 @@ class TrackingService : Service() {
             stepCounterSensor.setOnSensorValueChangedListener { sensorData ->
                 val newSteps = sensorData[0].toInt()
                 // Update the walk state with the new steps
-                walkStateHandler.updateWalkStateSteps(newSteps)
+                walkHandler.updateWalkSteps(newSteps)
                 // Notify the the updated notification
                 val updatedNotification = notification
-                    .setStyle(NotificationCompat.BigTextStyle().bigText("Steps: ${walkStateHandler.walkState.value.steps}"))
+                    .setStyle(NotificationCompat.BigTextStyle().bigText("Steps: ${walkHandler.walk.value.steps}"))
                 notificationManager.notify(
                     NOTIFICATION_ID, updatedNotification.build()
                 )
@@ -224,9 +223,9 @@ class TrackingService : Service() {
         trackingServiceScope.cancel()
         stepCounterSensor.stopListening()
         // Update the walk state isTracking field to false
-        walkStateHandler.updateWalkStateTracking(false)
+        walkHandler.updateWalkTracking(false)
         // Update the walk state path adding an empty point
-        walkStateHandler.updateWalkStatePathPointPaused()
+        walkHandler.updateWalkPathPointPaused()
     }
 
     /**
@@ -238,8 +237,8 @@ class TrackingService : Service() {
         timeTrackingManager.stopTrackingTime()
         stepCounterSensor.stopListening()
         hasBeenResumed = false
-        walkStateHandler.updateWalkStateTracking(false)
-        walkStateHandler.updateWalkStatePathPointPaused()
+        walkHandler.updateWalkTracking(false)
+        walkHandler.updateWalkPathPointPaused()
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
         stopSelf() // Stops the service
     }

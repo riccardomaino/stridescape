@@ -1,24 +1,25 @@
-package it.unito.progmob.core.domain.state
+package it.unito.progmob.tracking.domain.service
 
-import it.unito.progmob.core.domain.model.PathPoint
+import it.unito.progmob.tracking.domain.model.PathPoint
+import it.unito.progmob.tracking.domain.model.Walk
 import it.unito.progmob.core.domain.util.WalkUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.math.RoundingMode
 
-class WalkStateHandler {
+class WalkHandler {
     /**
      * The [MutableStateFlow] object that holds the current state of the walk. It is exposed to a
      * read-only state flow to prevent external modification of the state.
      */
-    private val _walkState: MutableStateFlow<WalkState> = MutableStateFlow(WalkState())
-    var walkState = _walkState.asStateFlow()
+    private val _walk: MutableStateFlow<Walk> = MutableStateFlow(Walk())
+    var walk = _walk.asStateFlow()
 
     private var initialSteps: Int? = null
 
     fun trackingServiceStarted(){
-        _walkState.update {
+        _walk.update {
             it.copy(
                 pathPoints = emptyList(),
                 distanceInMeters = 0,
@@ -31,32 +32,32 @@ class WalkStateHandler {
     }
 
     /**
-     * Updates the [WalkState] according to the newPathPoint received from flow of the location and
+     * Updates the [Walk] according to the newPathPoint received from flow of the location and
      * the new time received from the flow of the time
      *
-     * @param newPathPoint the new [PathPoint] used to update the [WalkState]
-     * @param time the new time in milliseconds used to update the [WalkState]
+     * @param newPathPoint the new [PathPoint] used to update the [Walk]
+     * @param time the new time in milliseconds used to update the [Walk]
      * @param pointsAccuracy the accuracy in meters to consider two path points as different
      */
-    fun updateWalkStatePathPointAndTime(
+    fun updateWalkPathPointAndTime(
         newPathPoint: PathPoint.LocationPoint,
         time: Long,
         pointsAccuracy: Int = 5
     ) {
          // Update the milliseconds time in the walk state
-        _walkState.update {
+        _walk.update {
             it.copy(
                 timeInMillis = time
             )
         }
         // Update the distance in meters, path points and speed in the walk state
-        val previousPathPoint = _walkState.value.pathPoints.lastOrNull()
+        val previousPathPoint = _walk.value.pathPoints.lastOrNull()
         previousPathPoint?.let { prevPathPoint ->
             if (prevPathPoint is PathPoint.LocationPoint) {
                 if(prevPathPoint != newPathPoint){
                     val distanceBetweenPathPoints = WalkUtils.getDistanceBetweenTwoPathPoints(prevPathPoint, newPathPoint)
                     if (distanceBetweenPathPoints > pointsAccuracy) {
-                        _walkState.update { walkState ->
+                        _walk.update { walkState ->
                             walkState.copy(
                                 distanceInMeters = walkState.distanceInMeters + distanceBetweenPathPoints,
                                 pathPoints = walkState.pathPoints + newPathPoint,
@@ -67,7 +68,7 @@ class WalkStateHandler {
                     }
                 }
             } else  {
-                _walkState.update {walkState ->
+                _walk.update { walkState ->
                     walkState.copy(
                         pathPoints = walkState.pathPoints + newPathPoint,
                         speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
@@ -75,7 +76,7 @@ class WalkStateHandler {
                     )
                 }
             }
-        } ?: _walkState.update { walkState ->
+        } ?: _walk.update { walkState ->
             walkState.copy(
                 pathPoints = walkState.pathPoints + newPathPoint,
                 speedInKMH = newPathPoint.speed.times(3.6f).toBigDecimal()
@@ -85,12 +86,12 @@ class WalkStateHandler {
     }
 
     /**
-     * Updates the [WalkState] according to the isTracking value
+     * Updates the [Walk] according to the isTracking value
      *
-     * @param isTracking the new value of the isTracking field to update the [WalkState]
+     * @param isTracking the new value of the isTracking field to update the [Walk]
      */
-    fun updateWalkStateTracking(isTracking: Boolean){
-        _walkState.update {
+    fun updateWalkTracking(isTracking: Boolean){
+        _walk.update {
             it.copy(
                 isTracking = isTracking
             )
@@ -98,13 +99,13 @@ class WalkStateHandler {
     }
 
     /**
-     * Updates the [WalkState] according to the stepsValue received from the step counter sensor
+     * Updates the [Walk] according to the stepsValue received from the step counter sensor
      *
-     * @param newSteps the new number of steps taken by the user to update the [WalkState]
+     * @param newSteps the new number of steps taken by the user to update the [Walk]
      */
-    fun updateWalkStateSteps(newSteps: Int) {
+    fun updateWalkSteps(newSteps: Int) {
         initialSteps?.let { initialSteps ->
-            _walkState.update {
+            _walk.update {
                 it.copy(
                     steps = newSteps - initialSteps
                 )
@@ -115,11 +116,11 @@ class WalkStateHandler {
     }
 
     /**
-     * Updates the [WalkState] adding an empty [PathPoint] in order to know when the user paused.
+     * Updates the [Walk] adding an empty [PathPoint] in order to know when the user paused.
      * It's useful in order to know when the path should not be drawn between two points
      */
-    fun updateWalkStatePathPointPaused() {
-        _walkState.update { walkState ->
+    fun updateWalkPathPointPaused() {
+        _walk.update { walkState ->
             val emptyPoint = PathPoint.EmptyPoint
             walkState.copy(
                 pathPoints = walkState.pathPoints + emptyPoint,
@@ -129,6 +130,6 @@ class WalkStateHandler {
 
 
     companion object {
-        private val TAG = WalkStateHandler::class.java.simpleName
+        private val TAG = WalkHandler::class.java.simpleName
     }
 }
