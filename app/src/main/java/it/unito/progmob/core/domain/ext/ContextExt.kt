@@ -8,16 +8,18 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 
-private val allPermissions = mutableListOf(
-    Manifest.permission.ACCESS_FINE_LOCATION
-).apply {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        add(Manifest.permission.POST_NOTIFICATIONS)
-        add(Manifest.permission.ACTIVITY_RECOGNITION)
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        add(Manifest.permission.ACTIVITY_RECOGNITION)
-    }
-}.toTypedArray()
+val Context.allPermissions by lazy {
+    mutableListOf(
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            add(Manifest.permission.POST_NOTIFICATIONS)
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
+        }
+    }.toTypedArray()
+}
 
 
 /**

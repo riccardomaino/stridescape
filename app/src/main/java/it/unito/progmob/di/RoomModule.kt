@@ -7,11 +7,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import it.unito.progmob.core.data.data_source.WalkDatabase
+import it.unito.progmob.core.data.repository.TargetRepositoryImpl
 import it.unito.progmob.core.data.repository.WalkRepositoryImpl
+import it.unito.progmob.core.domain.repository.TargetRepository
 import it.unito.progmob.core.domain.repository.WalkRepository
-import it.unito.progmob.core.domain.usecase.GetWalksWithPathPointsUseCase
-import it.unito.progmob.core.domain.usecase.UpsertPathPointUseCase
-import it.unito.progmob.core.domain.usecase.UpsertWalkUseCase
 import javax.inject.Singleton
 
 @Module
@@ -28,4 +27,8 @@ object RoomModule {
     @Provides
     @Singleton
     fun provideWalkRepository(walkDatabase: WalkDatabase): WalkRepository = WalkRepositoryImpl(walkDatabase.walkDao)
+
+    @Provides
+    @Singleton
+    fun provideTargetRepository(walkDatabase: WalkDatabase): TargetRepository = TargetRepositoryImpl(walkDatabase.targetDao)
 }

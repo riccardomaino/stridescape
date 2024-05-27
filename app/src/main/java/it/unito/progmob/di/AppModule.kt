@@ -13,6 +13,7 @@ import it.unito.progmob.tracking.data.manager.TrackingServiceManagerImpl
 import it.unito.progmob.tracking.data.manager.LocationTrackingManagerImpl
 import it.unito.progmob.tracking.data.manager.TimeTrackingManagerImpl
 import it.unito.progmob.core.domain.manager.DataStoreManager
+import it.unito.progmob.core.domain.repository.TargetRepository
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.tracking.domain.manager.TrackingServiceManager
 import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
@@ -32,8 +33,12 @@ import it.unito.progmob.core.domain.usecase.SaveOnboardingEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
-import it.unito.progmob.core.domain.usecase.UpsertPathPointUseCase
-import it.unito.progmob.core.domain.usecase.UpsertWalkUseCase
+import it.unito.progmob.core.domain.usecase.AddPathPointUseCase
+import it.unito.progmob.core.domain.usecase.AddWalkUseCase
+import it.unito.progmob.core.domain.usecase.CheckTargetExistUseCase
+import it.unito.progmob.core.domain.usecase.MainUseCases
+import it.unito.progmob.home.domain.usecase.AddTargetUseCase
+import it.unito.progmob.home.domain.usecase.GetDateTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
 import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
 import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
@@ -97,6 +102,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideMainUseCases(
+        dataStoreManager: DataStoreManager,
+        targetRepository: TargetRepository
+    ) = MainUseCases(
+        ReadOnboardingEntryUseCase(dataStoreManager),
+        CheckTargetExistUseCase(targetRepository)
+    )
+
+    @Provides
+    @Singleton
     fun provideOnBoardingUseCases(
         dataStoreManager: DataStoreManager
     ) = OnBoardingUseCases(
@@ -110,14 +125,17 @@ object AppModule {
     @Provides
     @Singleton
     fun provideHomeUseCases(
-        walkRepository: WalkRepository
+        walkRepository: WalkRepository,
+        targetRepository: TargetRepository
     ) = HomeUseCases(
         DismissPermissionDialogUseCase(),
         PermissionResultUseCase(),
         GetDayStepsUseCase(walkRepository),
         GetDayCaloriesUseCase(walkRepository),
         GetDayDistanceUseCase(walkRepository),
-        GetDayTimeUseCase(walkRepository)
+        GetDayTimeUseCase(walkRepository),
+        AddTargetUseCase(targetRepository),
+        GetDateTargetUseCase(targetRepository)
     )
 
     @Provides
@@ -133,7 +151,8 @@ object AppModule {
         StopTrackingUseCase(trackingServiceManager),
         ReadUserWeightEntryUseCase(dataStoreManager),
         ReadUserHeightEntryUseCase(dataStoreManager),
-        UpsertPathPointUseCase(walkRepository),
-        UpsertWalkUseCase(walkRepository)
+        AddPathPointUseCase(walkRepository),
+        AddWalkUseCase(walkRepository)
     )
+
 }

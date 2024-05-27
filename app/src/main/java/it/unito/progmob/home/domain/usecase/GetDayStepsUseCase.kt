@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetDayStepsUseCase @Inject constructor(
     private val walkRepository: WalkRepository
 ) {
-    operator fun invoke(currentDay: String): Flow<Int> {
-        return walkRepository.findStepsByDate(currentDay)
+    operator fun invoke(date: String): Flow<Int> {
+        return walkRepository.findStepsByDate(date)
     }
 }

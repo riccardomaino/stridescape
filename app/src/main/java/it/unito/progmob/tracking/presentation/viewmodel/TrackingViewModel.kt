@@ -98,9 +98,9 @@ class TrackingViewModel @Inject constructor(
     private fun stopTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.stopTrackingUseCase()
-            val walkId = trackingUseCases.upsertWalkUseCase(uiTrackingState.value)
+            val walkId = trackingUseCases.addWalkUseCase(uiTrackingState.value)
             uiTrackingState.value.pathPoints.forEach { pathPoint ->
-                trackingUseCases.upsertPathPointUseCase(walkId, pathPoint)
+                trackingUseCases.addPathPointUseCase(walkId, pathPoint)
             }
             walkHandler.trackingServiceStopped()
         }

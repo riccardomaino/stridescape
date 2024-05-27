@@ -6,19 +6,22 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.unito.progmob.core.domain.usecase.MainUseCases
+import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.core.presentation.MainEvent
 import it.unito.progmob.core.presentation.navigation.Route
-import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val onBoardingUseCases: OnBoardingUseCases,
+    private val mainUseCases: MainUseCases,
 ) : ViewModel() {
 
     var startDestination by mutableStateOf(Route.OnBoardingNavigationRoute.route)
@@ -28,7 +31,7 @@ class MainViewModel @Inject constructor(
     val isReady = _isReady.asStateFlow()
 
     init {
-        onBoardingUseCases.readOnboardingEntryUseCase().onEach { shouldStartFromHomeScreen ->
+        mainUseCases.readOnboardingEntryUseCase().onEach { shouldStartFromHomeScreen ->
             startDestination = if(shouldStartFromHomeScreen) {
                 Route.MainNavigationRoute.route
             } else {
@@ -37,6 +40,10 @@ class MainViewModel @Inject constructor(
             delay(600)
             _isReady.value = true
         }.launchIn(viewModelScope)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            mainUseCases.checkTargetExistUseCase(DateUtils.getCurrentDate(pattern = "dd/MM/yyyy"))
+        }
     }
 
     /**

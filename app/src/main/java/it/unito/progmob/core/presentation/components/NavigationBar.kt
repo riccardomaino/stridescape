@@ -46,6 +46,7 @@ fun NavigationBar(
     navigationController: NavController
 ) {
     val selectedPageColor = MaterialTheme.colorScheme.primary
+    val unselectedPageColor = MaterialTheme.colorScheme.onPrimary
 
     Row(
         modifier = modifier
@@ -96,7 +97,7 @@ fun NavigationBar(
                             contentDescription = "Localized description",
                             modifier = Modifier
                                 .size(large),
-                            tint = if (navigationController.currentDestination?.route == Route.HomeScreenRoute.route)
+                            tint = if (navigationController.currentDestination?.route == Route.HomeScreenRoute.route || navigationController.currentDestination?.route == Route.TrackingScreenRoute.route)
                                 MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }

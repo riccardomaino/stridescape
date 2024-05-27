@@ -11,4 +11,7 @@ object Constants {
     // Tracking Service
     const val LOCATION_TRACKING_INTERVAL = 5000L
 
+    // Target
+    const val DEFAULT_STEPS_TARGET = 5000
+
 }

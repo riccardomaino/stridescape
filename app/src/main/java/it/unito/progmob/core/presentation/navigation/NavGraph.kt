@@ -133,23 +133,24 @@ fun NavGraph(
                 }
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
-                val permissionsToRequest = homeViewModel.permissionsToRequest
                 val visiblePermissionDialogQueue by homeViewModel.visiblePermissionDialogQueue.collectAsState()
                 val currentDayOfWeek by homeViewModel.currentDayOfWeek.collectAsState()
                 val stepsCurrentDay by homeViewModel.stepsCurrentDay.collectAsState()
                 val caloriesCurrentDay by homeViewModel.caloriesCurrentDay.collectAsState()
                 val distanceCurrentDay by homeViewModel.distanceCurrentDay.collectAsState()
                 val timeCurrentDay by homeViewModel.timeCurrentDay.collectAsState()
+                val stepsTargetCurrentDay by homeViewModel.stepsTargetCurrentDay.collectAsState()
+
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
                     navController = navController,
                     visiblePermissionDialogQueue = visiblePermissionDialogQueue,
-                    permissionsToRequest = permissionsToRequest,
                     currentDayOfWeek = currentDayOfWeek,
                     stepsCurrentDay = stepsCurrentDay,
                     caloriesCurrentDay = caloriesCurrentDay,
                     distanceCurrentDay = distanceCurrentDay,
-                    timeCurrentDay = timeCurrentDay
+                    timeCurrentDay = timeCurrentDay,
+                    stepsTargetCurrentDay = stepsTargetCurrentDay
                 )
             }
 

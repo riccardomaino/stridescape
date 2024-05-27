@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetDayTimeUseCase @Inject constructor(
    private val walkRepository: WalkRepository
 ) {
-    operator fun invoke(currentDay: String): Flow<Long> {
-        return walkRepository.findTimeByDate(currentDay)
+    operator fun invoke(date: String): Flow<Long> {
+        return walkRepository.findTimeByDate(date)
     }
 }

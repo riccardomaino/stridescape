@@ -6,7 +6,7 @@ import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 
-class UpsertWalkUseCase(
+class AddWalkUseCase(
     private val walkRepository: WalkRepository
 ) {
     suspend operator fun invoke(uiTrackingState: UiTrackingState): Long {

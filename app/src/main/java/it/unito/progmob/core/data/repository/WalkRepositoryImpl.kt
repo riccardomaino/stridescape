@@ -14,20 +14,20 @@ class WalkRepositoryImpl(
         return walkDao.findWalksWithPathPoints()
     }
 
-    override fun findStepsByDate(currentDay: String): Flow<Int> {
-        return walkDao.findStepsByDate(currentDay)
+    override fun findStepsByDate(date: String): Flow<Int> {
+        return walkDao.findStepsByDate(date)
     }
 
-    override fun findCaloriesByDate(currentDay: String): Flow<Int> {
-        return walkDao.findCaloriesByDate(currentDay)
+    override fun findCaloriesByDate(date: String): Flow<Int> {
+        return walkDao.findCaloriesByDate(date)
     }
 
-    override fun findDistanceByDate(currentDay: String): Flow<Int> {
-        return walkDao.findDistanceByDate(currentDay)
+    override fun findDistanceByDate(date: String): Flow<Int> {
+        return walkDao.findDistanceByDate(date)
     }
 
-    override fun findTimeByDate(currentDay: String): Flow<Long> {
-        return walkDao.findTimeByDate(currentDay)
+    override fun findTimeByDate(date: String): Flow<Long> {
+        return walkDao.findTimeByDate(date)
     }
 
     override suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long {

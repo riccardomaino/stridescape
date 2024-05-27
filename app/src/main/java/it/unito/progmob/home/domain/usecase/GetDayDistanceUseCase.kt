@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetDayDistanceUseCase @Inject constructor(
     private val walkRepository: WalkRepository
 ) {
-    operator fun invoke(currentDay: String): Flow<Int> {
-        return walkRepository.findDistanceByDate(currentDay)
+    operator fun invoke(date: String): Flow<Int> {
+        return walkRepository.findDistanceByDate(date)
     }
 }

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.navigation.NavController
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.ext.allPermissions
 import it.unito.progmob.core.domain.ext.findActivity
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.ext.openAppSettings
@@ -59,12 +60,12 @@ fun HomeScreen(
     homeEvent: (HomeEvent) -> Unit,
     navController: NavController,
     visiblePermissionDialogQueue: List<String>,
-    permissionsToRequest: Array<String>,
     currentDayOfWeek: Int,
     stepsCurrentDay: Int,
     caloriesCurrentDay: Int,
     distanceCurrentDay: Int,
-    timeCurrentDay: Long
+    timeCurrentDay: Long,
+    stepsTargetCurrentDay: Int
 ) {
 
     val context = LocalContext.current
@@ -74,14 +75,11 @@ fun HomeScreen(
     val weeklyStats = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000)
     val weeklyTargetStats = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000)
 
-//    val allPermissionsGranted = remember {
-//        mutableStateOf(false)
-//    }
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
-            permissionsToRequest.forEach { permission ->
+            context.allPermissions.forEach { permission ->
                 if (perms[permission] == false) {
                     homeEvent(
                         HomeEvent.PermissionResult(
@@ -134,23 +132,12 @@ fun HomeScreen(
                         navController.navigate(Route.TrackingScreenRoute.route)
                     }else{
                         multiplePermissionResultLauncher.launch(
-                            permissionsToRequest
+                            context.allPermissions
                         )
+                        if(context.hasAllPermissions()){
+                            navController.navigate(Route.TrackingScreenRoute.route)
+                        }
                     }
-//                    multiplePermissionResultLauncher.launch(
-//                        permissionsToRequest
-//                    )
-
-//                    allPermissionsGranted.value = permissionsToRequest.all { permission ->
-//                        ContextCompat.checkSelfPermission(
-//                            context,
-//                            permission
-//                        ) == PackageManager.PERMISSION_GRANTED
-//                    }
-
-//                    if (allPermissionsGranted.value) {
-//                        navController.navigate(Route.TrackingScreenRoute.route)
-//                    }
                 },
                 navigationController = navController,
             )
@@ -170,7 +157,7 @@ fun HomeScreen(
                     .clip(shape = RoundedCornerShape(large))
                     .background(MaterialTheme.colorScheme.surface)
             ) {
-                CircularProgressBar(steps = stepsCurrentDay, targetStepsGoal = 6000, radius = 88.dp)
+                CircularProgressBar(steps = stepsCurrentDay, targetStepsGoal = stepsTargetCurrentDay, radius = 88.dp)
             }
             Spacer(modifier = Modifier.height(small))
             WalkingStats(

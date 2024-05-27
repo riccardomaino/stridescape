@@ -17,17 +17,17 @@ interface WalkDao {
     @Query("SELECT * FROM walks")
     fun findWalksWithPathPoints(): Flow<List<WalkWithPathPoints>>
 
-    @Query("SELECT SUM(steps) FROM walks WHERE date = :currentDay")
-    fun findStepsByDate(currentDay: String): Flow<Int>
+    @Query("SELECT SUM(steps) FROM walks WHERE date = :date")
+    fun findStepsByDate(date: String): Flow<Int>
 
-    @Query("SELECT SUM(calories) FROM walks WHERE date = :currentDay")
-    fun findCaloriesByDate(currentDay: String): Flow<Int>
+    @Query("SELECT SUM(calories) FROM walks WHERE date = :date")
+    fun findCaloriesByDate(date: String): Flow<Int>
 
-    @Query("SELECT SUM(distance) FROM walks WHERE date = :currentDay")
-    fun findDistanceByDate(currentDay: String): Flow<Int>
+    @Query("SELECT SUM(distance) FROM walks WHERE date = :date")
+    fun findDistanceByDate(date: String): Flow<Int>
 
-    @Query("SELECT SUM(time) FROM walks WHERE date = :currentDay")
-    fun findTimeByDate(currentDay: String): Flow<Long>
+    @Query("SELECT SUM(time) FROM walks WHERE date = :date")
+    fun findTimeByDate(date: String): Flow<Long>
 
     @Upsert
     suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long

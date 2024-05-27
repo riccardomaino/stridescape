@@ -2,8 +2,8 @@ package it.unito.progmob.tracking.domain.usecase
 
 import it.unito.progmob.core.domain.usecase.ReadUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
-import it.unito.progmob.core.domain.usecase.UpsertPathPointUseCase
-import it.unito.progmob.core.domain.usecase.UpsertWalkUseCase
+import it.unito.progmob.core.domain.usecase.AddPathPointUseCase
+import it.unito.progmob.core.domain.usecase.AddWalkUseCase
 
 data class TrackingUseCases(
     val startTrackingUseCase: StartTrackingUseCase,
@@ -12,6 +12,6 @@ data class TrackingUseCases(
     val stopTrackingUseCase: StopTrackingUseCase,
     val readUserWeightEntryUseCase: ReadUserWeightEntryUseCase,
     val readUserHeightEntryUseCase: ReadUserHeightEntryUseCase,
-    val upsertPathPointUseCase: UpsertPathPointUseCase,
-    val upsertWalkUseCase: UpsertWalkUseCase
+    val addPathPointUseCase: AddPathPointUseCase,
+    val addWalkUseCase: AddWalkUseCase
 )

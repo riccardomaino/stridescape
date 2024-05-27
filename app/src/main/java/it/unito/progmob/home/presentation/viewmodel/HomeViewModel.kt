@@ -1,7 +1,5 @@
 package it.unito.progmob.home.presentation.viewmodel
 
-import android.Manifest
-import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,49 +28,22 @@ class HomeViewModel @Inject constructor(
     private val _currentDayOfWeek = MutableStateFlow(DateUtils.getCurrentDayOfWeek())
     val currentDayOfWeek = _currentDayOfWeek.asStateFlow()
 
-    private val currentDay = DateUtils.getCurrentDate(pattern = "dd/MM/yyyy")
+    private val currentDate = DateUtils.getCurrentDate(pattern = "dd/MM/yyyy")
 
-    val stepsCurrentDay = homeUseCases.getDayStepsUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
-    // val stepsCurrentDay = _stepsCurrentDay.asStateFlow()
+    val stepsCurrentDay = homeUseCases.getDayStepsUseCase(currentDate)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
-    val caloriesCurrentDay = homeUseCases.getDayCaloriesUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
-    // val caloriesCurrentDay = _caloriesCurrentDay.asStateFlow()
+    val caloriesCurrentDay = homeUseCases.getDayCaloriesUseCase(currentDate)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
-    val distanceCurrentDay = homeUseCases.getDayDistanceUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
-    // val distanceCurrentDay = _distanceCurrentDay.asStateFlow()
+    val distanceCurrentDay = homeUseCases.getDayDistanceUseCase(currentDate)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
-    val timeCurrentDay = homeUseCases.getDayTimeUseCase(currentDay).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
-    // val timeCurrentDay = _timeCurrentDay.asStateFlow()
+    val timeCurrentDay = homeUseCases.getDayTimeUseCase(currentDate)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0L)
 
-    // Array of permissions to request computed based on the SDK version
-    val permissionsToRequest = mutableListOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-    ).apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            add(Manifest.permission.POST_NOTIFICATIONS)
-            add(Manifest.permission.ACTIVITY_RECOGNITION)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            add(Manifest.permission.ACTIVITY_RECOGNITION)
-        }
-    }.toTypedArray()
-
-//    init{
-//        viewModelScope.launch(Dispatchers.IO){
-//
-//            launch {
-//                homeUseCases.getCurrentDayStepsUseCase(currentDay)
-//            }
-//            launch {
-//                homeUseCases.getCurrentDayCaloriesUseCase(currentDay)
-//            }
-//            launch {
-//                homeUseCases.getCurrentDayDistanceUseCase(currentDay)
-//            }
-//            launch {
-//                homeUseCases.getCurrentDayTimeUseCase(currentDay)
-//            }
-//        }
-//    }
+    val stepsTargetCurrentDay = homeUseCases.getDateTargetUseCase(currentDate)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
     /**
      * Handles Home events emitted from the UI.
@@ -84,6 +55,7 @@ class HomeViewModel @Inject constructor(
                 isGranted = event.isGranted,
                 permission = event.permission
             )
+
             is HomeEvent.DismissPermissionDialog -> dismissPermissionDialog()
         }
     }
@@ -95,8 +67,8 @@ class HomeViewModel @Inject constructor(
     private fun dismissPermissionDialog() {
         viewModelScope.launch(Dispatchers.Default) {
             val dismissDialogQueueResult = homeUseCases.dismissPermissionDialogUseCase(
-                    _visiblePermissionDialogQueue.value.toMutableList()
-                )
+                _visiblePermissionDialogQueue.value.toMutableList()
+            )
 
             _visiblePermissionDialogQueue.update {
                 dismissDialogQueueResult
