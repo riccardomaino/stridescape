@@ -43,7 +43,7 @@ class HomeViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0L)
 
     val stepsTargetCurrentDay = homeUseCases.getDateTargetUseCase(currentDate)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     /**
      * Handles Home events emitted from the UI.

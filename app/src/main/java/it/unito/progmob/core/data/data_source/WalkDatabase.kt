@@ -8,7 +8,7 @@ import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.TargetEntity
 import it.unito.progmob.core.domain.model.WalkEntity
 
-@Database(entities = [WalkEntity::class, PathPointEntity::class, TargetEntity::class], version = 2)
+@Database(entities = [WalkEntity::class, PathPointEntity::class, TargetEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class WalkDatabase: RoomDatabase() {
     abstract val walkDao: WalkDao

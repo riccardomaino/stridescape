@@ -30,6 +30,10 @@ class WalkRepositoryImpl(
         return walkDao.findTimeByDate(date)
     }
 
+    override fun findStepsBetweenDates(startDate: String, endDate: String): Flow<Int> {
+        return walkDao.findStepsBetweenDates(startDate, endDate)
+    }
+
     override suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long {
         return walkDao.upsertNewWalk(newWalkEntity)
     }
