@@ -30,7 +30,7 @@ interface WalkDao {
     fun findTimeByDate(date: String): Flow<Long>
 
     @Query("SELECT steps FROM walks WHERE date >= :startDate AND date <= :endDate")
-    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<Int>
+    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<IntArray>
 
     @Upsert
     suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long

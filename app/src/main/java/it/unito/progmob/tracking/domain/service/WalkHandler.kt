@@ -107,7 +107,7 @@ class WalkHandler {
                     steps = newSteps - initialSteps
                 )
             }
-        } ?: {
+        } ?: run {
             initialSteps = newSteps
         }
     }

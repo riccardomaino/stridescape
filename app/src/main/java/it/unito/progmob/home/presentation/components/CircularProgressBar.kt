@@ -31,7 +31,7 @@ import it.unito.progmob.ui.theme.large
 @Composable
 fun CircularProgressBar(
     steps: Int,
-    targetStepsGoal: Int,
+    targetStepsGoal: Int = 1,
     fontSize: TextUnit = 48.sp,
     radius: Dp = 96.dp,
     color: Color = MaterialTheme.colorScheme.primary,

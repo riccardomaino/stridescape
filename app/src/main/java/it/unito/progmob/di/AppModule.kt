@@ -43,6 +43,7 @@ import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
 import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
 import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
 import it.unito.progmob.home.domain.usecase.GetDayTimeUseCase
+import it.unito.progmob.home.domain.usecase.GetWeeklyStepsUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -135,7 +136,8 @@ object AppModule {
         GetDayDistanceUseCase(walkRepository),
         GetDayTimeUseCase(walkRepository),
         AddTargetUseCase(targetRepository),
-        GetDateTargetUseCase(targetRepository)
+        GetDateTargetUseCase(targetRepository),
+        GetWeeklyStepsUseCase(walkRepository)
     )
 
     @Provides

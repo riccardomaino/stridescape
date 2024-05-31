@@ -11,7 +11,7 @@ interface WalkRepository {
     fun findCaloriesByDate(date: String): Flow<Int>
     fun findDistanceByDate(date: String): Flow<Int>
     fun findTimeByDate(date: String): Flow<Long>
-    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<Int>
+    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<IntArray>
 
     suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long
     suspend fun upsertNewPathPoint(newPathPointEntity: PathPointEntity)
