@@ -2,6 +2,7 @@ package it.unito.progmob.core
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -38,14 +39,14 @@ import it.unito.progmob.core.domain.ext.allPermissions
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.ext.openAppSettings
 import it.unito.progmob.core.presentation.MainEvent
-import it.unito.progmob.core.presentation.navigation.NavGraph
-import it.unito.progmob.core.presentation.viewmodel.MainViewModel
 import it.unito.progmob.core.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.core.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.core.presentation.components.NavigationBar
 import it.unito.progmob.core.presentation.components.PermissionDialog
 import it.unito.progmob.core.presentation.components.PostNotificationsPermissionTextProvider
+import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
+import it.unito.progmob.core.presentation.viewmodel.MainViewModel
 import it.unito.progmob.ui.theme.MyApplicationTheme
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
@@ -89,60 +90,89 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     topBar = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = large, end = large, bottom = small),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Person,
-                                contentDescription = stringResource(R.string.user_icon),
-                            )
-                            when(currentBackStackEntry?.destination?.route){
-                                Route.HomeScreenRoute.route -> Text(
+                        if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = large, end = large, bottom = small),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if(currentBackStackEntry?.destination?.route != Route.OnBoardingProfileScreenRoute.route){
+                                    Icon(
+                                        Icons.Default.Person,
+                                        contentDescription = stringResource(R.string.user_icon),
+                                    )
+                                }
+                                when (currentBackStackEntry?.destination?.route) {
+                                    Route.OnBoardingProfileScreenRoute.route -> Text(
+                                        stringResource(R.string.onboparding_page4_title),
+                                        style = MaterialTheme.typography.displaySmall.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                    Route.HomeScreenRoute.route -> Text(
                                         stringResource(R.string.home_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
+                                        style = MaterialTheme.typography.displaySmall.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
                                     )
-                                Route.StatsScreenRoute.route -> Text(
+
+                                    Route.StatsScreenRoute.route -> Text(
                                         stringResource(R.string.stats_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
+                                        style = MaterialTheme.typography.displaySmall.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
                                     )
-                                Route.TrackingScreenRoute.route -> Text(
+
+                                    Route.TrackingScreenRoute.route -> Text(
                                         stringResource(R.string.tracking_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
+                                        style = MaterialTheme.typography.displaySmall.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
                                     )
+                                }
+                                if(currentBackStackEntry?.destination?.route != Route.OnBoardingProfileScreenRoute.route){
+                                    Icon(
+                                        Icons.Default.Settings,
+                                        contentDescription = stringResource(R.string.settings_icon)
+                                    )
+                                }
                             }
-                            Icon(
-                                Icons.Default.Settings,
-                                contentDescription = stringResource(R.string.settings_icon)
-                            )
                         }
                     },
                     bottomBar = {
-                        NavigationBar(
-                            onClickFloatingActionButton = {
-                                if (context.hasAllPermissions()) {
-                                    navController.navigate(Route.TrackingScreenRoute.route)
-                                } else {
-                                    multiplePermissionResultLauncher.launch(
-                                        context.allPermissions
-                                    )
-                                    if (context.hasAllPermissions()) {
-                                        navController.navigate(Route.TrackingScreenRoute.route)
-                                    }
-                                }
-                            },
-                            currentBackStackEntry = currentBackStackEntry,
-                            navController = navController
-                        )
+                        Log.d("MainActivity", "current entry: ${currentBackStackEntry?.destination?.route}")
+                        when (currentBackStackEntry?.destination?.route) {
+                            Route.OnBoardingScreenRoute.route -> {}
+                            Route.OnBoardingProfileScreenRoute.route -> {}
+                            Route.TrackingScreenRoute.route -> {}
+                            else -> {
+                                NavigationBar(
+                                    onClickFloatingActionButton = {
+                                        if (context.hasAllPermissions()) {
+                                            navController.navigate(Route.TrackingScreenRoute.route)
+                                        } else {
+                                            multiplePermissionResultLauncher.launch(
+                                                context.allPermissions
+                                            )
+                                            if (context.hasAllPermissions()) {
+                                                navController.navigate(Route.TrackingScreenRoute.route)
+                                            }
+                                        }
+                                    },
+                                    currentBackStackEntry = currentBackStackEntry,
+                                    navController = navController
+                                )
+                            }
+                        }
                     }
 
                 ) { padding ->
-                    Surface(modifier = Modifier
-                        .padding(padding)
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                    Surface(
+                        modifier = Modifier
+                            .padding(padding)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         NavGraph(
                             startDestination = startDestination,

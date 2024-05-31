@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
@@ -53,16 +52,6 @@ fun OnBoardingProfileScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        topBar = {
-            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = medium), horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier = modifier.height(medium))
-                Text(
-                    text = stringResource(R.string.onboparding_page4_title),
-                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold)
-                )
-                Spacer(modifier = modifier.height(extraLarge))
-            }
-        },
         bottomBar = {
             Row(
                 modifier = modifier

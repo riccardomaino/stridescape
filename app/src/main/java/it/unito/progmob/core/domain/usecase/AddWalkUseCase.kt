@@ -12,7 +12,7 @@ class AddWalkUseCase(
     suspend operator fun invoke(uiTrackingState: UiTrackingState): Long {
         val newWalkEntity = WalkEntity(
             weekDay = DateUtils.getCurrentDayOfWeek(),
-            date = DateUtils.getCurrentDate(pattern = "yyyy/MM/dd"),
+            date = DateUtils.getCurrentDate(),
             steps = uiTrackingState.steps,
             distance = uiTrackingState.distanceInMeters,
             time = uiTrackingState.timeInMillis,

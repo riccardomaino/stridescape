@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import it.unito.progmob.core.domain.model.DailyStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.model.WalkWithPathPoints
@@ -29,8 +30,8 @@ interface WalkDao {
     @Query("SELECT SUM(time) FROM walks WHERE date = :date")
     fun findTimeByDate(date: String): Flow<Long>
 
-    @Query("SELECT steps FROM walks WHERE date >= :startDate AND date <= :endDate")
-    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<IntArray>
+    @Query("SELECT weekDay, SUM(steps) AS steps FROM walks WHERE date >= :startDate AND date <= :endDate GROUP BY date, weekDay")
+    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<DailyStepsTuple?>
 
     @Upsert
     suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long

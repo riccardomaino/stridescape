@@ -1,52 +1,66 @@
 package it.unito.progmob.core.domain.util
 
-import java.time.Instant
-import java.util.Calendar
-import java.util.Date
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.char
+import kotlinx.datetime.minus
+import kotlinx.datetime.toLocalDateTime
 
 object DateUtils {
+
+    fun formatDate(
+        date: LocalDate, format: DateTimeFormat<LocalDate> = LocalDate.Format {
+            year()
+            char('/')
+            monthNumber()
+            char('/')
+            dayOfMonth()
+        }
+    ): String {
+        return date.format(format)
+    }
+
     fun getCurrentDayOfWeek(): Int {
-        val calendarInfo = Date().toCalendar()
-        val dayOfWeek = calendarInfo[Calendar.DAY_OF_WEEK]
-        return (dayOfWeek-2).mod(7)
+        val instant = Clock.System.now()
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek
+        return localDate.value - 1
     }
 
-    fun getCurrentDate(pattern: String): String {
-        val currentTimeStamp = Instant.now().epochSecond
-        return TimeUtils.formatEpochTime(currentTimeStamp, pattern)
-    }
-
-    fun getFirstDayOfWeek(): Int {
-        val calendarInfo = Date().toCalendar()
-        val currentDay = getCurrentDayOfWeek()
-        calendarInfo.add(Calendar.DAY_OF_MONTH, -currentDay)
-         return calendarInfo[Calendar.DAY_OF_MONTH]
-    }
-
-    fun getMonthOfFirstDayOfWeek(): Int {
-        val calendarInfo = Date().toCalendar()
-        val currentDay = getCurrentDayOfWeek()
-        calendarInfo.add(Calendar.DAY_OF_MONTH, -currentDay)
-        return calendarInfo[Calendar.MONTH]+1
-    }
-
-    fun getYearOfFirstDayOfWeek(): Int {
-        val calendarInfo = Date().toCalendar()
-        val currentDay = getCurrentDayOfWeek()
-        calendarInfo.add(Calendar.DAY_OF_MONTH, -currentDay)
-        return calendarInfo[Calendar.YEAR]
-    }
-
-    fun getLastDayOfWeek(): Int {
-        val calendarInfo = Date().toCalendar()
-        val currentDay = getCurrentDayOfWeek()
-        calendarInfo.add(Calendar.DAY_OF_MONTH, 6-currentDay)
-        return calendarInfo[Calendar.DAY_OF_MONTH]
+    fun getCurrentDate(
+        format: DateTimeFormat<LocalDate> = LocalDate.Format {
+            year()
+            char('/')
+            monthNumber()
+            char('/')
+            dayOfMonth()
+        }
+    ): String {
+        val instant = Clock.System.now()
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        return formatDate(localDate, format)
     }
 
     fun getFirstDateOfWeek(): String {
-        return "${getYearOfFirstDayOfWeek()}/${getMonthOfFirstDayOfWeek()}/${getFirstDayOfWeek()}"
+        val currentDay = getCurrentDayOfWeek()
+        val instant = Clock.System.now()
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val firstDateOfWeek = localDate.minus(currentDay, DateTimeUnit.DAY)
+
+        return formatDate(firstDateOfWeek)
     }
 
-    private fun Date.toCalendar(): Calendar = Calendar.getInstance().also { it.time = this }
+
+    fun getLastDateOfWeek(): String {
+        val currentDay = getCurrentDayOfWeek()
+        val instant = Clock.System.now()
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val lastDateOfWeek = localDate.minus(6 - currentDay, DateTimeUnit.DAY)
+
+        return formatDate(lastDateOfWeek)
+    }
+
 }

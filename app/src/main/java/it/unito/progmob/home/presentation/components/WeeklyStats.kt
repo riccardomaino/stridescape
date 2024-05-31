@@ -1,5 +1,6 @@
 package it.unito.progmob.home.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,12 +67,14 @@ fun WeeklyStats(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+                Log.d("WeeklyStats", "WeeklySteps: ${weeklySteps.contentToString()}, Weekly size: ${weeklySteps.size}")
                 weekDays.forEachIndexed { index, _ ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Log.d("WeeklyStats", "Index: $index")
                         CircularProgressBar(
-                            steps = if(index < weeklySteps.size) weeklySteps[index] else 0,
+                            steps = if (index < weeklySteps.size) weeklySteps[index] else 0,
                             targetStepsGoal = weeklyTarget[index],
                             showStepsInfo = false,
                             radius = medium,
