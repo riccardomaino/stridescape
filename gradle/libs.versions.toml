@@ -30,6 +30,7 @@ playServicesMaps = "18.2.0"
 splashScreen = "1.0.1"
 kotlinxSerialization = "1.6.3"
 kotlinxSerializationPlugIn = "2.0.0"
+vico = "2.0.0-alpha.20"
 
 [libraries]
 # Core
@@ -76,7 +77,9 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 google-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 google-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 google-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
-
+# Vico Charts
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

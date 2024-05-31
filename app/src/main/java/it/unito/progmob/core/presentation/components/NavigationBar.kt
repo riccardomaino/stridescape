@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
@@ -28,8 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import it.unito.progmob.R
 import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.floatingActionButtonSize
@@ -41,9 +45,9 @@ import it.unito.progmob.ui.theme.small
 @Composable
 fun NavigationBar(
     modifier: Modifier = Modifier,
-    floatingActionButtonIcon: @Composable() () -> Unit,
-    onClickFloatingActionButton: () -> Unit,
-    navigationController: NavController
+    onClickFloatingActionButton: () -> Unit = {},
+    currentBackStackEntry: NavBackStackEntry?,
+    navController: NavController
 ) {
     val selectedPageColor = MaterialTheme.colorScheme.primary
     val unselectedPageColor = MaterialTheme.colorScheme.onPrimary
@@ -79,35 +83,55 @@ fun NavigationBar(
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
-                    Canvas(
-                        modifier = Modifier.size(small)
-                    ) {
-                        drawCircle(
-                            color = selectedPageColor,
-                            radius = 22.dp.toPx(),
-                        )
+                    if(currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route){
+                        Canvas(
+                            modifier = Modifier.size(small)
+                        ) {
+                            drawCircle(
+                                color = selectedPageColor,
+                                radius = 22.dp.toPx(),
+                            )
 
+                        }
                     }
                     IconButton(onClick = {
-                        if (navigationController.currentDestination?.route != Route.HomeScreenRoute.route)
-                            navigationController.navigate(Route.HomeScreenRoute.route)
+                        if (currentBackStackEntry?.destination?.route != Route.HomeScreenRoute.route)
+                            navController.navigate(Route.HomeScreenRoute.route)
                     }) {
                         Icon(
                             Icons.Filled.Home,
                             contentDescription = "Localized description",
-                            modifier = Modifier
-                                .size(large),
-                            tint = if (navigationController.currentDestination?.route == Route.HomeScreenRoute.route || navigationController.currentDestination?.route == Route.TrackingScreenRoute.route)
+                            modifier = Modifier.size(large),
+                            tint = if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route || currentBackStackEntry?.destination?.route == Route.TrackingScreenRoute.route)
                                 MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }
-                IconButton(onClick = { }) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ShowChart,
-                        contentDescription = "Localized description",
-                        modifier = Modifier.size(large),
-                    )
+                Box(
+                    contentAlignment = Alignment.Center
+                ){
+                    if(currentBackStackEntry?.destination?.route == Route.StatsScreenRoute.route){
+                        Canvas(
+                            modifier = Modifier.size(small)
+                        ) {
+                            drawCircle(
+                                color = selectedPageColor,
+                                radius = 22.dp.toPx(),
+                            )
+
+                        }
+                    }
+                    IconButton(onClick = {
+                        if (currentBackStackEntry?.destination?.route != Route.StatsScreenRoute.route)
+                            navController.navigate(Route.StatsScreenRoute.route)
+                    }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ShowChart,
+                            contentDescription = "Localized description",
+                            modifier = Modifier.size(large),
+                            tint = if (currentBackStackEntry?.destination?.route == Route.StatsScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
                 }
                 IconButton(onClick = { }) {
                     Icon(
@@ -118,16 +142,22 @@ fun NavigationBar(
                 }
             }
         }
-        FloatingActionButton(
-            containerColor = MaterialTheme.colorScheme.primary,
-            elevation = FloatingActionButtonDefaults.elevation(),
-            onClick = { onClickFloatingActionButton() },
-            shape = FloatingActionButtonDefaults.extendedFabShape,
-            modifier = Modifier
-                .padding(small)
-                .size(floatingActionButtonSize)
-        ) {
-            floatingActionButtonIcon()
+        if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route){
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                elevation = FloatingActionButtonDefaults.elevation(),
+                onClick = { onClickFloatingActionButton() },
+                shape = FloatingActionButtonDefaults.extendedFabShape,
+                modifier = Modifier
+                    .padding(small)
+                    .size(floatingActionButtonSize)
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.DirectionsRun,
+                    contentDescription = stringResource(R.string.home_walk_icon),
+                    modifier = Modifier.size(large),
+                )
+            }
         }
     }
 }

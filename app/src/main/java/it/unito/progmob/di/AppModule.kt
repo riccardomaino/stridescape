@@ -22,9 +22,9 @@ import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
 import it.unito.progmob.tracking.domain.service.WalkHandler
-import it.unito.progmob.home.domain.usecase.DismissPermissionDialogUseCase
+import it.unito.progmob.core.domain.usecase.DismissPermissionDialogUseCase
 import it.unito.progmob.home.domain.usecase.HomeUseCases
-import it.unito.progmob.home.domain.usecase.PermissionResultUseCase
+import it.unito.progmob.core.domain.usecase.PermissionResultUseCase
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
 import it.unito.progmob.core.domain.usecase.ReadOnboardingEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserHeightEntryUseCase
@@ -43,6 +43,8 @@ import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
 import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
 import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
 import it.unito.progmob.home.domain.usecase.GetDayTimeUseCase
+import it.unito.progmob.stats.domain.usecase.DummyUseCase
+import it.unito.progmob.stats.domain.usecase.StatsUseCases
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -107,7 +109,9 @@ object AppModule {
         targetRepository: TargetRepository
     ) = MainUseCases(
         ReadOnboardingEntryUseCase(dataStoreManager),
-        CheckTargetExistUseCase(targetRepository)
+        CheckTargetExistUseCase(targetRepository),
+        DismissPermissionDialogUseCase(),
+        PermissionResultUseCase()
     )
 
     @Provides
@@ -128,8 +132,6 @@ object AppModule {
         walkRepository: WalkRepository,
         targetRepository: TargetRepository
     ) = HomeUseCases(
-        DismissPermissionDialogUseCase(),
-        PermissionResultUseCase(),
         GetDayStepsUseCase(walkRepository),
         GetDayCaloriesUseCase(walkRepository),
         GetDayDistanceUseCase(walkRepository),
@@ -154,5 +156,9 @@ object AppModule {
         AddPathPointUseCase(walkRepository),
         AddWalkUseCase(walkRepository)
     )
+
+     @Provides
+     @Singleton
+     fun provideStatsUseCases() = StatsUseCases(DummyUseCase())
 
 }

@@ -1,8 +1,9 @@
 package it.unito.progmob.core.presentation
 
+import it.unito.progmob.home.presentation.HomeEvent
+
 sealed class MainEvent {
-    data object OnClickHome : MainEvent()
-    data object OnClickHistory : MainEvent()
-    data object OnClickMap : MainEvent()
-    data object OnClickPlay : MainEvent()
+    data object DismissPermissionDialog : MainEvent()
+    data class PermissionResult(val permission : String, val isGranted : Boolean) : MainEvent()
+
 }

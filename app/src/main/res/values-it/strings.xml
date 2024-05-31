@@ -52,4 +52,6 @@
     <string name="tracking_stop_btn">Ferma</string>
     <string name="tracking_pause_btn">Pausa</string>
     <string name="tracking_resume_btn">Riprendi</string>
+    <string name="stats_title">Statistiche</string>
+    <string name="stats_selected_filter_icon_content_description">Filtro selezionato</string>
 </resources>

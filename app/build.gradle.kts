@@ -100,6 +100,9 @@ dependencies {
     implementation(libs.google.maps.compose)
     implementation(libs.google.play.services.maps)
     implementation(libs.google.play.services.location)
+    // Vico Charts
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m3)
 
     // [UNIT TESTING DEPENDENCIES]
     testImplementation(libs.junit)

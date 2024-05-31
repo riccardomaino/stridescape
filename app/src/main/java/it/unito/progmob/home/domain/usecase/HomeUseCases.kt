@@ -1,11 +1,12 @@
 package it.unito.progmob.home.domain.usecase
 
+import it.unito.progmob.core.domain.usecase.DismissPermissionDialogUseCase
+import it.unito.progmob.core.domain.usecase.PermissionResultUseCase
+
 /**
  * Data class that holds all use cases related to the home feature.
  */
 data class HomeUseCases(
-    val dismissPermissionDialogUseCase: DismissPermissionDialogUseCase,
-    val permissionResultUseCase: PermissionResultUseCase,
     val getDayStepsUseCase: GetDayStepsUseCase,
     val getDayCaloriesUseCase: GetDayCaloriesUseCase,
     val getDayDistanceUseCase: GetDayDistanceUseCase,

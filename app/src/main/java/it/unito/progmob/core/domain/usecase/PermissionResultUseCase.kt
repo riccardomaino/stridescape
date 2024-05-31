@@ -1,4 +1,4 @@
-package it.unito.progmob.home.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 class PermissionResultUseCase {
     /**

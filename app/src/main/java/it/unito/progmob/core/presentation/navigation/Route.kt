@@ -9,4 +9,5 @@ sealed class Route (
     data object MainNavigationRoute: Route(route = "mainNavigationRoute")
     data object HomeScreenRoute: Route(route = "homeScreenRoute")
     data object TrackingScreenRoute: Route(route = "trackingScreenRoute")
+    data object StatsScreenRoute: Route(route = "statsScreenRoute")
 }
