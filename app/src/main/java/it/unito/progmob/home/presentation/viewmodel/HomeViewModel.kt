@@ -6,13 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

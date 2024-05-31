@@ -10,7 +10,6 @@ import it.unito.progmob.core.domain.usecase.MainUseCases
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.core.presentation.MainEvent
 import it.unito.progmob.core.presentation.navigation.Route
-import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
