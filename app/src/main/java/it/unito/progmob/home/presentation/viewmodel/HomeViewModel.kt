@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
     private val _currentDayOfWeek = MutableStateFlow(DateUtils.getCurrentDayOfWeek())
     val currentDayOfWeek = _currentDayOfWeek.asStateFlow()
 
-    private val currentDate = DateUtils.getCurrentDate()
+    private val currentDate = DateUtils.getCurrentDateFormatted()
 
     val stepsCurrentDay = homeUseCases.getDayStepsUseCase(currentDate)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf())
 
     init {
-        Log.d("HomeViewModel", "Current day of week: ${DateUtils.getCurrentDate()}")
+        Log.d("HomeViewModel", "Current day of week: ${DateUtils.getCurrentDateFormatted()}")
     }
 
     /**

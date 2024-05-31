@@ -2,35 +2,37 @@ package it.unito.progmob.core.domain.util
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
 object DateUtils {
 
-    fun formatDate(
-        date: LocalDate, format: DateTimeFormat<LocalDate> = LocalDate.Format {
+    private fun formatDate(
+        date: LocalDate,
+        format: DateTimeFormat<LocalDate> = LocalDate.Format {
             year()
             char('/')
             monthNumber()
             char('/')
             dayOfMonth()
         }
-    ): String {
-        return date.format(format)
-    }
+    ): String = date.format(format)
 
-    fun getCurrentDayOfWeek(): Int {
+    fun getCurrentLocalDateTime(): LocalDateTime {
         val instant = Clock.System.now()
-        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek
-        return localDate.value - 1
+        return instant.toLocalDateTime(TimeZone.currentSystemDefault())
     }
 
-    fun getCurrentDate(
+
+    fun getCurrentDateFormatted(
         format: DateTimeFormat<LocalDate> = LocalDate.Format {
             year()
             char('/')
@@ -39,10 +41,31 @@ object DateUtils {
             dayOfMonth()
         }
     ): String {
-        val instant = Clock.System.now()
-        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val localDate = getCurrentLocalDateTime().date
         return formatDate(localDate, format)
     }
+
+    /**
+     * Get the instant from now adding or subtracting days
+     * @param days the number of days to add or subtract
+     * @param operation the operation to perform
+     * @return the instant
+     */
+    fun getInstantFromNow(days: Long, operation: DateOperation ): Instant {
+        val instant = Clock.System.now()
+        return when(operation){
+            DateOperation.PLUS -> instant.plus(days, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
+            DateOperation.MINUS -> instant.minus(days, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
+        }
+    }
+
+
+    fun getCurrentDayOfWeek(): Int {
+        val instant = Clock.System.now()
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek
+        return localDate.value - 1
+    }
+
 
     fun getFirstDateOfWeek(): String {
         val currentDay = getCurrentDayOfWeek()
@@ -63,4 +86,8 @@ object DateUtils {
         return formatDate(lastDateOfWeek)
     }
 
+    enum class DateOperation {
+        PLUS,
+        MINUS
+    }
 }

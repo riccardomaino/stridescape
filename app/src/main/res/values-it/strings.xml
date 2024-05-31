@@ -54,4 +54,5 @@
     <string name="tracking_resume_btn">Riprendi</string>
     <string name="stats_title">Statistiche</string>
     <string name="stats_selected_filter_icon_content_description">Filtro selezionato</string>
+    <string name="stats_datepicker_title">Seleziona un intervallo di date</string>
 </resources>

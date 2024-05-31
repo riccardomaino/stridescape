@@ -1,8 +1,13 @@
 package it.unito.progmob.core.domain.util
 
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -13,17 +18,19 @@ object TimeUtils {
      * human readable string
      *
      * @param epochSeconds
-     * @param pattern the formatter of the string, e.g. "dd MMMM, HH:mm:ss"
+     * @param format the formatter of the string
      * @return a human readable string
      */
-    fun formatEpochTime(epochSeconds: Long, pattern: String): String {
-        // Create an Instant from the epoch seconds
-        val instant = Instant.ofEpochSecond(epochSeconds)
-        // Define a formatter
-        val formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.systemDefault())
-        // Format the Instant
-        return formatter.format(instant)
-    }
+    fun formatEpochSeconds(
+        epochSeconds: Long,
+        format: DateTimeFormat<LocalTime> = LocalTime.Format {
+            hour()
+            char(':')
+            minute()
+            char(':')
+            second()
+        }
+    ): String = Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(TimeZone.currentSystemDefault()).time.format(format)
 
     /**
      * It turns the time in milliseconds into the HH:mm:ss format

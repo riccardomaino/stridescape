@@ -56,4 +56,5 @@
     <string name="tracking_resume_btn">Resume</string>
     <string name="stats_title">Statistics</string>
     <string name="stats_selected_filter_icon_content_description">Selected filter</string>
+    <string name="stats_datepicker_title">Select a date range</string>
 </resources>
