@@ -71,7 +71,7 @@ fun WeeklyStats(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CircularProgressBar(
-                            steps = weeklySteps[index],
+                            steps = if(index < weeklySteps.size) weeklySteps[index] else 0,
                             targetStepsGoal = weeklyTarget[index],
                             showStepsInfo = false,
                             radius = medium,

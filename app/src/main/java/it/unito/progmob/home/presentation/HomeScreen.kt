@@ -36,7 +36,8 @@ fun HomeScreen(
     caloriesCurrentDay: Int,
     distanceCurrentDay: Int,
     timeCurrentDay: Long,
-    stepsTargetCurrentDay: Int
+    stepsTargetCurrentDay: Int,
+    weeklySteps: IntArray
 ) {
     val weeklyStats = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000)
     val weeklyTargetStats = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000)
@@ -66,7 +67,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(small))
         WeeklyStats(
             selectedDay = currentDayOfWeek,
-            weeklySteps = weeklyStats,
+            weeklySteps = weeklySteps,
             weeklyTarget = weeklyTargetStats
         )
     }

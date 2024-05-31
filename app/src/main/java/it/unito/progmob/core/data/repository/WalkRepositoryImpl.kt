@@ -30,7 +30,7 @@ class WalkRepositoryImpl(
         return walkDao.findTimeByDate(date)
     }
 
-    override fun findStepsBetweenDates(startDate: String, endDate: String): Flow<Int> {
+    override fun findStepsBetweenDates(startDate: String, endDate: String): Flow<IntArray> {
         return walkDao.findStepsBetweenDates(startDate, endDate)
     }
 

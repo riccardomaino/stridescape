@@ -122,7 +122,7 @@ fun TrackingScreen(
                     modifier = modifier,
                     icon = Icons.AutoMirrored.Outlined.DirectionsWalk,
                     iconContentDescription = stringResource(R.string.tracking_steps_walking_stat_icon_desc),
-                    color = Color.Blue,
+                    color = Color(0xFF2952BB),
                     title = stringResource(R.string.tracking_steps_walking_stat_title),
                     content = uiTrackingState.steps.toString()
                 )
