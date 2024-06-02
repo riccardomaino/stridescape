@@ -34,7 +34,7 @@ fun PermissionDialog(
                     text = if (isPermanentlyDeclined) {
                         stringResource(R.string.home_permissiondialog_grant_permission_btn)
                     } else {
-                        stringResource(R.string.home_permisisondialog_ok_btn)
+                        stringResource(R.string.dialog_ok_btn)
                     },
                 )
             }

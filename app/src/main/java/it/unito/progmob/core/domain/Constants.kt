@@ -14,4 +14,25 @@ object Constants {
     // Target
     const val DEFAULT_STEPS_TARGET = 5000
 
+    // Chart Column
+    const val CHART_COLUMN_THICKNESS = 16
+    const val CHART_COLUMN_ROUNDNESS = 40
+
+    // Chart Mean Horizontal Line
+    const val CHART_HORIZONTAL_LINE_THICKNESS = 2
+    const val CHART_HORIZONTAL_LINE_LABEL_HORIZONTAL_PADDING = 8
+    const val CHART_HORIZONTAL_LINE_LABEL_VERTICAL_PADDING = 2
+    const val CHART_HORIZONTAL_LINE_LABEL_MARGIN = 4
+
+    // Chart Marker (Label + Indicator)
+    const val CHART_LABEL_BACKGROUND_SHADOW_RADIUS = 4f
+    const val CHART_LABEL_BACKGROUND_SHADOW_DY = 2f
+    const val CHART_LABEL_HORIZONTAL_PADDING = 8
+    const val CHART_LABEL_VERTICAL_PADDING = 4
+    const val CHART_LABEL_MIN_WIDTH = 40
+    const val CHART_INDICATOR_PADDING = 10
+    const val CHART_INDICATOR_FRONT_PADDING = 5
+    const val CHART_INDICATOR_SIZE = 36f
+    const val CHART_CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER = 1.4f
+
 }

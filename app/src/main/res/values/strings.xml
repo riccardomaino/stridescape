@@ -17,7 +17,7 @@
     <string name="home_title" translatable="false">Home</string>
     <string name="home_open_settings">Open settings</string>
     <string name="home_permissiondialog_grant_permission_btn">Grant Permission</string>
-    <string name="home_permisisondialog_ok_btn">OK</string>
+    <string name="dialog_ok_btn">OK</string>
     <string name="home_permissiondialog_title">Permission required</string>
     <string name="home_permissiondialog_activity_recognition_declined_txt">You have been permanently denied permission to access your physical activity. Go to the app settings and grant permission.</string>
     <string name="home_permissiondialog_activity_recognition_txt">It is necessary to access your physical activity to track your steps</string>
@@ -57,4 +57,7 @@
     <string name="stats_title">Statistics</string>
     <string name="stats_selected_filter_icon_content_description">Selected filter</string>
     <string name="stats_datepicker_title">Select a date range</string>
+    <string name="dialog_cancel_btn">Cancel</string>
+    <string name="stats_button_icon_content_description">Icon of the button used to select a range of dates</string>
+    <string name="stats_filter_btn_txt">Select Dates</string>
 </resources>

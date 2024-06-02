@@ -14,7 +14,7 @@
     <string name="settings_icon">Icona impostazioni</string>
     <string name="home_open_settings">Apri impostazioni</string>
     <string name="home_permissiondialog_grant_permission_btn">Concedi Permesso</string>
-    <string name="home_permisisondialog_ok_btn">Ok</string>
+    <string name="dialog_ok_btn">OK</string>
     <string name="home_permissiondialog_title">Permesso richiesto</string>
     <string name="home_permissiondialog_activity_recognition_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua attività fisica. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
     <string name="home_permissiondialog_activity_recognition_txt">E\' necessario accedere alla tua attività fisica per monitorare i tuoi passi</string>
@@ -55,4 +55,7 @@
     <string name="stats_title">Statistiche</string>
     <string name="stats_selected_filter_icon_content_description">Filtro selezionato</string>
     <string name="stats_datepicker_title">Seleziona un intervallo di date</string>
+    <string name="dialog_cancel_btn">Annulla</string>
+    <string name="stats_button_icon_content_description">Icona del bottone utilizzato per selezionare un intervallo di date</string>
+    <string name="stats_filter_btn_txt">Seleziona Date</string>
 </resources>

@@ -43,9 +43,9 @@ import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
 import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
 import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
 import it.unito.progmob.home.domain.usecase.GetDayTimeUseCase
-import it.unito.progmob.stats.domain.usecase.DummyUseCase
 import it.unito.progmob.stats.domain.usecase.StatsUseCases
 import it.unito.progmob.home.domain.usecase.GetWeeklyStepsUseCase
+import it.unito.progmob.stats.domain.usecase.GetDistanceDataUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -161,6 +161,8 @@ object AppModule {
 
      @Provides
      @Singleton
-     fun provideStatsUseCases() = StatsUseCases(DummyUseCase())
+     fun provideStatsUseCases(
+         walkRepository: WalkRepository
+     ) = StatsUseCases(GetDistanceDataUseCase(walkRepository))
 
 }

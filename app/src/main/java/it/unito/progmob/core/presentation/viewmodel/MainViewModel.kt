@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(
                 Route.OnBoardingNavigationRoute.route
             }
             delay(600)
-            _isReady.value = true
+            _isReady.update { true }
         }.launchIn(viewModelScope)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -71,14 +71,21 @@ class MainViewModel @Inject constructor(
      */
     private fun dismissPermissionDialog() {
         viewModelScope.launch(Dispatchers.Default) {
-            val dismissDialogQueueResult = mainUseCases.dismissPermissionDialogUseCase(
-                _visiblePermissionDialogQueue.value.toMutableList()
-            )
-
             _visiblePermissionDialogQueue.update {
-                dismissDialogQueueResult
+                it.toMutableList().apply {
+                    removeFirst()
+                }
             }
         }
+//        viewModelScope.launch(Dispatchers.Default) {
+//            val dismissDialogQueueResult = mainUseCases.dismissPermissionDialogUseCase(
+//                _visiblePermissionDialogQueue.value.toMutableList()
+//            )
+//
+//            _visiblePermissionDialogQueue.update {
+//                dismissDialogQueueResult
+//            }
+//        }
     }
 
     /**
@@ -92,16 +99,25 @@ class MainViewModel @Inject constructor(
         permission: String,
         isGranted: Boolean
     ) {
-        viewModelScope.launch(Dispatchers.Default) {
-            val permissionDialogQueueResult = mainUseCases.permissionResultUseCase(
-                _visiblePermissionDialogQueue.value.toMutableList(),
-                permission,
-                isGranted
-            )
-
-            _visiblePermissionDialogQueue.update {
-                permissionDialogQueueResult
+        viewModelScope.launch {
+            if(!isGranted && !_visiblePermissionDialogQueue.value.contains(permission)) {
+                _visiblePermissionDialogQueue.update {
+                    it.toMutableList().apply {
+                        add(permission)
+                    }
+                }
             }
         }
+//        viewModelScope.launch(Dispatchers.Default) {
+//            val permissionDialogQueueResult = mainUseCases.permissionResultUseCase(
+//                _visiblePermissionDialogQueue.value.toMutableList(),
+//                permission,
+//                isGranted
+//            )
+//
+//            _visiblePermissionDialogQueue.update {
+//                permissionDialogQueueResult
+//            }
+//        }
     }
 }

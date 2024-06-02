@@ -15,43 +15,79 @@ import kotlinx.datetime.toLocalDateTime
 
 object DateUtils {
 
+    val defaultFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
+        year()
+        char('/')
+        monthNumber()
+        char('/')
+        dayOfMonth()
+    }
+
+    val chartFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
+        dayOfMonth()
+        char('/')
+        monthNumber()
+        char('/')
+        year()
+    }
+
+    /**
+     * Format a date [LocalDate] using the formatter provided or the default one if it is not provided
+     * @param date the date to format
+     * @param formatter the formatter to use
+     * @return the formatted date
+     */
     private fun formatDate(
         date: LocalDate,
-        format: DateTimeFormat<LocalDate> = LocalDate.Format {
-            year()
-            char('/')
-            monthNumber()
-            char('/')
-            dayOfMonth()
-        }
-    ): String = date.format(format)
+        formatter: DateTimeFormat<LocalDate> = defaultFormatter
+    ): String = date.format(formatter)
 
-    fun getCurrentLocalDateTime(): LocalDateTime {
+    /**
+     * Get the current date using the kotlin datetime API with the system default timezone
+     * @return the current date as a [LocalDateTime]
+     */
+    private fun getCurrentLocalDateTime(): LocalDateTime {
         val instant = Clock.System.now()
         return instant.toLocalDateTime(TimeZone.currentSystemDefault())
     }
 
-
-    fun getCurrentDateFormatted(
-        format: DateTimeFormat<LocalDate> = LocalDate.Format {
-            year()
-            char('/')
-            monthNumber()
-            char('/')
-            dayOfMonth()
-        }
-    ): String {
-        val localDate = getCurrentLocalDateTime().date
-        return formatDate(localDate, format)
+    /**
+     * It turns the date in milliseconds since 1.1.1970 (epoch) into a
+     * human readable string based on the formatter provided or the default one if it is not provided
+     *
+     * @param epochMillis
+     * @param formatter the formatter to use
+     * @return a human readable string
+     */
+    fun formatDateFromEpochMillis(epochMillis: Long, formatter: DateTimeFormat<LocalDate>? = null): String {
+        val instant = Instant.fromEpochMilliseconds(epochMillis)
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        return formatter?.let{
+            formatDate(localDate, formatter)
+        } ?: formatDate(localDate)
     }
 
     /**
-     * Get the instant from now adding or subtracting days
+     * Get the current date formatted based on the formatter provided or the default one if it is not provided
+     * @param formatter the formatter to use
+     * @return the formatted date
+     */
+    fun getCurrentDateFormatted(
+        formatter: DateTimeFormat<LocalDate>? = null
+    ): String {
+        val localDate = getCurrentLocalDateTime().date
+        return formatter?.let {
+            formatDate(localDate, formatter)
+        } ?: formatDate(localDate)
+    }
+
+    /**
+     * Get the instant of a certain date from now adding or subtracting days
      * @param days the number of days to add or subtract
      * @param operation the operation to perform
      * @return the instant
      */
-    fun getInstantFromNow(days: Long, operation: DateOperation ): Instant {
+    fun getInstantOfDateFromNow(days: Long, operation: DateOperation = DateOperation.PLUS): Instant {
         val instant = Clock.System.now()
         return when(operation){
             DateOperation.PLUS -> instant.plus(days, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
@@ -59,30 +95,34 @@ object DateUtils {
         }
     }
 
-
+    /**
+     * Get the current day of the week as an integer (0..6) where 0 is Monday and 6 is Sunday
+     * @return the integer between 0 and 6 representing the current day of the week
+     */
     fun getCurrentDayOfWeek(): Int {
-        val instant = Clock.System.now()
-        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek
-        return localDate.value - 1
+        val dayOfWeek = getCurrentLocalDateTime().dayOfWeek
+        return dayOfWeek.value - 1
     }
 
-
+    /**
+     * Get the first date of the week based on the current date
+     * @return the formatted string of the first date of the week
+     */
     fun getFirstDateOfWeek(): String {
+        val localDate = getCurrentLocalDateTime().date
         val currentDay = getCurrentDayOfWeek()
-        val instant = Clock.System.now()
-        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
         val firstDateOfWeek = localDate.minus(currentDay, DateTimeUnit.DAY)
-
         return formatDate(firstDateOfWeek)
     }
 
-
+    /**
+     * Get the last date of the week based on the current date
+     * @return the formatted string of the last date of the week
+     */
     fun getLastDateOfWeek(): String {
+        val localDate = getCurrentLocalDateTime().date
         val currentDay = getCurrentDayOfWeek()
-        val instant = Clock.System.now()
-        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
         val lastDateOfWeek = localDate.minus(6 - currentDay, DateTimeUnit.DAY)
-
         return formatDate(lastDateOfWeek)
     }
 

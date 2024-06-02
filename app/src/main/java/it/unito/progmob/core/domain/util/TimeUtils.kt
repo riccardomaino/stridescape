@@ -13,24 +13,34 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 object TimeUtils {
+
+    private val defaultFormatter: DateTimeFormat<LocalTime> = LocalTime.Format {
+        hour()
+        char(':')
+        minute()
+        char(':')
+        second()
+    }
+
+    private fun formatTime(
+        time: LocalTime,
+        formatter: DateTimeFormat<LocalTime> = defaultFormatter
+    ): String = time.format(formatter)
+
     /**
      * It turns the time in milliseconds since 1.1.1970 (epoch) into a
      * human readable string
      *
      * @param epochSeconds
-     * @param format the formatter of the string
      * @return a human readable string
      */
-    fun formatEpochSeconds(
-        epochSeconds: Long,
-        format: DateTimeFormat<LocalTime> = LocalTime.Format {
-            hour()
-            char(':')
-            minute()
-            char(':')
-            second()
-        }
-    ): String = Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(TimeZone.currentSystemDefault()).time.format(format)
+    fun formatTimeFromEpochSeconds(epochSeconds: Long, formatter: DateTimeFormat<LocalTime>? = null): String {
+        val instant = Instant.fromEpochSeconds(epochSeconds)
+        val localTime = instant.toLocalDateTime(TimeZone.currentSystemDefault()).time
+        return formatter?.let {
+            formatTime(localTime, formatter)
+        } ?: formatTime(localTime)
+    }
 
     /**
      * It turns the time in milliseconds into the HH:mm:ss format

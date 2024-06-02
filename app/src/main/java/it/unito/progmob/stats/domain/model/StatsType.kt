@@ -3,7 +3,7 @@ package it.unito.progmob.stats.domain.model
 enum class StatsType {
     DISTANCE,
     TIME,
-    SPEED,
+    CALORIES,
     STEPS,
-    CALORIES
+    SPEED
 }

@@ -16,6 +16,15 @@ object WalkUtils {
         .setScale(2, RoundingMode.HALF_UP).toFloat()
 
     /**
+     * This method converts the distance from meters to kilometers with one decimal place
+     *
+     * @param distanceInMeters the distance in meters to convert
+     */
+    fun convertMetersToKm(distanceInMeters: Int): Float = (distanceInMeters.toFloat() / 1000.toFloat()).toBigDecimal()
+        .setScale(1, RoundingMode.HALF_UP).toFloat()
+
+
+    /**
      * This method calculates the approximate distance in meters between two PathPoints
      *
      * @param firstPathPoint the first PathPoint

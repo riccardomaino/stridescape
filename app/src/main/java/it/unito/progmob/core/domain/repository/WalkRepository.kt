@@ -1,5 +1,6 @@
 package it.unito.progmob.core.domain.repository
 
+import it.unito.progmob.core.domain.model.DailyDistanceTuple
 import it.unito.progmob.core.domain.model.DailyStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
@@ -13,6 +14,7 @@ interface WalkRepository {
     fun findDistanceByDate(date: String): Flow<Int>
     fun findTimeByDate(date: String): Flow<Long>
     fun findStepsBetweenDates(startDate: String, endDate: String): Flow<DailyStepsTuple?>
+    fun findDistanceForDateRange(startDate: String, endDate: String): List<DailyDistanceTuple>?
 
     suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long
     suspend fun upsertNewPathPoint(newPathPointEntity: PathPointEntity)
