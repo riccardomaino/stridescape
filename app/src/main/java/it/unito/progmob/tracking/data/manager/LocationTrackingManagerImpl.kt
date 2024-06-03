@@ -44,7 +44,7 @@ class LocationTrackingManagerImpl @Inject constructor(
 
     /**
      * Tracks the user's location and returns a Flow of [Location] objects. It creates an anonymous
-     * [LocationCallback] that will be used retrieve the location by the [FusedLocationProviderClient].
+     * [LocationCallback] that will be used to retrieve the location thanks to the [FusedLocationProviderClient].
      *
      * @param intervalMillis The interval in milliseconds at which to track the location.
      * @return A Flow of [Location] objects.

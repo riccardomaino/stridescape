@@ -39,8 +39,7 @@ fun HomeScreen(
     stepsTargetCurrentDay: Int,
     weeklySteps: IntArray
 ) {
-    val weeklyStats = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000)
-    val weeklyTargetStats = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000)
+    val weeklyTargetStats = intArrayOf(5000, 5000, 5000, 5000, 5000, 5000, 5000)
 
     Column(
         modifier = modifier
@@ -51,7 +50,7 @@ fun HomeScreen(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = small)
+                .padding(start = small, end = small, top = small)
                 .shadow(small, shape = RoundedCornerShape(large))
                 .clip(shape = RoundedCornerShape(large))
                 .background(MaterialTheme.colorScheme.surface)
@@ -62,7 +61,7 @@ fun HomeScreen(
         WalkingStats(
             kcal = caloriesCurrentDay.toString(),
             km = WalkUtils.formatDistanceToKm(distanceCurrentDay),
-            time = TimeUtils.formatMillisTime(timeCurrentDay)
+            time = TimeUtils.formatMillisTimeHoursMinutes(timeCurrentDay)
         )
         Spacer(modifier = Modifier.height(small))
         WeeklyStats(

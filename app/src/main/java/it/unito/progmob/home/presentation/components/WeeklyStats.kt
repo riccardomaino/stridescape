@@ -59,7 +59,7 @@ fun WeeklyStats(
             Text(
                 modifier = modifier.padding(start = medium),
                 text = stringResource(R.string.home_weeklystats_title),
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground
             )
             HorizontalDivider(modifier = modifier.padding(vertical = small, horizontal = small))
@@ -84,7 +84,7 @@ fun WeeklyStats(
                         Spacer(modifier = modifier.height(small))
                         Text(
                             text = weekDays[index],
-                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraBold),
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.ExtraBold),
                             color = if (index == selectedDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                         )
                     }

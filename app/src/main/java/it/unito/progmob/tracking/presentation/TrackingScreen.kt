@@ -10,34 +10,24 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.DirectionsWalk
-import androidx.compose.material.icons.outlined.LocalFireDepartment
-import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Stop
-import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,21 +35,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.navigation.NavController
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import it.unito.progmob.R
-import it.unito.progmob.core.domain.util.TimeUtils
-import it.unito.progmob.core.domain.util.WalkUtils
-import it.unito.progmob.tracking.presentation.components.WalkingStat
+import it.unito.progmob.tracking.presentation.components.WalkingButtons
+import it.unito.progmob.tracking.presentation.components.WalkingCard
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
-import it.unito.progmob.ui.theme.doubleExtraLarge
-import it.unito.progmob.ui.theme.extraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
@@ -74,7 +60,8 @@ fun TrackingScreen(
 ) {
     var switchStartStopBtn by remember { mutableStateOf(true) }
     var switchPauseResumeBtn by remember { mutableStateOf(true) }
-
+    val hapticFeedback = LocalView.current
+    val coroutineScope = rememberCoroutineScope()
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
     var isMapLoaded by remember { mutableStateOf(false) }
@@ -112,56 +99,19 @@ fun TrackingScreen(
                 )
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = large),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                WalkingStat(
-                    modifier = modifier,
-                    icon = Icons.AutoMirrored.Outlined.DirectionsWalk,
-                    iconContentDescription = stringResource(R.string.tracking_steps_walking_stat_icon_desc),
-                    color = Color(0xFF2952BB),
-                    title = stringResource(R.string.tracking_steps_walking_stat_title),
-                    content = uiTrackingState.steps.toString()
-                )
-                VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
-                WalkingStat(
-                    icon = Icons.Outlined.LocalFireDepartment,
-                    iconContentDescription = stringResource(R.string.tracking_calories_walking_stat_icon_desc),
-                    color = Color.Red,
-                    title = stringResource(R.string.tracking_calories_walking_stat_title),
-                    content = uiTrackingState.caloriesBurnt.toString()
-                )
-                VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
-                WalkingStat(
-                    icon = Icons.Outlined.Map,
-                    iconContentDescription = stringResource(R.string.tracking_distance_walking_stat_icon_desc),
-                    title = stringResource(R.string.tracking_distance_walking_stat_title),
-                    color = Color(0xFF0C9B12),
-                    content = WalkUtils.formatDistanceToKm(uiTrackingState.distanceInMeters)
-                )
-                VerticalDivider(modifier = Modifier.height(doubleExtraLarge))
-                WalkingStat(
-                    icon = Icons.Outlined.Timer,
-                    iconContentDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
-                    color = Color(0xFFFF9800),
-                    title = stringResource(R.string.tracking_time_walking_stat_title),
-                    content = TimeUtils.formatMillisTime(uiTrackingState.timeInMillis)
-                )
-            }
+            WalkingCard(uiTrackingState = uiTrackingState)
+
             if (switchStartStopBtn) {
                 Button(
                     onClick = {
                         switchStartStopBtn = !switchStartStopBtn
                         trackingEvent(TrackingEvent.StartTrackingService)
+                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
                     },
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(horizontal = large, vertical = medium)
                 ) {
-
                     Text(
                         text = stringResource(R.string.tracking_start_btn),
                         style = MaterialTheme.typography.titleMedium,
@@ -175,75 +125,50 @@ fun TrackingScreen(
                         .padding(vertical = medium),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    Button(
+                    WalkingButtons(
+                        modifier = modifier,
+                        trackingEvent = trackingEvent,
                         onClick = {
                             switchStartStopBtn = !switchStartStopBtn
                             trackingEvent(TrackingEvent.StopTrackingService)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
                         },
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.errorContainer),
-                        modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
-                    ) {
-                        Icon(
-                            Icons.Outlined.Stop,
-                            modifier = modifier.size(extraLarge),
-                            contentDescription = stringResource(R.string.settings_icon),
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(modifier = Modifier.width(small))
-                        Text(
-                            text = stringResource(R.string.tracking_stop_btn),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = modifier.padding(vertical = small)
-                        )
-                    }
+                        iconDescription = stringResource(R.string.settings_icon),
+                        text = stringResource(R.string.tracking_stop_btn),
+                        icon = Icons.Outlined.Stop,
+                        color = MaterialTheme.colorScheme.errorContainer,
+                        textColor = MaterialTheme.colorScheme.error
+                    )
                     if (switchPauseResumeBtn) {
-                        Button(
+                        WalkingButtons(
+                            modifier = modifier,
+                            trackingEvent = trackingEvent,
                             onClick = {
                                 switchPauseResumeBtn = !switchPauseResumeBtn
                                 trackingEvent(TrackingEvent.PauseTrackingService)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
                             },
-                            modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
-                        ) {
-                            Icon(
-                                Icons.Outlined.Pause,
-                                modifier = modifier.size(extraLarge),
-                                contentDescription = stringResource(R.string.settings_icon),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                            Spacer(modifier = Modifier.width(small))
-                            Text(
-                                text = stringResource(R.string.tracking_pause_btn),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = modifier.padding(vertical = small)
-                            )
-                        }
+                            iconDescription = stringResource(R.string.settings_icon),
+                            text = stringResource(R.string.tracking_pause_btn),
+                            icon = Icons.Outlined.Pause,
+                        )
                     } else {
-                        Button(
+                        WalkingButtons(
+                            modifier = modifier,
+                            trackingEvent = trackingEvent,
                             onClick = {
                                 switchPauseResumeBtn = !switchPauseResumeBtn
                                 trackingEvent(TrackingEvent.ResumeTrackingService)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
                             },
-                            modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
-                        ) {
-                            Icon(
-                                Icons.Outlined.PlayArrow,
-                                modifier = modifier.size(extraLarge),
-                                contentDescription = stringResource(R.string.settings_icon),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                            Spacer(modifier = Modifier.width(small))
-                            Text(
-                                text = stringResource(R.string.tracking_resume_btn),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = modifier.padding(vertical = small)
-                            )
-                        }
+                            iconDescription = stringResource(R.string.settings_icon),
+                            text = stringResource(R.string.tracking_resume_btn),
+                            icon = Icons.Outlined.PlayArrow
+                        )
                     }
                 }
             }
         }
-
     }
 }
 

@@ -2,29 +2,26 @@ package it.unito.progmob.main
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -38,7 +35,6 @@ import it.unito.progmob.R
 import it.unito.progmob.core.domain.ext.allPermissions
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.ext.openAppSettings
-import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.core.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.core.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.core.presentation.components.NavigationBar
@@ -46,13 +42,13 @@ import it.unito.progmob.core.presentation.components.PermissionDialog
 import it.unito.progmob.core.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
+import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.main.presentation.viewmodel.MainViewModel
 import it.unito.progmob.ui.theme.MyApplicationTheme
-import it.unito.progmob.ui.theme.large
-import it.unito.progmob.ui.theme.small
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val mainViewModel by viewModels<MainViewModel>()
@@ -91,58 +87,57 @@ class MainActivity : ComponentActivity() {
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     topBar = {
                         if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = large, end = large, bottom = small),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                if(currentBackStackEntry?.destination?.route != Route.OnBoardingProfileScreenRoute.route){
-                                    Icon(
-                                        Icons.Default.Person,
-                                        contentDescription = stringResource(R.string.user_icon),
-                                    )
-                                }
-                                when (currentBackStackEntry?.destination?.route) {
-                                    Route.OnBoardingProfileScreenRoute.route -> Text(
-                                        stringResource(R.string.onboparding_page4_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(
-                                            fontWeight = FontWeight.Bold
+                            TopAppBar(
+                                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                                title = {
+                                    when (currentBackStackEntry?.destination?.route) {
+                                        Route.OnBoardingProfileScreenRoute.route -> Text(
+                                            stringResource(R.string.onboparding_page4_title),
+                                            style = MaterialTheme.typography.titleLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
                                         )
-                                    )
-                                    Route.HomeScreenRoute.route -> Text(
-                                        stringResource(R.string.home_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
 
-                                    Route.StatsScreenRoute.route -> Text(
-                                        stringResource(R.string.stats_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(
-                                            fontWeight = FontWeight.Bold
+                                        Route.HomeScreenRoute.route -> Text(
+                                            stringResource(R.string.home_title),
+                                            style = MaterialTheme.typography.titleLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
                                         )
-                                    )
 
-                                    Route.TrackingScreenRoute.route -> Text(
-                                        stringResource(R.string.tracking_title),
-                                        style = MaterialTheme.typography.displaySmall.copy(
-                                            fontWeight = FontWeight.Bold
+                                        Route.StatsScreenRoute.route -> Text(
+                                            stringResource(R.string.stats_title),
+                                            style = MaterialTheme.typography.titleLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
                                         )
-                                    )
+
+                                        Route.TrackingScreenRoute.route -> Text(
+                                            stringResource(R.string.tracking_title),
+                                            style = MaterialTheme.typography.titleLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        )
+                                    }
+                                },
+                                actions = {
+                                    if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route && currentBackStackEntry?.destination?.route != Route.TrackingScreenRoute.route) {
+                                        IconButton(
+                                            onClick = {}
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Person,
+                                                contentDescription = stringResource(R.string.user_icon),
+                                            )
+                                        }
+                                    }
                                 }
-                                if(currentBackStackEntry?.destination?.route != Route.OnBoardingProfileScreenRoute.route){
-                                    Icon(
-                                        Icons.Default.Settings,
-                                        contentDescription = stringResource(R.string.settings_icon)
-                                    )
-                                }
-                            }
+                            )
                         }
+
+
                     },
                     bottomBar = {
-                        Log.d("MainActivity", "current entry: ${currentBackStackEntry?.destination?.route}")
                         when (currentBackStackEntry?.destination?.route) {
                             Route.OnBoardingScreenRoute.route -> {}
                             Route.OnBoardingProfileScreenRoute.route -> {}
@@ -172,7 +167,6 @@ class MainActivity : ComponentActivity() {
                     Surface(
                         modifier = Modifier
                             .padding(padding)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         NavGraph(
                             startDestination = startDestination,

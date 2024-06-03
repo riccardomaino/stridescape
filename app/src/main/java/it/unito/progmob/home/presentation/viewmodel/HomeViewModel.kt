@@ -9,6 +9,7 @@ import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -40,10 +41,6 @@ class HomeViewModel @Inject constructor(
 
     val weeklySteps = homeUseCases.getWeeklyStepsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf())
-
-    init {
-        Log.d("HomeViewModel", "Current day of week: ${DateUtils.getCurrentDateFormatted()}")
-    }
 
     /**
      * Handles Home events emitted from the UI.

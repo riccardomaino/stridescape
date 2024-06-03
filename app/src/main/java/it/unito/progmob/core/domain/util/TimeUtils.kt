@@ -76,4 +76,17 @@ object TimeUtils {
         val secs = duration.minus(mins.toDuration(DurationUnit.MINUTES)).inWholeSeconds
         return mins + if (secs >= 30) 1 else 0
     }
+
+    /**
+     * It turns the time in milliseconds into the HH:mm format
+     *
+     * @param timeInMillis the time in milliseconds
+     * @return a human readable string
+     */
+    fun formatMillisTimeHoursMinutes(timeInMillis: Long): String {
+        val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
+        return duration.toComponents { hours, minutes, _, _ ->
+            "%02d:%02d".format(hours, minutes)
+        }
+    }
 }

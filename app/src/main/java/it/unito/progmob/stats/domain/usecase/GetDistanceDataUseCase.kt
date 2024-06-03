@@ -1,5 +1,6 @@
 package it.unito.progmob.stats.domain.usecase
 
+import it.unito.progmob.core.domain.ext.rangeTo
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.core.domain.util.WalkUtils
@@ -23,18 +24,36 @@ class GetDistanceDataUseCase @Inject constructor(
     operator fun invoke(startDate: Long, endDate: Long): List<Pair<LocalDate, Float>> {
         val formattedStartDate = DateUtils.formatDateFromEpochMillis(startDate)
         val formattedEndDate = DateUtils.formatDateFromEpochMillis(endDate)
-//        val startLocalDateTime = Instant.fromEpochMilliseconds(startDate)
-//            .toLocalDateTime(TimeZone.currentSystemDefault())
-//        val endLocalDateTime = Instant.fromEpochMilliseconds(startDate)
-//            .toLocalDateTime(TimeZone.currentSystemDefault())
-//        Log.d("GetDistanceDataUseCase", "Range: ${startLocalDateTime.rangeTo(endLocalDateTime)}")
-        return walkRepository.findDistanceForDateRange(formattedStartDate, formattedEndDate)?.let {
+        val startLocalDate = DateUtils.getLocalDateFromEpochMillis(startDate)
+        val endLocalDate = DateUtils.getLocalDateFromEpochMillis(endDate)
+        val dateRange = startLocalDate.rangeTo(endLocalDate).asIterable()
+        val pairList = mutableListOf<Pair<LocalDate, Float>>()
+        var nextDate: LocalDate? =
+            if (dateRange.iterator().hasNext()) dateRange.iterator().next() else null
+
+        walkRepository.findDistanceForDateRange(formattedStartDate, formattedEndDate)?.let {
             it.map { dailyDistanceTuple ->
-                Pair(
-                    LocalDate.parse(dailyDistanceTuple.date, format = DateUtils.defaultFormatter),
-                    WalkUtils.convertMetersToKm(dailyDistanceTuple.distance)
+                if (dateRange.iterator().hasNext()) {
+                    nextDate = dateRange.iterator().next()
+                    while (nextDate!! < LocalDate.parse(
+                            dailyDistanceTuple.date,
+                            format = DateUtils.defaultFormatter
+                        )
+                    ) {
+                        // pairList.add(Pair(nextDate, 0f))
+                    }
+                }
+                pairList.add(
+                    Pair(
+                        LocalDate.parse(
+                            dailyDistanceTuple.date,
+                            format = DateUtils.defaultFormatter
+                        ),
+                        WalkUtils.convertMetersToKm(dailyDistanceTuple.distance)
+                    )
                 )
             }
         } ?: emptyList()
+        return pairList
     }
 }

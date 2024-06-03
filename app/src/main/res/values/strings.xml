@@ -60,6 +60,7 @@
     <string name="dialog_cancel_btn">Cancel</string>
     <string name="stats_button_icon_content_description">Icon of the button used to select a range of dates</string>
     <string name="stats_filter_btn_txt">Select Dates</string>
+    <string name="main_activity_go_back_icon">Go back icon</string>
     <string name="stats_chart_y_axis_distance_title" translatable="false">km</string>
     <string name="stats_chart_y_axis_time_title" translatable="false">min</string>
     <string name="stats_chart_y_axis_calories_title" translatable="false">kcal</string>

@@ -1,6 +1,8 @@
 package it.unito.progmob.core.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -31,30 +33,32 @@ fun NavGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        enterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                animationSpec = tween(200, delayMillis = 90)
-            ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                animationSpec = tween(200, delayMillis = 90)
-            ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
-        },
-        popEnterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                animationSpec = tween(200, delayMillis = 90)
-            ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
-        },
-        popExitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                animationSpec = tween(200, delayMillis = 90)
-            ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
-        }
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+//        enterTransition = {
+//            slideIntoContainer(
+//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+//                animationSpec = tween(150, delayMillis = 0)
+//            ) + fadeIn(animationSpec = tween(200, delayMillis = 0))
+//        },
+//        exitTransition = {
+//            slideOutOfContainer(
+//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+//                animationSpec = tween(150, delayMillis = 0)
+//            ) + fadeOut(animationSpec = tween(200, delayMillis = 0))
+//        },
+//        popEnterTransition = {
+//            slideIntoContainer(
+//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+//                animationSpec = tween(150, delayMillis = 0)
+//            ) + fadeIn(animationSpec = tween(200, delayMillis = 0))
+//        },
+//        popExitTransition = {
+//            slideOutOfContainer(
+//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+//                animationSpec = tween(150, delayMillis = 0)
+//            ) + fadeOut(animationSpec = tween(200, delayMillis = 0))
+//        }
     ) {
         navigation(
             route = Route.OnBoardingNavigationRoute.route,
@@ -97,7 +101,6 @@ fun NavGraph(
                 val stepsTargetCurrentDay by homeViewModel.stepsTargetCurrentDay.collectAsState()
                 val weeklySteps by homeViewModel.weeklySteps.collectAsState()
 
-
                 HomeScreen(
                     homeEvent = homeViewModel::onEvent,
                     navController = navController,
@@ -112,10 +115,23 @@ fun NavGraph(
             }
 
             composable(
-                route = Route.TrackingScreenRoute.route
+                route = Route.TrackingScreenRoute.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Companion.Up,
+                        animationSpec = tween(250, delayMillis = 90)
+                    ) + fadeIn(animationSpec = tween(200, delayMillis = 90))
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Companion.Down,
+                        animationSpec = tween(250, delayMillis = 90)
+                    ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
+                },
             ) {
                 val trackingViewModel = hiltViewModel<TrackingViewModel>()
                 val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
+
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
                     navController = navController,

@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -39,7 +40,8 @@ fun OnBoardingTop(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.primary)
                 .padding(start = large, end = large, top = medium)
-                .fillMaxHeight(fraction = 0.6f)
+                .fillMaxHeight(fraction = 0.6f),
+            contentAlignment = Alignment.BottomCenter
         ) {
             page.image?.let { painterResource(id = it) }?.let {
                 Image(
@@ -49,7 +51,6 @@ fun OnBoardingTop(
                     painter = it,
                     contentDescription = page.imageContentDescription,
                     contentScale = ContentScale.Crop,
-
                     )
             }
         }

@@ -52,6 +52,15 @@ object DateUtils {
     }
 
     /**
+     * Get the [LocalDate] from the epoch milliseconds using the kotlin datetime API with the system default timezone
+     * @return the [LocalDate] from the epoch milliseconds
+     */
+    fun getLocalDateFromEpochMillis(dateInMillis: Long): LocalDate =
+        Instant.fromEpochMilliseconds(dateInMillis)
+            .toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+
+    /**
      * It turns the date in milliseconds since 1.1.1970 (epoch) into a
      * human readable string based on the formatter provided or the default one if it is not provided
      *
@@ -59,10 +68,13 @@ object DateUtils {
      * @param formatter the formatter to use
      * @return a human readable string
      */
-    fun formatDateFromEpochMillis(epochMillis: Long, formatter: DateTimeFormat<LocalDate>? = null): String {
+    fun formatDateFromEpochMillis(
+        epochMillis: Long,
+        formatter: DateTimeFormat<LocalDate>? = null
+    ): String {
         val instant = Instant.fromEpochMilliseconds(epochMillis)
         val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-        return formatter?.let{
+        return formatter?.let {
             formatDate(localDate, formatter)
         } ?: formatDate(localDate)
     }
@@ -87,11 +99,23 @@ object DateUtils {
      * @param operation the operation to perform
      * @return the instant
      */
-    fun getInstantOfDateFromNow(days: Long, operation: DateOperation = DateOperation.PLUS): Instant {
+    fun getInstantOfDateFromNow(
+        days: Long,
+        operation: DateOperation = DateOperation.PLUS
+    ): Instant {
         val instant = Clock.System.now()
-        return when(operation){
-            DateOperation.PLUS -> instant.plus(days, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
-            DateOperation.MINUS -> instant.minus(days, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
+        return when (operation) {
+            DateOperation.PLUS -> instant.plus(
+                days,
+                DateTimeUnit.DAY,
+                TimeZone.currentSystemDefault()
+            )
+
+            DateOperation.MINUS -> instant.minus(
+                days,
+                DateTimeUnit.DAY,
+                TimeZone.currentSystemDefault()
+            )
         }
     }
 

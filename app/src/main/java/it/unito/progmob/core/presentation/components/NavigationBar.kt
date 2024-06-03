@@ -1,5 +1,10 @@
 package it.unito.progmob.core.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,13 +29,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import it.unito.progmob.R
@@ -51,6 +63,29 @@ fun NavigationBar(
 ) {
     val selectedPageColor = MaterialTheme.colorScheme.primary
     val unselectedPageColor = MaterialTheme.colorScheme.onPrimary
+    var isShown by remember {
+        mutableStateOf(true)
+    }
+    val hapticFeedback = LocalView.current
+
+
+    val animatedSize = animateFloatAsState(
+        targetValue = if (isShown) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 150,
+            delayMillis = 100
+        ),
+        label = "Floating action button animation"
+    )
+
+    val animatedSizeReverse = animateFloatAsState(
+        targetValue = if (!isShown) 0f else 1f,
+        animationSpec = tween(
+            durationMillis = 250,
+        ),
+        label = "Floating action button animation"
+    )
+
 
     Row(
         modifier = modifier
@@ -83,7 +118,7 @@ fun NavigationBar(
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
-                    if(currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route){
+                    if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route) {
                         Canvas(
                             modifier = Modifier.size(small)
                         ) {
@@ -95,8 +130,11 @@ fun NavigationBar(
                         }
                     }
                     IconButton(onClick = {
-                        if (currentBackStackEntry?.destination?.route != Route.HomeScreenRoute.route)
+                        if (currentBackStackEntry?.destination?.route != Route.HomeScreenRoute.route) {
                             navController.navigate(Route.HomeScreenRoute.route)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                            isShown = true
+                        }
                     }) {
                         Icon(
                             Icons.Filled.Home,
@@ -109,8 +147,8 @@ fun NavigationBar(
                 }
                 Box(
                     contentAlignment = Alignment.Center
-                ){
-                    if(currentBackStackEntry?.destination?.route == Route.StatsScreenRoute.route){
+                ) {
+                    if (currentBackStackEntry?.destination?.route == Route.StatsScreenRoute.route) {
                         Canvas(
                             modifier = Modifier.size(small)
                         ) {
@@ -121,10 +159,15 @@ fun NavigationBar(
 
                         }
                     }
-                    IconButton(onClick = {
-                        if (currentBackStackEntry?.destination?.route != Route.StatsScreenRoute.route)
-                            navController.navigate(Route.StatsScreenRoute.route)
-                    }) {
+                    IconButton(
+                        onClick = {
+                            if (currentBackStackEntry?.destination?.route != Route.StatsScreenRoute.route) {
+                                navController.navigate(Route.StatsScreenRoute.route)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                isShown = false
+                            }
+                        }
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ShowChart,
                             contentDescription = "Localized description",
@@ -133,7 +176,9 @@ fun NavigationBar(
                         )
                     }
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                }) {
                     Icon(
                         Icons.Filled.History,
                         contentDescription = "Localized description",
@@ -142,15 +187,33 @@ fun NavigationBar(
                 }
             }
         }
-        if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route){
+
+        AnimatedVisibility(
+            visible = isShown, enter = expandHorizontally(
+                animationSpec = tween(
+                    durationMillis = 150,
+                )
+            ), exit = shrinkOut(
+                animationSpec = tween(
+                    durationMillis = 150,
+                    delayMillis = 100,
+                ),
+                shrinkTowards = Alignment.Center
+            )
+        )
+        {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
                 elevation = FloatingActionButtonDefaults.elevation(),
-                onClick = { onClickFloatingActionButton() },
+                onClick = {
+                    onClickFloatingActionButton()
+                    hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                },
                 shape = FloatingActionButtonDefaults.extendedFabShape,
                 modifier = Modifier
-                    .padding(small)
-                    .size(floatingActionButtonSize)
+                    .padding(horizontal = small)
+                    .scale(if (isShown) animatedSize.value else animatedSizeReverse.value)
+                    .size(floatingActionButtonSize),
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.DirectionsRun,
@@ -159,5 +222,9 @@ fun NavigationBar(
                 )
             }
         }
+
     }
+
+
 }
+

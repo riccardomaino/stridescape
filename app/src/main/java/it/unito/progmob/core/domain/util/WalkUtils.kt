@@ -68,7 +68,7 @@ object WalkUtils {
             .map { it.speed }
             .average()
             .toBigDecimal()
-            .setScale(2, RoundingMode.HALF_UP)
+            .setScale(1, RoundingMode.HALF_UP)
             .toFloat()
     }
 

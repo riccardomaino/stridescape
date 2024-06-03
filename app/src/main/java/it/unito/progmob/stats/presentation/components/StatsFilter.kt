@@ -24,6 +24,7 @@ import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +46,7 @@ import it.unito.progmob.stats.presentation.StatsEvent
 import it.unito.progmob.ui.theme.extralargeRadius
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
+import it.unito.progmob.ui.theme.small
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,55 +72,65 @@ fun StatsFilter(
     )
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = medium, start = medium, end = medium)
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(medium)
-    ) {
-        StatsType.entries.forEach {
-            ElevatedFilterChip(
-                onClick = { statsEvent(StatsEvent.StatsTypeSelected(it)) },
-                selected = it == selectedFilter,
-                leadingIcon = {
-                    AnimatedVisibility(it == selectedFilter) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = stringResource(R.string.stats_selected_filter_icon_content_description),
-                        )
-                    }
-                },
-                label = {
-                    Text(
-                        text = it.name,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
-            )
-        }
-    }
-
-    Button(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = medium)
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(extralargeRadius)
-            ),
-        onClick = {
-            showDateRangePicker = true
-        }
+            .padding(bottom = small, start = small, end = small),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            Icons.Filled.CalendarMonth,
-            contentDescription = stringResource(R.string.stats_button_icon_content_description),
-            modifier = Modifier.size(large),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-        Spacer(modifier = modifier.width(medium))
-        Text(text = stringResource(R.string.stats_filter_btn_txt))
+        Row(
+            modifier = Modifier
+//                .fillMaxWidth(0.85f)
+                .weight(3f)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(medium),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StatsType.entries.forEach {
+                ElevatedFilterChip(
+                    onClick = { statsEvent(StatsEvent.StatsTypeSelected(it)) },
+                    selected = it == selectedFilter,
+                    leadingIcon = {
+                        AnimatedVisibility(it == selectedFilter) {
+                            Icon(
+                                imageVector = Icons.Default.Done,
+                                contentDescription = stringResource(R.string.stats_selected_filter_icon_content_description),
+                            )
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = it.name,
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                )
+            }
+
+        }
+        Spacer(modifier = modifier.width(small))
+        IconButton(
+            modifier = modifier
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(extralargeRadius)
+                )
+                .weight(1f),
+            onClick = {
+                showDateRangePicker = true
+            }
+        ) {
+            Icon(
+                Icons.Filled.CalendarMonth,
+                contentDescription = stringResource(R.string.stats_button_icon_content_description),
+                modifier = Modifier.size(large),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+
     }
+
+
 
     if (showDateRangePicker) {
         DatePickerDialog(

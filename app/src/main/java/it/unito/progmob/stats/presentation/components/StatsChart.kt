@@ -2,6 +2,7 @@ package it.unito.progmob.stats.presentation.components
 
 import android.graphics.Typeface
 import android.text.Layout
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -86,53 +87,60 @@ fun StatsChart(
                         chartData[it.first] = it.second
                         meanValue += it.second
                     }
-                    if(meanValue > 0){
-                        meanValue = (meanValue / uiStatsState.distanceChartValues.size).toBigDecimal()
-                            .setScale(1, RoundingMode.HALF_UP).toFloat()
+                    if (meanValue > 0) {
+                        meanValue =
+                            (meanValue / uiStatsState.distanceChartValues.size).toBigDecimal()
+                                .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
+
                 StatsType.TIME -> {
                     uiStatsState.timeChartValues.forEach {
                         chartData[it.first] = it.second.toFloat()
                         meanValue += it.second
                     }
-                    if(meanValue > 0){
+                    if (meanValue > 0) {
                         meanValue = (meanValue / uiStatsState.timeChartValues.size).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
+
                 StatsType.CALORIES -> {
                     uiStatsState.caloriesChartValues.forEach {
                         chartData[it.first] = it.second.toFloat()
                         meanValue += it.second
                     }
-                    if(meanValue > 0){
-                        meanValue = (meanValue / uiStatsState.caloriesChartValues.size).toBigDecimal()
-                            .setScale(1, RoundingMode.HALF_UP).toFloat()
+                    if (meanValue > 0) {
+                        meanValue =
+                            (meanValue / uiStatsState.caloriesChartValues.size).toBigDecimal()
+                                .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
+
                 StatsType.STEPS -> {
                     uiStatsState.stepsChartValues.forEach {
                         chartData[it.first] = it.second.toFloat()
                         meanValue += it.second
                     }
-                    if(meanValue > 0){
+                    if (meanValue > 0) {
                         meanValue = (meanValue / uiStatsState.stepsChartValues.size).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
+
                 StatsType.SPEED -> {
                     uiStatsState.speedChartValues.forEach {
                         chartData[it.first] = it.second
                         meanValue += it.second
                     }
-                    if(meanValue > 0){
+                    if (meanValue > 0) {
                         meanValue = (meanValue / uiStatsState.speedChartValues.size).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
             }
-            val xToDatesMap: Map<Float, LocalDate> = chartData.keys.associateBy { it.toEpochDays().toFloat() }
+            val xToDatesMap: Map<Float, LocalDate> =
+                chartData.keys.associateBy { it.toEpochDays().toFloat() }
             modelProducer.tryRunTransaction {
                 columnSeries {
                     series(x = xToDatesMap.keys, y = chartData.values)
@@ -161,9 +169,10 @@ fun StatsChart(
                 itemPlacer = AxisItemPlacer.Vertical.step({ 1f }),
                 titleComponent = rememberTextComponent(
                     color = MaterialTheme.colorScheme.onSurface,
-                    background = rememberShapeComponent(Shape.Pill, MaterialTheme.colorScheme.surface),
-                    padding = Dimensions.of(horizontal = 8.dp, vertical = 2.dp),
-                    margins = Dimensions.of(end = 0.dp),
+                    background = rememberShapeComponent(
+                        Shape.Pill,
+                        MaterialTheme.colorScheme.surface
+                    ),
                     typeface = Typeface.MONOSPACE
                 ),
                 title = when (uiStatsState.statsSelected) {
@@ -190,7 +199,7 @@ fun StatsChart(
             decorations = listOf(rememberMeanHorizontalLine(meanValueExtraStoreKey)),
         ),
         modelProducer = modelProducer,
-        modifier = modifier,
+        modifier = modifier.fillMaxHeight(0.6f),
         marker = rememberMarker(),
         horizontalLayout = HorizontalLayout.fullWidth(),
     )
@@ -284,9 +293,13 @@ internal fun rememberMarker(
             indicatorSizeDp = CHART_INDICATOR_SIZE,
             setIndicatorColor = if (showIndicator) {
                 { _ ->
-                    indicatorRearComponent.color = indicatorRearComponentColor.copy(alpha = 0.15f).toArgb()
+                    indicatorRearComponent.color =
+                        indicatorRearComponentColor.copy(alpha = 0.15f).toArgb()
                     indicatorCenterComponent.color = indicatorCenterComponentColor.toArgb()
-                    indicatorCenterComponent.setShadow(radius = 12f, color = indicatorCenterComponentColor.toArgb())
+                    indicatorCenterComponent.setShadow(
+                        radius = 12f,
+                        color = indicatorCenterComponentColor.toArgb()
+                    )
                 }
             } else {
                 null
@@ -299,7 +312,8 @@ internal fun rememberMarker(
                 horizontalDimensions: HorizontalDimensions,
             ) {
                 with(context) {
-                    outInsets.top = (CHART_CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER * CHART_LABEL_BACKGROUND_SHADOW_RADIUS - CHART_LABEL_BACKGROUND_SHADOW_DY).pixels
+                    outInsets.top =
+                        (CHART_CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER * CHART_LABEL_BACKGROUND_SHADOW_RADIUS - CHART_LABEL_BACKGROUND_SHADOW_DY).pixels
                     if (labelPosition == LabelPosition.AroundPoint) {
                         return
                     }
