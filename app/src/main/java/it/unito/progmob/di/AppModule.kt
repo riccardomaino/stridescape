@@ -22,21 +22,19 @@ import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
 import it.unito.progmob.tracking.domain.service.WalkHandler
-import it.unito.progmob.core.domain.usecase.DismissPermissionDialogUseCase
 import it.unito.progmob.home.domain.usecase.HomeUseCases
-import it.unito.progmob.core.domain.usecase.PermissionResultUseCase
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
-import it.unito.progmob.core.domain.usecase.ReadOnboardingEntryUseCase
+import it.unito.progmob.main.domain.usecase.ReadOnboardingEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
-import it.unito.progmob.core.domain.usecase.SaveOnboardingEntryUseCase
+import it.unito.progmob.onboarding.domain.usecase.SaveOnboardingEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
-import it.unito.progmob.core.domain.usecase.AddPathPointUseCase
-import it.unito.progmob.core.domain.usecase.AddWalkUseCase
-import it.unito.progmob.core.domain.usecase.CheckTargetExistUseCase
-import it.unito.progmob.core.domain.usecase.MainUseCases
+import it.unito.progmob.tracking.domain.usecase.AddPathPointUseCase
+import it.unito.progmob.tracking.domain.usecase.AddWalkUseCase
+import it.unito.progmob.main.domain.usecase.CheckTargetExistUseCase
+import it.unito.progmob.main.domain.usecase.MainUseCases
 import it.unito.progmob.home.domain.usecase.AddTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDateTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
@@ -45,7 +43,11 @@ import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
 import it.unito.progmob.home.domain.usecase.GetDayTimeUseCase
 import it.unito.progmob.stats.domain.usecase.StatsUseCases
 import it.unito.progmob.home.domain.usecase.GetWeeklyStepsUseCase
+import it.unito.progmob.stats.domain.usecase.GetCaloriesDataUseCase
 import it.unito.progmob.stats.domain.usecase.GetDistanceDataUseCase
+import it.unito.progmob.stats.domain.usecase.GetSpeedDataUseCase
+import it.unito.progmob.stats.domain.usecase.GetStepsDataUseCase
+import it.unito.progmob.stats.domain.usecase.GetTimeDataUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -110,9 +112,7 @@ object AppModule {
         targetRepository: TargetRepository
     ) = MainUseCases(
         ReadOnboardingEntryUseCase(dataStoreManager),
-        CheckTargetExistUseCase(targetRepository),
-        DismissPermissionDialogUseCase(),
-        PermissionResultUseCase()
+        CheckTargetExistUseCase(targetRepository)
     )
 
     @Provides
@@ -120,7 +120,6 @@ object AppModule {
     fun provideOnBoardingUseCases(
         dataStoreManager: DataStoreManager
     ) = OnBoardingUseCases(
-        ReadOnboardingEntryUseCase(dataStoreManager),
         SaveOnboardingEntryUseCase(dataStoreManager),
         SaveUserNameEntryUseCase(dataStoreManager),
         SaveUserWeightEntryUseCase(dataStoreManager),
@@ -163,6 +162,11 @@ object AppModule {
      @Singleton
      fun provideStatsUseCases(
          walkRepository: WalkRepository
-     ) = StatsUseCases(GetDistanceDataUseCase(walkRepository))
-
+     ) = StatsUseCases(
+         GetDistanceDataUseCase(walkRepository),
+         GetTimeDataUseCase(walkRepository),
+         GetCaloriesDataUseCase(walkRepository),
+         GetStepsDataUseCase(walkRepository),
+         GetSpeedDataUseCase(walkRepository)
+     )
 }

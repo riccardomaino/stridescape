@@ -1,4 +1,4 @@
-package it.unito.progmob.core
+package it.unito.progmob.main
 
 import android.Manifest
 import android.os.Bundle
@@ -38,7 +38,7 @@ import it.unito.progmob.R
 import it.unito.progmob.core.domain.ext.allPermissions
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.ext.openAppSettings
-import it.unito.progmob.core.presentation.MainEvent
+import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.core.presentation.components.AccessFineLocationPermissionTextProvider
 import it.unito.progmob.core.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.core.presentation.components.NavigationBar
@@ -46,7 +46,7 @@ import it.unito.progmob.core.presentation.components.PermissionDialog
 import it.unito.progmob.core.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
-import it.unito.progmob.core.presentation.viewmodel.MainViewModel
+import it.unito.progmob.main.presentation.viewmodel.MainViewModel
 import it.unito.progmob.ui.theme.MyApplicationTheme
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small

@@ -1,4 +1,4 @@
-package it.unito.progmob.core.presentation.viewmodel
+package it.unito.progmob.main.presentation.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,9 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.unito.progmob.core.domain.usecase.MainUseCases
+import it.unito.progmob.main.domain.usecase.MainUseCases
 import it.unito.progmob.core.domain.util.DateUtils
-import it.unito.progmob.core.presentation.MainEvent
+import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.core.presentation.navigation.Route
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -24,14 +24,17 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val mainUseCases: MainUseCases,
 ) : ViewModel() {
+
     // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to
     // request again if the the user has refused them
     private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
 
+    // MutableStateFlow of String used to store the start destination of the app
     var startDestination by mutableStateOf(Route.OnBoardingNavigationRoute.route)
         private set
 
+    // MutableStateFlow of Boolean used for the splash screen to know when the app is ready
     private val _isReady = MutableStateFlow(false)
     val isReady = _isReady.asStateFlow()
 
@@ -66,8 +69,8 @@ class MainViewModel @Inject constructor(
     }
 
     /**
-     * Calls the use case to dismiss the permission dialog. It pops the first entry of the queue of permissions.
-     * This method launch a coroutine, using Dispatchers.Default, to perform the use case
+     * It pops the first entry of the queue of permissions. This method launch a coroutine, using
+     * Dispatchers.Default, to perform the operation
      */
     private fun dismissPermissionDialog() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -77,21 +80,13 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
-//        viewModelScope.launch(Dispatchers.Default) {
-//            val dismissDialogQueueResult = mainUseCases.dismissPermissionDialogUseCase(
-//                _visiblePermissionDialogQueue.value.toMutableList()
-//            )
-//
-//            _visiblePermissionDialogQueue.update {
-//                dismissDialogQueueResult
-//            }
-//        }
     }
 
     /**
-     * Calls the use case to handle the result of the permission rationale. It adds the permission
-     * to the queue of permissions if it is not granted.
-     * This method launch a coroutine, using Dispatchers.Default, to perform the use case
+     * It adds the permission to the queue of permissions if it is not granted and it is not already
+     * present in the queue. This method launch a coroutine, using Dispatchers.Default, to perform
+     * the operation
+     *
      * @param permission The string name representing the permission
      * @param isGranted A boolean value used to evaluate if the permission was granted or not
      */
@@ -108,16 +103,5 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
-//        viewModelScope.launch(Dispatchers.Default) {
-//            val permissionDialogQueueResult = mainUseCases.permissionResultUseCase(
-//                _visiblePermissionDialogQueue.value.toMutableList(),
-//                permission,
-//                isGranted
-//            )
-//
-//            _visiblePermissionDialogQueue.update {
-//                permissionDialogQueueResult
-//            }
-//        }
     }
 }

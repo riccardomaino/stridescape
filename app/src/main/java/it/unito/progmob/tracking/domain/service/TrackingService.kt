@@ -13,7 +13,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import dagger.hilt.android.AndroidEntryPoint
-import it.unito.progmob.core.MainActivity
+import it.unito.progmob.main.MainActivity
 import it.unito.progmob.R
 import it.unito.progmob.core.domain.Constants.LOCATION_TRACKING_INTERVAL
 import it.unito.progmob.core.domain.ext.hasAllPermissions

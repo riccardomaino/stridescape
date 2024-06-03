@@ -11,12 +11,12 @@ class GetWeeklyStepsUseCase(
     operator fun invoke(): Flow<IntArray> {
         val startDate = DateUtils.getFirstDateOfWeek()
         val endDate = DateUtils.getCurrentDateFormatted()
-        val dailySteps = intArrayOf(0, 0, 0, 0, 0, 0, 0)
-        return walkRepository.findStepsBetweenDates(startDate, endDate).mapNotNull { dailyStepsTuple ->
-            dailyStepsTuple?.let {
-                dailySteps[dailyStepsTuple.weekDay] = dailyStepsTuple.steps
+        val weekDayStepsArray = intArrayOf(0, 0, 0, 0, 0, 0, 0)
+        return walkRepository.findStepsBetweenDates(startDate, endDate).mapNotNull { weekDayStepsTuple ->
+            weekDayStepsTuple?.let {
+                weekDayStepsArray[weekDayStepsTuple.weekDay] = weekDayStepsTuple.steps
             }
-            dailySteps
+            weekDayStepsArray
         }
     }
 }

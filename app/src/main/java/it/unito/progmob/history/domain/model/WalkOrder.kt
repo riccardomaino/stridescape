@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.util
+package it.unito.progmob.history.domain.model
 
 sealed class WalkOrder(val orderType: WalkOrderType) {
     class Steps(orderType: WalkOrderType): WalkOrder(orderType)

@@ -16,8 +16,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.DateRangePickerDefaults
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,7 +58,10 @@ fun StatsFilter(
         mutableStateOf(false)
     }
     val dateRangePickerState = rememberDateRangePickerState(
-        initialSelectedStartDateMillis = DateUtils.getInstantOfDateFromNow(7, DateUtils.DateOperation.MINUS).toEpochMilliseconds(),
+        initialSelectedStartDateMillis = DateUtils.getInstantOfDateFromNow(
+            7,
+            DateUtils.DateOperation.MINUS
+        ).toEpochMilliseconds(),
         initialSelectedEndDateMillis = DateUtils.getInstantOfDateFromNow(0).toEpochMilliseconds(),
         initialDisplayedMonthMillis = null,
         yearRange = (2024..2100),
@@ -151,7 +156,28 @@ fun StatsFilter(
             }
         ) {
             DateRangePicker(
-                modifier = modifier.weight(1f),
+                modifier = modifier.then(
+                    if (dateRangePickerState.displayMode == DisplayMode.Picker)
+                        modifier.weight(1f)
+                    else
+                        modifier
+                ),
+                title = {
+                    Text(
+                        modifier = modifier.padding(top = medium, start = medium, end = medium),
+                        text = "Select date range",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                },
+                headline = {
+                    DateRangePickerDefaults.DateRangePickerHeadline(
+                        selectedStartDateMillis = dateRangePickerState.selectedStartDateMillis,
+                        selectedEndDateMillis = dateRangePickerState.selectedEndDateMillis,
+                        displayMode = dateRangePickerState.displayMode,
+                        modifier = modifier.padding(start = medium),
+                        dateFormatter = DatePickerDefaults.dateFormatter()
+                    )
+                },
                 state = dateRangePickerState
             )
         }

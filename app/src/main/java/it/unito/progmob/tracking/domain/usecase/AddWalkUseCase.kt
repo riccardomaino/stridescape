@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.usecase
+package it.unito.progmob.tracking.domain.usecase
 
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.repository.WalkRepository

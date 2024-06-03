@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.usecase
+package it.unito.progmob.main.domain.usecase
 
 import it.unito.progmob.core.domain.Constants
 import it.unito.progmob.core.domain.model.TargetEntity

@@ -34,7 +34,10 @@ object TimeUtils {
      * @param epochSeconds
      * @return a human readable string
      */
-    fun formatTimeFromEpochSeconds(epochSeconds: Long, formatter: DateTimeFormat<LocalTime>? = null): String {
+    fun formatTimeFromEpochSeconds(
+        epochSeconds: Long,
+        formatter: DateTimeFormat<LocalTime>? = null
+    ): String {
         val instant = Instant.fromEpochSeconds(epochSeconds)
         val localTime = instant.toLocalDateTime(TimeZone.currentSystemDefault()).time
         return formatter?.let {
@@ -43,15 +46,34 @@ object TimeUtils {
     }
 
     /**
-     * It turns the time in milliseconds into the HH:mm:ss format
+     * It turns the time in milliseconds into a human readable string (e.g. the HH:mm:ss format)
      *
      * @param timeInMillis the time in milliseconds
      * @return a human readable string
      */
     fun formatMillisTime(timeInMillis: Long): String {
+//        val instant = Instant.fromEpochMilliseconds(timeInMillis)
+//        val localTime = instant.toLocalDateTime(TimeZone.currentSystemDefault()).time
+//        return formatter?.let {
+//            formatTime(localTime, formatter)
+//        } ?: formatTime(localTime)
         val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
         return duration.toComponents { hours, minutes, seconds, _ ->
             "%02d:%02d:%02d".format(hours, minutes, seconds)
         }
+    }
+
+    /**
+     * It converts the time in milliseconds into minutes and rounds it to the nearest minute value
+     * (e.g. 30 seconds are rounded to 1 minute)
+     *
+     * @param timeInMillis the time in milliseconds
+     * @return the time in minutes
+     */
+    fun convertMillisToMinutes(timeInMillis: Long): Int {
+        val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
+        val mins = duration.inWholeMinutes.toInt()
+        val secs = duration.minus(mins.toDuration(DurationUnit.MINUTES)).inWholeSeconds
+        return mins + if (secs >= 30) 1 else 0
     }
 }

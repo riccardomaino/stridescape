@@ -2,7 +2,7 @@ package it.unito.progmob.core.domain.model
 
 import androidx.room.ColumnInfo
 
-data class DailyStepsTuple (
-    @ColumnInfo(name = "weekDay") val weekDay: Int,
+data class DateStepsTuple(
+    @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "steps") val steps: Int
 )

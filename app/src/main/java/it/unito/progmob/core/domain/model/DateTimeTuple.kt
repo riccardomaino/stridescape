@@ -2,7 +2,7 @@ package it.unito.progmob.core.domain.model
 
 import androidx.room.ColumnInfo
 
-data class DailyDistanceTuple(
+data class DateTimeTuple(
     @ColumnInfo(name = "date") val date: String,
-    @ColumnInfo(name = "distance") val distance: Int
+    @ColumnInfo(name = "time") val time: Long
 )

@@ -1,4 +1,4 @@
-package it.unito.progmob.core.data.data_source
+package it.unito.progmob.core.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -1,9 +1,9 @@
-package it.unito.progmob.core.domain.usecase
+package it.unito.progmob.history.domain.usecase
 
 import it.unito.progmob.core.domain.model.WalkWithPathPoints
 import it.unito.progmob.core.domain.repository.WalkRepository
-import it.unito.progmob.core.domain.util.WalkOrder
-import it.unito.progmob.core.domain.util.WalkOrderType
+import it.unito.progmob.history.domain.model.WalkOrder
+import it.unito.progmob.history.domain.model.WalkOrderType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

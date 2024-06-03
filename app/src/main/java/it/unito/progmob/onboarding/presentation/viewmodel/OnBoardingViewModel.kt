@@ -16,6 +16,7 @@ class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases,
 ) : ViewModel() {
 
+    // MutableState of the user name, weight and height used to store the user preferences entries values
     val userName: MutableState<String> = mutableStateOf("")
     val userWeight: MutableState<String> = mutableStateOf("")
     val userHeight: MutableState<String> = mutableStateOf("")
@@ -29,7 +30,6 @@ class OnBoardingViewModel @Inject constructor(
             is OnBoardingEvent.SaveEntries -> saveEntries()
         }
     }
-
 
     /**
      * Calls the use cases to save all the user preferences entries values to the user preferences DataStore.

@@ -1,6 +1,6 @@
 package it.unito.progmob.core.data.repository
 
-import it.unito.progmob.core.data.data_source.TargetDao
+import it.unito.progmob.core.data.local.TargetDao
 import it.unito.progmob.core.domain.model.TargetEntity
 import it.unito.progmob.core.domain.repository.TargetRepository
 import kotlinx.coroutines.flow.Flow

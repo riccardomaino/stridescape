@@ -1,4 +1,4 @@
-package it.unito.progmob.core.data.data_source
+package it.unito.progmob.core.data.local
 
 import androidx.room.Dao
 import androidx.room.Query

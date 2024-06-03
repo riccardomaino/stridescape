@@ -2,13 +2,13 @@ package it.unito.progmob.stats.presentation.components
 
 import android.graphics.Typeface
 import android.text.Layout
-import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
@@ -41,6 +41,7 @@ import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.Shape
+import it.unito.progmob.R
 import it.unito.progmob.core.domain.Constants.CHART_CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER
 import it.unito.progmob.core.domain.Constants.CHART_COLUMN_ROUNDNESS
 import it.unito.progmob.core.domain.Constants.CHART_COLUMN_THICKNESS
@@ -64,9 +65,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import java.math.RoundingMode
-import java.text.DateFormatSymbols
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun StatsChart(
@@ -77,6 +75,7 @@ fun StatsChart(
     val xToDateMapExtraStoreKey = remember { ExtraStore.Key<Map<Float, LocalDate>>() }
     val meanValueExtraStoreKey = remember { ExtraStore.Key<Float>() }
 
+    // LaunchedEffect used to update the chart data when the uiStatsState changes
     LaunchedEffect(key1 = uiStatsState) {
         withContext(Dispatchers.Default) {
             val chartData: MutableMap<LocalDate, Float> = mutableMapOf()
@@ -84,20 +83,17 @@ fun StatsChart(
             when (uiStatsState.statsSelected) {
                 StatsType.DISTANCE -> {
                     uiStatsState.distanceChartValues.forEach {
-                        Log.d("StatsScreen", "DEBUG 1:  (${it.first}, ${it.second})")
                         chartData[it.first] = it.second
                         meanValue += it.second
                     }
-                    Log.d("StatsScreen", "DEBUG 2: meanValue = $meanValue")
                     if(meanValue > 0){
                         meanValue = (meanValue / uiStatsState.distanceChartValues.size).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
-                    Log.d("StatsScreen", "DEBUG 3 meanValue: $meanValue")
                 }
                 StatsType.TIME -> {
                     uiStatsState.timeChartValues.forEach {
-                        chartData[it.first] = it.second
+                        chartData[it.first] = it.second.toFloat()
                         meanValue += it.second
                     }
                     if(meanValue > 0){
@@ -136,8 +132,7 @@ fun StatsChart(
                     }
                 }
             }
-            val xToDatesMap: Map<Float, LocalDate> =
-                chartData.keys.associateBy { it.toEpochDays().toFloat() }
+            val xToDatesMap: Map<Float, LocalDate> = chartData.keys.associateBy { it.toEpochDays().toFloat() }
             modelProducer.tryRunTransaction {
                 columnSeries {
                     series(x = xToDatesMap.keys, y = chartData.values)
@@ -162,15 +157,32 @@ fun StatsChart(
                     ),
                 ),
             ),
-            startAxis = rememberStartAxis(),
+            startAxis = rememberStartAxis(
+                itemPlacer = AxisItemPlacer.Vertical.step({ 1f }),
+                titleComponent = rememberTextComponent(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    background = rememberShapeComponent(Shape.Pill, MaterialTheme.colorScheme.surface),
+                    padding = Dimensions.of(horizontal = 8.dp, vertical = 2.dp),
+                    margins = Dimensions.of(end = 0.dp),
+                    typeface = Typeface.MONOSPACE
+                ),
+                title = when (uiStatsState.statsSelected) {
+                    StatsType.DISTANCE -> stringResource(R.string.stats_chart_y_axis_distance_title)
+                    StatsType.TIME -> stringResource(R.string.stats_chart_y_axis_time_title)
+                    StatsType.CALORIES -> stringResource(R.string.stats_chart_y_axis_calories_title)
+                    StatsType.STEPS -> stringResource(R.string.stats_chart_y_axis_steps_title)
+                    StatsType.SPEED -> stringResource(R.string.stats_chart_y_axis_speed_title)
+                },
+            ),
             bottomAxis = rememberBottomAxis(
                 valueFormatter = { x, chartValues, _ ->
-                    (chartValues.model.extraStore[xToDateMapExtraStoreKey][x] ?: LocalDate.fromEpochDays(x.toInt()))
+                    (chartValues.model.extraStore[xToDateMapExtraStoreKey][x]
+                        ?: LocalDate.fromEpochDays(x.toInt()))
                         .format(DateUtils.chartFormatter)
                 },
                 itemPlacer = remember {
                     AxisItemPlacer.Horizontal.default(
-                        spacing = 3,
+                        spacing = 1,
                         addExtremeLabelPadding = true
                     )
                 },
@@ -194,7 +206,10 @@ private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Fl
     // MEAN HORIZONTAL LINE Definition
     return rememberHorizontalLine(
         y = { it[meanValueExtraStoreKey] },
-        line = rememberLineComponent(lineColor, CHART_HORIZONTAL_LINE_THICKNESS.dp),
+        line = rememberLineComponent(
+            color = lineColor,
+            thickness = CHART_HORIZONTAL_LINE_THICKNESS.dp
+        ),
         labelComponent = rememberTextComponent(
             background = rememberShapeComponent(Shape.Pill, lineLabelColor),
             color = lineLabelTextColor,
@@ -204,7 +219,6 @@ private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Fl
             ),
             margins = Dimensions.of(CHART_HORIZONTAL_LINE_LABEL_MARGIN.dp),
             typeface = Typeface.MONOSPACE,
-
         ),
     )
 }
@@ -221,24 +235,26 @@ internal fun rememberMarker(
     // LABEL Background Settings
     val labelBackgroundColor = MaterialTheme.colorScheme.surface
     val labelBackgroundShape = Shape.markerCornered(Corner.FullyRounded)
-    val labelBackground = rememberShapeComponent(labelBackgroundShape, labelBackgroundColor)
-        .setShadow(
-            radius = CHART_LABEL_BACKGROUND_SHADOW_RADIUS,
-            dy = CHART_LABEL_BACKGROUND_SHADOW_DY,
-            applyElevationOverlay = true
-        )
+    val labelBackground = rememberShapeComponent(
+        shape = labelBackgroundShape,
+        color = labelBackgroundColor
+    ).setShadow(
+        radius = CHART_LABEL_BACKGROUND_SHADOW_RADIUS,
+        dy = CHART_LABEL_BACKGROUND_SHADOW_DY,
+        applyElevationOverlay = true
+    )
 
     // LABEL Definition
     val label = rememberTextComponent(
-            color = labelTextColor,
-            background = labelBackground,
-            padding = Dimensions.of(
-                CHART_LABEL_HORIZONTAL_PADDING.dp,
-                CHART_LABEL_VERTICAL_PADDING.dp
-            ),
-            typeface = Typeface.MONOSPACE,
-            textAlignment = Layout.Alignment.ALIGN_CENTER,
-            minWidth = TextComponent.MinWidth.fixed(CHART_LABEL_MIN_WIDTH.dp)
+        color = labelTextColor,
+        background = labelBackground,
+        padding = Dimensions.of(
+            CHART_LABEL_HORIZONTAL_PADDING.dp,
+            CHART_LABEL_VERTICAL_PADDING.dp
+        ),
+        typeface = Typeface.MONOSPACE,
+        textAlignment = Layout.Alignment.ALIGN_CENTER,
+        minWidth = TextComponent.MinWidth.fixed(CHART_LABEL_MIN_WIDTH.dp)
     )
 
     // INDICATOR Settings
@@ -249,13 +265,13 @@ internal fun rememberMarker(
     val indicatorCenterComponent = rememberShapeComponent(Shape.Pill)
     val indicatorRearComponent = rememberShapeComponent(Shape.Pill)
     val indicator = rememberLayeredComponent(
-            rear = indicatorRearComponent,
-            front = rememberLayeredComponent(
-                rear = indicatorCenterComponent,
-                front = indicatorFrontComponent,
-                padding = Dimensions.of(CHART_INDICATOR_FRONT_PADDING.dp),
-            ),
-            padding = Dimensions.of(CHART_INDICATOR_PADDING.dp)
+        rear = indicatorRearComponent,
+        front = rememberLayeredComponent(
+            rear = indicatorCenterComponent,
+            front = indicatorFrontComponent,
+            padding = Dimensions.of(CHART_INDICATOR_FRONT_PADDING.dp),
+        ),
+        padding = Dimensions.of(CHART_INDICATOR_PADDING.dp)
     )
     val guideline = rememberAxisGuidelineComponent()
 
@@ -293,12 +309,3 @@ internal fun rememberMarker(
         }
     }
 }
-
-
-private val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMM")
-private val monthNames = DateFormatSymbols.getInstance(Locale.US).shortMonths
-//private val bottomAxisValueFormatter = CartesianValueFormatter { x, chartValues, _ ->
-//    chartValues.model.extraStore[xToDateMapKey][x] ?: LocalDate.fromEpochDays(x.toInt()).format(
-//        DateUtils.chartFormatter
-//    )
-//}

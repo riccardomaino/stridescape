@@ -1,4 +1,4 @@
-package it.unito.progmob.core.presentation
+package it.unito.progmob.main.presentation
 
 sealed class MainEvent {
     data object DismissPermissionDialog : MainEvent()

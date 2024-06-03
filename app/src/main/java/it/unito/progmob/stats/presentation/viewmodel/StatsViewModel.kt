@@ -1,7 +1,5 @@
 package it.unito.progmob.stats.presentation.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,15 +18,9 @@ import javax.inject.Inject
 class StatsViewModel @Inject constructor(
     private val statsUseCases: StatsUseCases
 ) : ViewModel() {
-
+    // MutableStateFlow of UiStatsState used to maintain the current state of the UI.
     private val _uiStatsState = MutableStateFlow(UiStatsState())
     val uiStatsState = _uiStatsState.asStateFlow()
-
-    var isLoading = mutableStateOf(false)
-        private set
-    var isDataUpdated = mutableStateOf(false)
-        private set
-
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -39,7 +31,6 @@ class StatsViewModel @Inject constructor(
             )
         }
     }
-
 
     /**
      * Handles Stats events emitted from the UI.
@@ -52,7 +43,11 @@ class StatsViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * Updates the UI state based on the selected stats type after fetching stats data.
+     *
+     * @param statsSelected The selected stats type.
+     */
     private fun statsTypeSelected(statsSelected: StatsType){
         viewModelScope.launch(Dispatchers.IO) {
             fetchStats(
@@ -63,6 +58,12 @@ class StatsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Updates the UI state based on the selected date range after fetching stats data.
+     *
+     * @param startDate The start date in milliseconds.
+     * @param endDate The end date in milliseconds.
+     */
     private fun dateRangeSelected(startDate: Long, endDate: Long) {
         viewModelScope.launch(Dispatchers.IO){
             fetchStats(
@@ -73,14 +74,18 @@ class StatsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Fetches stats data based on the selected stats type and date range.
+     *
+     * @param startDate The start date in milliseconds.
+     * @param endDate The end date in milliseconds.
+     * @param statsSelected The selected stats type.
+     */
     private fun fetchStats(startDate: Long, endDate: Long, statsSelected: StatsType) {
         viewModelScope.launch(Dispatchers.IO) {
             when (statsSelected) {
                 StatsType.DISTANCE -> {
-                    val distanceStatsList =  statsUseCases.getDistanceStatsUseCase(
-                        startDate,
-                        endDate
-                    )
+                    val distanceStatsList =  statsUseCases.getDistanceDataUseCase(startDate, endDate)
                     _uiStatsState.update {
                         it.copy(
                             startDate = startDate,
@@ -90,10 +95,50 @@ class StatsViewModel @Inject constructor(
                         )
                     }
                 }
-                StatsType.TIME -> Log.d("StatsViewModel", "TIME")
-                StatsType.CALORIES -> Log.d("StatsViewModel", "CALORIES")
-                StatsType.STEPS -> Log.d("StatsViewModel", "STEPS")
-                StatsType.SPEED -> Log.d("StatsViewModel", "SPEED")
+                StatsType.TIME -> {
+                    val timeStatsList = statsUseCases.getTimeDataUseCase(startDate, endDate)
+                    _uiStatsState.update {
+                        it.copy(
+                            startDate = startDate,
+                            endDate = endDate,
+                            statsSelected = statsSelected,
+                            timeChartValues = timeStatsList
+                        )
+                    }
+                }
+                StatsType.CALORIES -> {
+                    val caloriesStatsList = statsUseCases.getCaloriesDataUseCase(startDate, endDate)
+                    _uiStatsState.update {
+                        it.copy(
+                            startDate = startDate,
+                            endDate = endDate,
+                            statsSelected = statsSelected,
+                            caloriesChartValues = caloriesStatsList
+                        )
+                    }
+                }
+                StatsType.STEPS -> {
+                    val stepsStatsList = statsUseCases.getStepsDataUseCase(startDate, endDate)
+                    _uiStatsState.update {
+                        it.copy(
+                            startDate = startDate,
+                            endDate = endDate,
+                            statsSelected = statsSelected,
+                            stepsChartValues = stepsStatsList
+                        )
+                    }
+                }
+                StatsType.SPEED -> {
+                    val speedStatsList = statsUseCases.getSpeedDataUseCase(startDate, endDate)
+                    _uiStatsState.update {
+                        it.copy(
+                            startDate = startDate,
+                            endDate = endDate,
+                            statsSelected = statsSelected,
+                            speedChartValues = speedStatsList
+                        )
+                    }
+                }
             }
         }
     }

@@ -58,4 +58,5 @@
     <string name="dialog_cancel_btn">Annulla</string>
     <string name="stats_button_icon_content_description">Icona del bottone utilizzato per selezionare un intervallo di date</string>
     <string name="stats_filter_btn_txt">Seleziona Date</string>
+    <string name="stats_chart_title">Le Tue Statistiche</string>
 </resources>

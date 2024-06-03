@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import it.unito.progmob.core.data.data_source.WalkDatabase
+import it.unito.progmob.core.data.local.WalkDatabase
 import it.unito.progmob.core.data.repository.TargetRepositoryImpl
 import it.unito.progmob.core.data.repository.WalkRepositoryImpl
 import it.unito.progmob.core.domain.repository.TargetRepository
