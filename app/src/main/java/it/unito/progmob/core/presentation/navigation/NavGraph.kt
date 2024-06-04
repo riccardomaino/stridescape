@@ -131,11 +131,13 @@ fun NavGraph(
             ) {
                 val trackingViewModel = hiltViewModel<TrackingViewModel>()
                 val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
+                val currentLocation by trackingViewModel.currentLocation.collectAsState()
 
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
                     navController = navController,
-                    uiTrackingState = uiTrackingState
+                    uiTrackingState = uiTrackingState,
+                    currentLocation = currentLocation
                 )
             }
 

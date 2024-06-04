@@ -2,6 +2,7 @@ package it.unito.progmob.tracking.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.tracking.domain.model.Walk
@@ -38,6 +39,8 @@ class TrackingViewModel @Inject constructor(
     // The user height used to calculate the calories burnt
     private var userHeight: Int = 0
 
+    private val _currentLocation = MutableStateFlow<LatLng?>(null)
+    val currentLocation: StateFlow<LatLng?> = _currentLocation.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -74,6 +77,13 @@ class TrackingViewModel @Inject constructor(
             is TrackingEvent.ResumeTrackingService-> resumeTrackingService()
             is TrackingEvent.PauseTrackingService -> pauseTrackingService()
             is TrackingEvent.StopTrackingService -> stopTrackingService()
+            is TrackingEvent.TrackSingleLocation -> trackSingleLocation()
+        }
+    }
+
+    private fun trackSingleLocation() {
+        viewModelScope.launch(Dispatchers.IO) {
+            trackingUseCases.trackSingleLocationUseCase()
         }
     }
 

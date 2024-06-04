@@ -52,8 +52,6 @@ val Context.monthFullNames: Array<String>
         this.resources.getString(R.string.month_full_december)
     )
 
-
-
 val Context.allPermissions by lazy {
     mutableListOf(
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -66,8 +64,6 @@ val Context.allPermissions by lazy {
         }
     }.toTypedArray()
 }
-
-
 
 
 /**

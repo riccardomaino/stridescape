@@ -8,6 +8,7 @@ data class TrackingUseCases(
     val resumeTrackingUseCase: ResumeTrackingUseCase,
     val pauseTrackingUseCase: PauseTrackingUseCase,
     val stopTrackingUseCase: StopTrackingUseCase,
+    val trackSingleLocationUseCase: TrackSingleLocationUseCase,
     val readUserWeightEntryUseCase: ReadUserWeightEntryUseCase,
     val readUserHeightEntryUseCase: ReadUserHeightEntryUseCase,
     val addPathPointUseCase: AddPathPointUseCase,

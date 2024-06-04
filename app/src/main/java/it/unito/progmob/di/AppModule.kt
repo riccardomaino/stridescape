@@ -58,6 +58,7 @@ import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StopTrackingUseCase
+import it.unito.progmob.tracking.domain.usecase.TrackSingleLocationUseCase
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import javax.inject.Named
 import javax.inject.Singleton
@@ -153,12 +154,14 @@ object AppModule {
     fun provideTrackingUseCases(
         dataStoreManager: DataStoreManager,
         trackingServiceManager: TrackingServiceManager,
-        walkRepository: WalkRepository
+        walkRepository: WalkRepository,
+        locationTrackingManager: LocationTrackingManager
     ) = TrackingUseCases(
         StartTrackingUseCase(trackingServiceManager),
         ResumeTrackingUseCase(trackingServiceManager),
         PauseTrackingUseCase(trackingServiceManager),
         StopTrackingUseCase(trackingServiceManager),
+        TrackSingleLocationUseCase(locationTrackingManager),
         ReadUserWeightEntryUseCase(dataStoreManager),
         ReadUserHeightEntryUseCase(dataStoreManager),
         AddPathPointUseCase(walkRepository),

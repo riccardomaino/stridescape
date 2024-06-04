@@ -6,4 +6,5 @@ sealed class TrackingEvent {
     data object ResumeTrackingService: TrackingEvent()
     data object PauseTrackingService: TrackingEvent()
     data object StopTrackingService: TrackingEvent()
+    data object TrackSingleLocation: TrackingEvent()
 }

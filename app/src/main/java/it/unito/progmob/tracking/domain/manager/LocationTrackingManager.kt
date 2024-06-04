@@ -4,6 +4,6 @@ import android.location.Location
 import kotlinx.coroutines.flow.Flow
 
 interface LocationTrackingManager {
-    fun trackSingleLocation(onSuccess: (latitude: String, longitude: String) -> Unit)
+    fun trackSingleLocation(onSuccess: (latitude: Double, longitude: Double) -> Unit): Unit
     fun startTrackingLocation(intervalMillis: Long): Flow<Location>
 }

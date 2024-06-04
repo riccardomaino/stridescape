@@ -114,11 +114,9 @@ fun StatsScreen(
                         )
                     )
                     StatsChart(uiStatsState = uiStatsState)
-
                     RangeFilter(modifier, uiStatsState.rangeSelected, statsEvent)
                 }
             }
         }
-
     }
 }

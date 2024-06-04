@@ -81,4 +81,15 @@ object WalkUtils {
     fun formatDistanceToKm(distanceInMeters: Int): String =
         (distanceInMeters.toFloat() / 1000.toFloat()).toBigDecimal()
             .setScale(1, RoundingMode.HALF_UP).toString()
+
+
+    fun List<PathPoint>.lastLocationPoint(): PathPoint.LocationPoint? {
+        for (i in lastIndex downTo 0)
+            if (get(i) is PathPoint.LocationPoint)
+                return get(i) as PathPoint.LocationPoint
+        return null
+    }
+
+    fun List<PathPoint>.firstLocationPoint() =
+        find { it is PathPoint.LocationPoint } as? PathPoint.LocationPoint
 }
