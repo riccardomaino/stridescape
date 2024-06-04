@@ -17,9 +17,7 @@ class GetWeeklyStepsUseCase(
             weekDayStepsTuple?.let {
                 weekDayStepsArray[weekDayStepsTuple.weekDay] = weekDayStepsTuple.steps
             }
-            Log.d("GetWeeklyStepsUseCase", "invoke: ${weekDayStepsArray.asList()}")
             weekDayStepsArray
-
         }
     }
 }

@@ -15,14 +15,17 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.ext.weekDaysNames
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
@@ -34,16 +37,11 @@ fun WeeklyStats(
     weeklyTarget: IntArray,
     selectedDay: Int
 ) {
-    // val fontColor = if(isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-    val weekDays = arrayOf(
-        stringResource(R.string.home_weeklystats_monday),
-        stringResource(R.string.home_weeklystats_tuesday),
-        stringResource(R.string.home_weeklystats_wednesday),
-        stringResource(R.string.home_weeklystats_thursday),
-        stringResource(R.string.home_weeklystats_friday),
-        stringResource(R.string.home_weeklystats_saturday),
-        stringResource(R.string.home_weeklystats_sunday)
-    )
+    val context = LocalContext.current
+    val weekDaysNames = remember {
+        context.weekDaysNames
+    }
+
     Box(
         modifier = modifier
             .padding(horizontal = small)
@@ -67,7 +65,7 @@ fun WeeklyStats(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                weekDays.forEachIndexed { index, _ ->
+                weekDaysNames.forEachIndexed { index, _ ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -82,7 +80,7 @@ fun WeeklyStats(
                         )
                         Spacer(modifier = modifier.height(small))
                         Text(
-                            text = weekDays[index],
+                            text = weekDaysNames[index],
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.ExtraBold),
                             color = if (index == selectedDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                         )

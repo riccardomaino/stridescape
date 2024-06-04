@@ -31,13 +31,13 @@
     <string name="tracking_stop_icon">Icon used to stop the tracking</string>
     <string name="home_walk_icon">Navigation icon for tracking section</string>
     <string name="home_weeklystats_title">Your Progresses</string>
-    <string name="home_weeklystats_monday">Mon</string>
-    <string name="home_weeklystats_tuesday">Tue</string>
-    <string name="home_weeklystats_wednesday">Wed</string>
-    <string name="home_weeklystats_thursday">Thu</string>
-    <string name="home_weeklystats_friday">Fri</string>
-    <string name="home_weeklystats_saturday">Sat</string>
-    <string name="home_weeklystats_sunday">Sun</string>
+    <string name="week_monday">Mon</string>
+    <string name="week_tuesday">Tue</string>
+    <string name="week_wednesday">Wed</string>
+    <string name="week_thursday">Thu</string>
+    <string name="week_friday">Fri</string>
+    <string name="week_saturday">Sat</string>
+    <string name="week_sunday">Sun</string>
     <string name="onboparding_page4_title">Personal information</string>
     <string name="onboarding_page4_description">Enter your personal information so we can provide you with more precise data</string>
     <string name="tracking_play_icon">Icon used to start the tracking</string>
@@ -78,5 +78,5 @@
     <string name="month_september">Sep</string>
     <string name="month_october">Oct</string>
     <string name="month_november">Nov</string>
-    <string name="december">Dec</string>
+    <string name="month_december">Dec</string>
 </resources>

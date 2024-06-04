@@ -80,7 +80,11 @@ class StatsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (statsSelected) {
                 StatsType.DISTANCE -> {
-                    val distanceStatsList =  if(rangeSelected != RangeType.YEAR) statsUseCases.getDistanceDataUseCase(rangeSelected) else emptyList()
+                    val distanceStatsList =  if(rangeSelected != RangeType.YEAR) {
+                        statsUseCases.getWeekOrMonthDistanceStatUseCase(rangeSelected)
+                    } else {
+                        statsUseCases.getYearDistanceStatUseCase()
+                    }
                     _uiStatsState.update {
                         it.copy(
                             statsSelected = statsSelected,
@@ -90,7 +94,11 @@ class StatsViewModel @Inject constructor(
                     }
                 }
                 StatsType.TIME -> {
-                    val timeStatsList = if(rangeSelected != RangeType.YEAR) statsUseCases.getTimeDataUseCase(rangeSelected) else emptyList()
+                    val timeStatsList = if(rangeSelected != RangeType.YEAR) {
+                        statsUseCases.getWeekOrMonthTimeStatUseCase(rangeSelected)
+                    } else {
+                        statsUseCases.getYearTimeStatUseCase()
+                    }
                     _uiStatsState.update {
                         it.copy(
                             statsSelected = statsSelected,
@@ -100,7 +108,11 @@ class StatsViewModel @Inject constructor(
                     }
                 }
                 StatsType.CALORIES -> {
-                    val caloriesStatsList = if(rangeSelected != RangeType.YEAR)  statsUseCases.getCaloriesDataUseCase(rangeSelected) else emptyList()
+                    val caloriesStatsList = if(rangeSelected != RangeType.YEAR) {
+                        statsUseCases.getWeekOrMonthCaloriesStatUseCase(rangeSelected)
+                    } else {
+                        statsUseCases.getYearCaloriesStatUseCase()
+                    }
                     _uiStatsState.update {
                         it.copy(
                             statsSelected = statsSelected,
@@ -110,7 +122,11 @@ class StatsViewModel @Inject constructor(
                     }
                 }
                 StatsType.STEPS -> {
-                    val stepsStatsList = if(rangeSelected != RangeType.YEAR) statsUseCases.getStepsDataUseCase(rangeSelected) else emptyList()
+                    val stepsStatsList = if(rangeSelected != RangeType.YEAR) {
+                        statsUseCases.getWeekOrMonthStepsStatUseCase(rangeSelected)
+                    } else {
+                        statsUseCases.getYearStepsStatUseCase()
+                    }
                     _uiStatsState.update {
                         it.copy(
                             statsSelected = statsSelected,
@@ -120,7 +136,11 @@ class StatsViewModel @Inject constructor(
                     }
                 }
                 StatsType.SPEED -> {
-                    val speedStatsList = if(rangeSelected != RangeType.YEAR) statsUseCases.getSpeedDataUseCase(rangeSelected) else emptyList()
+                    val speedStatsList = if(rangeSelected != RangeType.YEAR) {
+                        statsUseCases.getWeekOrMonthSpeedStatUseCase(rangeSelected)
+                    } else {
+                        statsUseCases.getYearSpeedStatUseCase()
+                    }
                     _uiStatsState.update {
                         it.copy(
                             statsSelected = statsSelected,

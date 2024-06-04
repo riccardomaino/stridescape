@@ -3,20 +3,23 @@ package it.unito.progmob.stats.domain.usecase
 import it.unito.progmob.core.domain.ext.rangeTo
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
+import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.stats.domain.model.RangeType
 import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 /**
- * Use case that returns a list of pairs of LocalDate and Int representing the calories burned for
- * each day in the given date range.
+ * Use case that returns a list of pairs of LocalDate and Int representing the time in minutes
+ * walked for each day of the current week or month
  */
-class GetCaloriesDataUseCase @Inject constructor(
+class GetWeekOrMonthTimeStatUseCase @Inject constructor(
     private val walkRepository: WalkRepository
 ) {
     /**
-     * Returns a list of pairs of LocalDate and Int representing the calories burned for each day in
-     * the given date range.
+     * Returns a list of pairs of LocalDate and Int representing the time in minutes walked for each
+     * day of the current week or month.
+     *
+     * @param rangeType The range type to consider
      */
     operator fun invoke(rangeType: RangeType): List<Pair<LocalDate, Int>> {
         lateinit var formattedStartDate: String
@@ -37,17 +40,16 @@ class GetCaloriesDataUseCase @Inject constructor(
                 startLocalDate = DateUtils.getFirstDateOfMonth()
                 endLocalDate = DateUtils.getLastDateOfMonth()
             }
-
             else -> return emptyList()
         }
 
         val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
 
-        val resultPairsList = walkRepository.findCaloriesForDateRange(formattedStartDate, formattedEndDate)?.let {
-            it.map { dailyCaloriesTuple ->
+        val resultPairsList = walkRepository.findTimeForDateRange(formattedStartDate, formattedEndDate)?.let {
+            it.map { dailyTimeTuple ->
                 Pair(
-                    LocalDate.parse(dailyCaloriesTuple.date, format = DateUtils.defaultFormatter),
-                    dailyCaloriesTuple.calories
+                    LocalDate.parse(dailyTimeTuple.date, format = DateUtils.defaultFormatter),
+                    TimeUtils.convertMillisToMinutes(dailyTimeTuple.time)
                 )
             }
         }?.toMutableList() ?: mutableListOf()

@@ -7,6 +7,36 @@ import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import it.unito.progmob.R
+
+val Context.weekDaysNames: Array<String>
+    get() = arrayOf(
+        this.resources.getString(R.string.week_monday),
+        this.resources.getString(R.string.week_tuesday),
+        this.resources.getString(R.string.week_wednesday),
+        this.resources.getString(R.string.week_thursday),
+        this.resources.getString(R.string.week_friday),
+        this.resources.getString(R.string.week_saturday),
+        this.resources.getString(R.string.week_sunday)
+    )
+
+val Context.monthsNames: Array<String>
+    get() = arrayOf(
+        this.resources.getString(R.string.month_january),
+        this.resources.getString(R.string.month_february),
+        this.resources.getString(R.string.month_march),
+        this.resources.getString(R.string.month_april),
+        this.resources.getString(R.string.month_may),
+        this.resources.getString(R.string.month_june),
+        this.resources.getString(R.string.month_july),
+        this.resources.getString(R.string.month_august),
+        this.resources.getString(R.string.month_september),
+        this.resources.getString(R.string.month_october),
+        this.resources.getString(R.string.month_november),
+        this.resources.getString(R.string.month_december)
+    )
+
+
 
 val Context.allPermissions by lazy {
     mutableListOf(
@@ -20,6 +50,8 @@ val Context.allPermissions by lazy {
         }
     }.toTypedArray()
 }
+
+
 
 
 /**

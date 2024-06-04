@@ -60,19 +60,19 @@ interface WalkDao {
 
 
 
-    @Query("SELECT month, SUM(distance) AS distance FROM walks WHERE date LIKE :year || '%'  GROUP BY month ORDER BY month ASC")
+    @Query("SELECT month, SUM(distance) AS distance FROM walks WHERE date LIKE :year || '%' GROUP BY month ORDER BY month ASC")
     fun findDistanceForYear(year: String): List<MonthDistanceTuple>?
 
-    @Query("SELECT month, SUM(time) AS time FROM walks WHERE date LIKE :year || '%'  GROUP BY month ORDER BY month ASC")
+    @Query("SELECT month, SUM(time) AS time FROM walks WHERE date LIKE :year || '%' GROUP BY month ORDER BY month ASC")
     fun findTimeForYear(year: String): List<MonthTimeTuple>?
 
-    @Query("SELECT month, SUM(calories) AS calories FROM walks WHERE date LIKE :year || '%'  GROUP BY month ORDER BY month ASC")
+    @Query("SELECT month, SUM(calories) AS calories FROM walks WHERE date LIKE :year || '%' GROUP BY month ORDER BY month ASC")
     fun findCaloriesForYear(year: String): List<MonthCaloriesTuple>?
 
-    @Query("SELECT month, SUM(steps) AS steps FROM walks WHERE date LIKE :year || '%'  GROUP BY month ORDER BY month ASC")
+    @Query("SELECT month, SUM(steps) AS steps FROM walks WHERE date LIKE :year || '%' GROUP BY month ORDER BY month ASC")
     fun findStepsForYear(year: String): List<MonthStepsTuple>?
 
-    @Query("SELECT month, AVG(averageSpeed) AS averageSpeed FROM walks WHERE date LIKE :year || '%'  GROUP BY month ORDER BY month ASC")
+    @Query("SELECT month, AVG(averageSpeed) AS averageSpeed FROM walks WHERE date LIKE :year || '%' GROUP BY month ORDER BY month ASC")
     fun findSpeedForYear(year: String): List<MonthSpeedTuple>?
 
     @Upsert

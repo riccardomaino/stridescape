@@ -27,8 +27,8 @@ object Constants {
     // Chart Marker (Label + Indicator)
     const val CHART_LABEL_BACKGROUND_SHADOW_RADIUS = 4f
     const val CHART_LABEL_BACKGROUND_SHADOW_DY = 2f
-    const val CHART_LABEL_HORIZONTAL_PADDING = 8
-    const val CHART_LABEL_VERTICAL_PADDING = 4
+    const val CHART_LABEL_HORIZONTAL_PADDING = 16
+    const val CHART_LABEL_VERTICAL_PADDING = 8
     const val CHART_LABEL_MIN_WIDTH = 40
     const val CHART_INDICATOR_PADDING = 10
     const val CHART_INDICATOR_FRONT_PADDING = 5

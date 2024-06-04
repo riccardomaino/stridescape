@@ -3,23 +3,25 @@ package it.unito.progmob.stats.domain.usecase
 import it.unito.progmob.core.domain.ext.rangeTo
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
-import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.stats.domain.model.RangeType
 import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 /**
- * Use case that returns a list of pairs of LocalDate and Int representing the time in minutes
- * walked for each day in the given date range.
+ * Use case that returns a list of pairs of LocalDate and Float representing the distance walked for
+ * each day of the current week or month
  */
-class GetTimeDataUseCase @Inject constructor(
+class GetWeekOrMonthDistanceStatUseCase @Inject constructor(
     private val walkRepository: WalkRepository
 ) {
     /**
-     * Returns a list of pairs of LocalDate and Int representing the time in minutes walked for each
-     * day in the given date range.
+     * Returns a list of pairs of LocalDate and Float representing the distance walked for each day
+     * of the current week or month
+     *
+     * @param rangeType the range type to consider
      */
-    operator fun invoke(rangeType: RangeType): List<Pair<LocalDate, Int>> {
+    operator fun invoke(rangeType: RangeType): List<Pair<LocalDate, Float>> {
         lateinit var formattedStartDate: String
         lateinit var formattedEndDate: String
         lateinit var startLocalDate: LocalDate
@@ -43,20 +45,25 @@ class GetTimeDataUseCase @Inject constructor(
 
         val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
 
-        val resultPairsList = walkRepository.findTimeForDateRange(formattedStartDate, formattedEndDate)?.let {
-            it.map { dailyTimeTuple ->
-                Pair(
-                    LocalDate.parse(dailyTimeTuple.date, format = DateUtils.defaultFormatter),
-                    TimeUtils.convertMillisToMinutes(dailyTimeTuple.time)
-                )
-            }
-        }?.toMutableList() ?: mutableListOf()
+        val resultPairsList =
+            walkRepository.findDistanceForDateRange(formattedStartDate, formattedEndDate)?.let {
+                it.map { dailyDistanceTuple ->
+                    Pair(
+                        LocalDate.parse(
+                            dailyDistanceTuple.date,
+                            format = DateUtils.defaultFormatter
+                        ),
+                        WalkUtils.convertMetersToKm(dailyDistanceTuple.distance)
+                    )
+                }
+            }?.toMutableList() ?: mutableListOf()
 
         resultPairsList.addAll(dateRangeList.filter { date ->
             resultPairsList.none { it.first == date }
         }.map { date ->
-            Pair(date, 0)
+            Pair(date, 0f)
         })
+
 
         return resultPairsList.sortedBy { it.first }
     }

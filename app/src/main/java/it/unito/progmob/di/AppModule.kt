@@ -43,11 +43,16 @@ import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
 import it.unito.progmob.home.domain.usecase.GetDayTimeUseCase
 import it.unito.progmob.stats.domain.usecase.StatsUseCases
 import it.unito.progmob.home.domain.usecase.GetWeeklyStepsUseCase
-import it.unito.progmob.stats.domain.usecase.GetCaloriesDataUseCase
-import it.unito.progmob.stats.domain.usecase.GetDistanceDataUseCase
-import it.unito.progmob.stats.domain.usecase.GetSpeedDataUseCase
-import it.unito.progmob.stats.domain.usecase.GetStepsDataUseCase
-import it.unito.progmob.stats.domain.usecase.GetTimeDataUseCase
+import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthCaloriesStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthDistanceStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthSpeedStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthStepsStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthTimeStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetYearCaloriesStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetYearDistanceStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetYearSpeedStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetYearStepsStatUseCase
+import it.unito.progmob.stats.domain.usecase.GetYearTimeStatUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -163,10 +168,15 @@ object AppModule {
      fun provideStatsUseCases(
          walkRepository: WalkRepository
      ) = StatsUseCases(
-         GetDistanceDataUseCase(walkRepository),
-         GetTimeDataUseCase(walkRepository),
-         GetCaloriesDataUseCase(walkRepository),
-         GetStepsDataUseCase(walkRepository),
-         GetSpeedDataUseCase(walkRepository)
+         GetWeekOrMonthDistanceStatUseCase(walkRepository),
+         GetWeekOrMonthTimeStatUseCase(walkRepository),
+         GetWeekOrMonthCaloriesStatUseCase(walkRepository),
+         GetWeekOrMonthStepsStatUseCase(walkRepository),
+         GetWeekOrMonthSpeedStatUseCase(walkRepository),
+         GetYearDistanceStatUseCase(walkRepository),
+         GetYearTimeStatUseCase(walkRepository),
+         GetYearCaloriesStatUseCase(walkRepository),
+         GetYearStepsStatUseCase(walkRepository),
+         GetYearSpeedStatUseCase(walkRepository)
      )
 }

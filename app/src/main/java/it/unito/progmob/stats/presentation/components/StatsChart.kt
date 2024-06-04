@@ -2,6 +2,7 @@ package it.unito.progmob.stats.presentation.components
 
 import android.graphics.Typeface
 import android.text.Layout
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -9,10 +10,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
 import com.patrykandpatrick.vico.compose.cartesian.decoration.rememberHorizontalLine
@@ -25,6 +29,7 @@ import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.of
+import com.patrykandpatrick.vico.compose.common.shape.dashed
 import com.patrykandpatrick.vico.compose.common.shape.markerCornered
 import com.patrykandpatrick.vico.core.cartesian.CartesianMeasureContext
 import com.patrykandpatrick.vico.core.cartesian.HorizontalDimensions
@@ -37,7 +42,10 @@ import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.core.common.Defaults
 import com.patrykandpatrick.vico.core.common.Dimensions
+import com.patrykandpatrick.vico.core.common.HorizontalPosition
+import com.patrykandpatrick.vico.core.common.VerticalPosition
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.core.common.shape.Corner
@@ -58,6 +66,8 @@ import it.unito.progmob.core.domain.Constants.CHART_LABEL_BACKGROUND_SHADOW_RADI
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_HORIZONTAL_PADDING
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_MIN_WIDTH
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_VERTICAL_PADDING
+import it.unito.progmob.core.domain.ext.monthsNames
+import it.unito.progmob.core.domain.ext.weekDaysNames
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
@@ -73,34 +83,19 @@ fun StatsChart(
     uiStatsState: UiStatsState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val weekDaysNames = remember { context.weekDaysNames }
+    val monthsNames = remember { context.monthsNames }
+    val typeface = remember {
+        ResourcesCompat.getFont(context, R.font.nunito_bold)?.let {
+            Typeface.create(it, Typeface.BOLD)
+        } ?: Typeface.DEFAULT_BOLD
+    }
+
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val xToDateMapExtraStoreKey = remember { ExtraStore.Key<Map<Float, LocalDate>>() }
     val meanValueExtraStoreKey = remember { ExtraStore.Key<Float>() }
 
-    val weekDays = arrayOf(
-        stringResource(R.string.home_weeklystats_monday),
-        stringResource(R.string.home_weeklystats_tuesday),
-        stringResource(R.string.home_weeklystats_wednesday),
-        stringResource(R.string.home_weeklystats_thursday),
-        stringResource(R.string.home_weeklystats_friday),
-        stringResource(R.string.home_weeklystats_saturday),
-        stringResource(R.string.home_weeklystats_sunday)
-    )
-
-    val monthNames = arrayOf(
-        stringResource(R.string.month_january),
-        stringResource(R.string.month_february),
-        stringResource(R.string.month_march),
-        stringResource(R.string.month_april),
-        stringResource(R.string.month_may),
-        stringResource(R.string.month_june),
-        stringResource(R.string.month_july),
-        stringResource(R.string.month_august),
-        stringResource(R.string.month_september),
-        stringResource(R.string.month_october),
-        stringResource(R.string.month_november),
-        stringResource(R.string.december)
-    )
 
     // LaunchedEffect used to update the chart data when the uiStatsState changes
     LaunchedEffect(key1 = uiStatsState) {
@@ -165,8 +160,10 @@ fun StatsChart(
                     }
                 }
             }
-            val xToDatesMap: Map<Float, LocalDate> =
-                chartData.keys.associateBy { it.toEpochDays().toFloat() }
+            val xToDatesMap: Map<Float, LocalDate> = when (uiStatsState.rangeSelected) {
+                RangeType.YEAR -> chartData.keys.associateBy { it.monthNumber.toFloat() }
+                else -> chartData.keys.associateBy { it.toEpochDays().toFloat() }
+            }
             modelProducer.tryRunTransaction {
                 columnSeries {
                     series(x = xToDatesMap.keys, y = chartData.values)
@@ -192,32 +189,43 @@ fun StatsChart(
                 ),
             ),
             startAxis = rememberStartAxis(
-                itemPlacer = AxisItemPlacer.Vertical.step({ 1f }),
-                titleComponent = rememberTextComponent(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    background = rememberShapeComponent(
-                        Shape.Pill,
-                        MaterialTheme.colorScheme.surface
-                    ),
-                    typeface = Typeface.MONOSPACE
+                label = rememberAxisLabelComponent(
+                    typeface = typeface
                 ),
-                title = when (uiStatsState.statsSelected) {
-                    StatsType.DISTANCE -> stringResource(R.string.stats_chart_y_axis_distance_title)
-                    StatsType.TIME -> stringResource(R.string.stats_chart_y_axis_time_title)
-                    StatsType.CALORIES -> stringResource(R.string.stats_chart_y_axis_calories_title)
-                    StatsType.STEPS -> stringResource(R.string.stats_chart_y_axis_steps_title)
-                    StatsType.SPEED -> stringResource(R.string.stats_chart_y_axis_speed_title)
-                },
+                guideline = rememberAxisGuidelineComponent(
+                    thickness = 0.dp
+                ),
+                itemPlacer = AxisItemPlacer.Vertical.step({ 1f }),
+//                titleComponent = rememberTextComponent(
+//                    color = MaterialTheme.colorScheme.onSurface,
+//                    background = rememberShapeComponent(
+//                        Shape.Pill,
+//                        MaterialTheme.colorScheme.surface
+//                    ),
+//                    typeface = Typeface.MONOSPACE
+//                ),
+//                title = when (uiStatsState.statsSelected) {
+//                    StatsType.DISTANCE -> stringResource(R.string.stats_chart_y_axis_distance_title)
+//                    StatsType.TIME -> stringResource(R.string.stats_chart_y_axis_time_title)
+//                    StatsType.CALORIES -> stringResource(R.string.stats_chart_y_axis_calories_title)
+//                    StatsType.STEPS -> stringResource(R.string.stats_chart_y_axis_steps_title)
+//                    StatsType.SPEED -> stringResource(R.string.stats_chart_y_axis_speed_title)
+//                },
             ),
             bottomAxis = rememberBottomAxis(
+                label = rememberAxisLabelComponent(
+                    typeface = typeface
+                ),
+                guideline = rememberAxisGuidelineComponent(
+                    thickness = 0.dp
+                ),
                 valueFormatter = { x, chartValues, _ ->
                     val localDate = chartValues.model.extraStore[xToDateMapExtraStoreKey][x]
                         ?: LocalDate.fromEpochDays(x.toInt())
-
-                    when(uiStatsState.rangeSelected) {
-                        RangeType.WEEK -> weekDays[localDate.dayOfWeek.value - 1]
+                    when (uiStatsState.rangeSelected) {
+                        RangeType.WEEK -> weekDaysNames[localDate.dayOfWeek.value - 1]
                         RangeType.MONTH -> localDate.format(DateUtils.monthFormatter)
-                        RangeType.YEAR -> monthNames[localDate.monthNumber - 1]
+                        RangeType.YEAR -> monthsNames[localDate.monthNumber - 1]
                     }
                 },
                 itemPlacer = remember {
@@ -227,17 +235,17 @@ fun StatsChart(
                     )
                 },
             ),
-            decorations = listOf(rememberMeanHorizontalLine(meanValueExtraStoreKey)),
+            decorations = listOf(rememberMeanHorizontalLine(meanValueExtraStoreKey, typeface)),
         ),
         modelProducer = modelProducer,
         modifier = modifier.fillMaxHeight(0.6f),
-        marker = rememberMarker(),
+        marker = rememberMarker(typeface = typeface),
         horizontalLayout = HorizontalLayout.fullWidth(),
     )
 }
 
 @Composable
-private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Float>): HorizontalLine {
+private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Float>, typeface: Typeface): HorizontalLine {
     // MEAN HORIZONTAL LINE Settings
     val lineColor = MaterialTheme.colorScheme.secondary
     val lineLabelColor = MaterialTheme.colorScheme.secondary
@@ -245,12 +253,15 @@ private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Fl
 
     // MEAN HORIZONTAL LINE Definition
     return rememberHorizontalLine(
+        horizontalLabelPosition = HorizontalPosition.Start,
+        verticalLabelPosition = VerticalPosition.Center,
         y = { it[meanValueExtraStoreKey] },
         line = rememberLineComponent(
             color = lineColor,
             thickness = CHART_HORIZONTAL_LINE_THICKNESS.dp
         ),
         labelComponent = rememberTextComponent(
+
             background = rememberShapeComponent(Shape.Pill, lineLabelColor),
             color = lineLabelTextColor,
             padding = Dimensions.of(
@@ -258,7 +269,7 @@ private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Fl
                 CHART_HORIZONTAL_LINE_LABEL_VERTICAL_PADDING.dp,
             ),
             margins = Dimensions.of(CHART_HORIZONTAL_LINE_LABEL_MARGIN.dp),
-            typeface = Typeface.MONOSPACE,
+            typeface = typeface,
         ),
     )
 }
@@ -266,6 +277,7 @@ private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Fl
 
 @Composable
 internal fun rememberMarker(
+    typeface: Typeface,
     labelPosition: DefaultCartesianMarker.LabelPosition = DefaultCartesianMarker.LabelPosition.Top,
     showIndicator: Boolean = true,
 ): CartesianMarker {
@@ -287,12 +299,13 @@ internal fun rememberMarker(
     // LABEL Definition
     val label = rememberTextComponent(
         color = labelTextColor,
+
         background = labelBackground,
         padding = Dimensions.of(
             CHART_LABEL_HORIZONTAL_PADDING.dp,
             CHART_LABEL_VERTICAL_PADDING.dp
         ),
-        typeface = Typeface.MONOSPACE,
+        typeface = typeface,
         textAlignment = Layout.Alignment.ALIGN_CENTER,
         minWidth = TextComponent.MinWidth.fixed(CHART_LABEL_MIN_WIDTH.dp)
     )
@@ -313,7 +326,9 @@ internal fun rememberMarker(
         ),
         padding = Dimensions.of(CHART_INDICATOR_PADDING.dp)
     )
-    val guideline = rememberAxisGuidelineComponent()
+    val guideline = rememberAxisGuidelineComponent(
+        shape = Shape.dashed(Shape.Rectangle, 10f.dp, 10f.dp)
+    )
 
     // MARKER Definition
     return remember(label, labelPosition, indicator, showIndicator, guideline) {

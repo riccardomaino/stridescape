@@ -8,17 +8,19 @@ import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 /**
- * Use case that returns a list of pairs of LocalDate and Float representing the average speed for
- * each day in the given date range.
+ * Use case that returns a list of pairs of LocalDate and Int representing the calories burned for
+ * each day of the current week or month
  */
-class GetSpeedDataUseCase @Inject constructor(
+class GetWeekOrMonthCaloriesStatUseCase @Inject constructor(
     private val walkRepository: WalkRepository
 ) {
     /**
-     * Returns a list of pairs of LocalDate and Float representing the average speed for each day in
-     * the given date range.
+     * Returns a list of pairs of LocalDate and Int representing the calories burned for each day of
+     * the current week or month
+     *
+     * @param rangeType the range type to consider
      */
-    operator fun invoke(rangeType: RangeType): List<Pair<LocalDate, Float>> {
+    operator fun invoke(rangeType: RangeType): List<Pair<LocalDate, Int>> {
         lateinit var formattedStartDate: String
         lateinit var formattedEndDate: String
         lateinit var startLocalDate: LocalDate
@@ -37,15 +39,17 @@ class GetSpeedDataUseCase @Inject constructor(
                 startLocalDate = DateUtils.getFirstDateOfMonth()
                 endLocalDate = DateUtils.getLastDateOfMonth()
             }
+
             else -> return emptyList()
         }
+
         val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
 
-        val resultPairsList = walkRepository.findSpeedForDateRange(formattedStartDate, formattedEndDate)?.let {
-            it.map { dailySpeedTuple ->
+        val resultPairsList = walkRepository.findCaloriesForDateRange(formattedStartDate, formattedEndDate)?.let {
+            it.map { dailyCaloriesTuple ->
                 Pair(
-                    LocalDate.parse(dailySpeedTuple.date, format = DateUtils.defaultFormatter),
-                    dailySpeedTuple.averageSpeed
+                    LocalDate.parse(dailyCaloriesTuple.date, format = DateUtils.defaultFormatter),
+                    dailyCaloriesTuple.calories
                 )
             }
         }?.toMutableList() ?: mutableListOf()
@@ -53,7 +57,7 @@ class GetSpeedDataUseCase @Inject constructor(
         resultPairsList.addAll(dateRangeList.filter { date ->
             resultPairsList.none { it.first == date }
         }.map { date ->
-            Pair(date, 0f)
+            Pair(date, 0)
         })
 
         return resultPairsList.sortedBy { it.first }

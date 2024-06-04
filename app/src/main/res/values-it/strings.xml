@@ -27,13 +27,13 @@
     <string name="tracking_stop_icon">Icona utilizzata per fermare il tracciamento</string>
     <string name="home_walk_icon">Icona di navigazione per sezione tracking</string>
     <string name="home_weeklystats_title">I Tuoi Progressi</string>
-    <string name="home_weeklystats_monday">Lun</string>
-    <string name="home_weeklystats_tuesday">Mar</string>
-    <string name="home_weeklystats_wednesday">Mer</string>
-    <string name="home_weeklystats_thursday">Gio</string>
-    <string name="home_weeklystats_friday">Ven</string>
-    <string name="home_weeklystats_saturday">Sab</string>
-    <string name="home_weeklystats_sunday">Dom</string>
+    <string name="week_monday">Lun</string>
+    <string name="week_tuesday">Mar</string>
+    <string name="week_wednesday">Mer</string>
+    <string name="week_thursday">Gio</string>
+    <string name="week_friday">Ven</string>
+    <string name="week_saturday">Sab</string>
+    <string name="week_sunday">Dom</string>
     <string name="notification_content_title">Statistiche camminata</string>
     <string name="notification_channel_description">Questo canale di notifiche permette di ricevere gli aggiornamenti riguardanti le tue camminate tramite notifica.</string>
     <string name="onboparding_page4_title">Informazioini personali</string>
@@ -71,5 +71,5 @@
     <string name="month_september">Set</string>
     <string name="month_october">Ott</string>
     <string name="month_november">Nov</string>
-    <string name="december">Dic</string>
+    <string name="month_december">Dic</string>
 </resources>

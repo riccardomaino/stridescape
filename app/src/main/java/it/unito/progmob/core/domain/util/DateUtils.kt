@@ -93,6 +93,7 @@ object DateUtils {
         } ?: formatDate(localDate)
     }
 
+
     /**
      * Get the instant of a certain date from now adding or subtracting days
      *
@@ -185,6 +186,13 @@ object DateUtils {
     }
 
     /**
+     * Get the current year as an integer
+     *
+     * @return the current year
+     */
+    fun getCurrentYear(): Int = getCurrentLocalDateTime().year
+
+    /**
      * Get the first date of the week based on the current date formatted as a string
      *
      * @return the formatted string of the first date of the week
@@ -232,6 +240,17 @@ object DateUtils {
         val month = localDate.month
         val year = localDate.year
         return formatDate(LocalDate(year, month, maxDayOfMonth))
+    }
+
+
+    /**
+     * Get the current year formatted as a string
+     *
+     * @return the formatted string of the current year
+     */
+    fun formattedCurrentYear(): String {
+        val localDate = getCurrentLocalDateTime()
+        return localDate.year.toString()
     }
 
     enum class DateOperation {
