@@ -23,16 +23,13 @@ object DateUtils {
         dayOfMonth()
     }
 
-    val chartFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
+    val monthFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
         dayOfMonth()
-        char('/')
-        monthNumber()
-        char('/')
-        year()
     }
 
     /**
      * Format a date [LocalDate] using the formatter provided or the default one if it is not provided
+     *
      * @param date the date to format
      * @param formatter the formatter to use
      * @return the formatted date
@@ -44,6 +41,7 @@ object DateUtils {
 
     /**
      * Get the current date using the kotlin datetime API with the system default timezone
+     *
      * @return the current date as a [LocalDateTime]
      */
     private fun getCurrentLocalDateTime(): LocalDateTime {
@@ -53,6 +51,7 @@ object DateUtils {
 
     /**
      * Get the [LocalDate] from the epoch milliseconds using the kotlin datetime API with the system default timezone
+     *
      * @return the [LocalDate] from the epoch milliseconds
      */
     fun getLocalDateFromEpochMillis(dateInMillis: Long): LocalDate =
@@ -81,10 +80,11 @@ object DateUtils {
 
     /**
      * Get the current date formatted based on the formatter provided or the default one if it is not provided
+     *
      * @param formatter the formatter to use
      * @return the formatted date
      */
-    fun getCurrentDateFormatted(
+    fun formattedCurrentDate(
         formatter: DateTimeFormat<LocalDate>? = null
     ): String {
         val localDate = getCurrentLocalDateTime().date
@@ -95,6 +95,7 @@ object DateUtils {
 
     /**
      * Get the instant of a certain date from now adding or subtracting days
+     *
      * @param days the number of days to add or subtract
      * @param operation the operation to perform
      * @return the instant
@@ -120,34 +121,117 @@ object DateUtils {
     }
 
     /**
+     * Get the current month as an integer (1..12) where 1 is January and 12 is December
+     *
+     * @return the integer between 1 and 12 representing the current month
+     */
+    fun getCurrentMonth(): Int = getCurrentLocalDateTime().monthNumber
+
+
+    /**
      * Get the current day of the week as an integer (0..6) where 0 is Monday and 6 is Sunday
+     *
      * @return the integer between 0 and 6 representing the current day of the week
      */
-    fun getCurrentDayOfWeek(): Int {
-        val dayOfWeek = getCurrentLocalDateTime().dayOfWeek
-        return dayOfWeek.value - 1
+    fun getCurrentDayOfWeek(): Int = getCurrentLocalDateTime().dayOfWeek.value - 1
+
+
+    /**
+     * Get the first date of the week based on the current date
+     *
+     * @return the [LocalDate] of the first date of the week
+     */
+    fun getFirstDateOfWeek(): LocalDate {
+        val localDate = getCurrentLocalDateTime().date
+        val currentDay = getCurrentDayOfWeek()
+        return localDate.minus(currentDay, DateTimeUnit.DAY)
+    }
+
+    /**
+     * Get the last date of the week based on the current date
+     *
+     * @return the [LocalDate] of the first date of the week
+     */
+    fun getLastDateOfWeek(): LocalDate {
+        val localDate = getCurrentLocalDateTime().date
+        val currentDay = getCurrentDayOfWeek()
+        return localDate.plus(6 - currentDay, DateTimeUnit.DAY)
+
     }
 
     /**
      * Get the first date of the week based on the current date
+     *
+     * @return the [LocalDate] of the first date of the week
+     */
+    fun getFirstDateOfMonth(): LocalDate {
+        val localDate = getCurrentLocalDateTime()
+        val month = localDate.month
+        val year = localDate.year
+        return LocalDate(year, month, 1)
+    }
+
+    /**
+     * Get the last date of the week based on the current date formatted as a string
+     *
+     * @return the [LocalDate] of the first date of the week
+     */
+    fun getLastDateOfMonth(): LocalDate {
+        val localDate = getCurrentLocalDateTime()
+        val maxDayOfMonth = localDate.month.maxLength()
+        val month = localDate.month
+        val year = localDate.year
+        return LocalDate(year, month, maxDayOfMonth)
+    }
+
+    /**
+     * Get the first date of the week based on the current date formatted as a string
+     *
      * @return the formatted string of the first date of the week
      */
-    fun getFirstDateOfWeek(): String {
+    fun formattedFirstDateOfWeek(): String {
         val localDate = getCurrentLocalDateTime().date
         val currentDay = getCurrentDayOfWeek()
         val firstDateOfWeek = localDate.minus(currentDay, DateTimeUnit.DAY)
         return formatDate(firstDateOfWeek)
     }
 
+
     /**
-     * Get the last date of the week based on the current date
+     * Get the last date of the week based on the current date formatted as a string
+     *
      * @return the formatted string of the last date of the week
      */
-    fun getLastDateOfWeek(): String {
+    fun formattedLastDateOfWeek(): String {
         val localDate = getCurrentLocalDateTime().date
         val currentDay = getCurrentDayOfWeek()
-        val lastDateOfWeek = localDate.minus(6 - currentDay, DateTimeUnit.DAY)
+        val lastDateOfWeek = localDate.plus(6 - currentDay, DateTimeUnit.DAY)
         return formatDate(lastDateOfWeek)
+    }
+
+    /**
+     * Get the first date of the week based on the current date formatted as a string
+     *
+     * @return the formatted string of the first date of the week
+     */
+    fun formattedFirstDateOfMonth(): String {
+        val localDate = getCurrentLocalDateTime()
+        val month = localDate.month
+        val year = localDate.year
+        return formatDate(LocalDate(year, month, 1))
+    }
+
+    /**
+     * Get the last date of the week based on the current date formatted as a string
+     *
+     * @return the formatted string of the first date of the week
+     */
+    fun formattedLastDateOfMonth(): String {
+        val localDate = getCurrentLocalDateTime()
+        val maxDayOfMonth = localDate.month.maxLength()
+        val month = localDate.month
+        val year = localDate.year
+        return formatDate(LocalDate(year, month, maxDayOfMonth))
     }
 
     enum class DateOperation {

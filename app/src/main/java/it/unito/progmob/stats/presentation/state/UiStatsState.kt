@@ -1,12 +1,11 @@
 package it.unito.progmob.stats.presentation.state
 
-import it.unito.progmob.core.domain.util.DateUtils
+import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
 import kotlinx.datetime.LocalDate
 
 data class UiStatsState(
-    val startDate: Long = DateUtils.getInstantOfDateFromNow(6, DateUtils.DateOperation.MINUS).toEpochMilliseconds(),
-    val endDate: Long = DateUtils.getInstantOfDateFromNow(0).toEpochMilliseconds(),
+    val rangeSelected: RangeType = RangeType.WEEK,
     val statsSelected: StatsType = StatsType.DISTANCE,
     val distanceChartValues: List<Pair<LocalDate, Float>> = emptyList(),
     val timeChartValues: List<Pair<LocalDate, Int>> = emptyList(),

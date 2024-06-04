@@ -1,15 +1,20 @@
 package it.unito.progmob.core.data.repository
 
 import it.unito.progmob.core.data.local.WalkDao
-import it.unito.progmob.core.domain.model.DateCaloriesTuple
-import it.unito.progmob.core.domain.model.DateDistanceTuple
-import it.unito.progmob.core.domain.model.DateSpeedTuple
-import it.unito.progmob.core.domain.model.DateStepsTuple
-import it.unito.progmob.core.domain.model.DateTimeTuple
-import it.unito.progmob.core.domain.model.WeekDayStepsTuple
+import it.unito.progmob.core.domain.model.tuples.DateCaloriesTuple
+import it.unito.progmob.core.domain.model.tuples.DateDistanceTuple
+import it.unito.progmob.core.domain.model.tuples.DateSpeedTuple
+import it.unito.progmob.core.domain.model.tuples.DateStepsTuple
+import it.unito.progmob.core.domain.model.tuples.DateTimeTuple
+import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
+import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
+import it.unito.progmob.core.domain.model.tuples.MonthSpeedTuple
+import it.unito.progmob.core.domain.model.tuples.MonthStepsTuple
+import it.unito.progmob.core.domain.model.tuples.MonthTimeTuple
 import it.unito.progmob.core.domain.repository.WalkRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -58,6 +63,26 @@ class WalkRepositoryImpl(
 
     override fun findSpeedForDateRange(startDate: String, endDate: String): List<DateSpeedTuple>? {
         return walkDao.findSpeedForDateRange(startDate, endDate)
+    }
+
+    override fun findDistanceForYear(year: String): List<MonthDistanceTuple>? {
+        return walkDao.findDistanceForYear(year)
+    }
+
+    override fun findTimeForYear(year: String): List<MonthTimeTuple>? {
+        return walkDao.findTimeForYear(year)
+    }
+
+    override fun findCaloriesForYear(year: String): List<MonthCaloriesTuple>? {
+        return walkDao.findCaloriesForYear(year)
+    }
+
+    override fun findStepsForYear(year: String): List<MonthStepsTuple>? {
+        return walkDao.findStepsForYear(year)
+    }
+
+    override fun findSpeedForYear(year: String): List<MonthSpeedTuple>? {
+        return walkDao.findSpeedForYear(year)
     }
 
     override suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long {

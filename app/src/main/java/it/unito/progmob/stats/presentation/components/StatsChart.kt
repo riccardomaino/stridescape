@@ -59,6 +59,7 @@ import it.unito.progmob.core.domain.Constants.CHART_LABEL_HORIZONTAL_PADDING
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_MIN_WIDTH
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_VERTICAL_PADDING
 import it.unito.progmob.core.domain.util.DateUtils
+import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
 import it.unito.progmob.stats.presentation.state.UiStatsState
 import kotlinx.coroutines.Dispatchers
@@ -75,6 +76,31 @@ fun StatsChart(
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val xToDateMapExtraStoreKey = remember { ExtraStore.Key<Map<Float, LocalDate>>() }
     val meanValueExtraStoreKey = remember { ExtraStore.Key<Float>() }
+
+    val weekDays = arrayOf(
+        stringResource(R.string.home_weeklystats_monday),
+        stringResource(R.string.home_weeklystats_tuesday),
+        stringResource(R.string.home_weeklystats_wednesday),
+        stringResource(R.string.home_weeklystats_thursday),
+        stringResource(R.string.home_weeklystats_friday),
+        stringResource(R.string.home_weeklystats_saturday),
+        stringResource(R.string.home_weeklystats_sunday)
+    )
+
+    val monthNames = arrayOf(
+        stringResource(R.string.month_january),
+        stringResource(R.string.month_february),
+        stringResource(R.string.month_march),
+        stringResource(R.string.month_april),
+        stringResource(R.string.month_may),
+        stringResource(R.string.month_june),
+        stringResource(R.string.month_july),
+        stringResource(R.string.month_august),
+        stringResource(R.string.month_september),
+        stringResource(R.string.month_october),
+        stringResource(R.string.month_november),
+        stringResource(R.string.december)
+    )
 
     // LaunchedEffect used to update the chart data when the uiStatsState changes
     LaunchedEffect(key1 = uiStatsState) {
@@ -185,9 +211,14 @@ fun StatsChart(
             ),
             bottomAxis = rememberBottomAxis(
                 valueFormatter = { x, chartValues, _ ->
-                    (chartValues.model.extraStore[xToDateMapExtraStoreKey][x]
-                        ?: LocalDate.fromEpochDays(x.toInt()))
-                        .format(DateUtils.chartFormatter)
+                    val localDate = chartValues.model.extraStore[xToDateMapExtraStoreKey][x]
+                        ?: LocalDate.fromEpochDays(x.toInt())
+
+                    when(uiStatsState.rangeSelected) {
+                        RangeType.WEEK -> weekDays[localDate.dayOfWeek.value - 1]
+                        RangeType.MONTH -> localDate.format(DateUtils.monthFormatter)
+                        RangeType.YEAR -> monthNames[localDate.monthNumber - 1]
+                    }
                 },
                 itemPlacer = remember {
                     AxisItemPlacer.Horizontal.default(

@@ -8,6 +8,7 @@ data class WalkEntity(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val weekDay: Int,
     val date: String,
+    val month: Int,
     val steps: Int,
     val distance: Int,
     val time: Long,

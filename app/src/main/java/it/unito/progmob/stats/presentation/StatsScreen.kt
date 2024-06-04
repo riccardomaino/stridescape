@@ -1,5 +1,6 @@
 package it.unito.progmob.stats.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import it.unito.progmob.R
-import it.unito.progmob.core.domain.util.DateUtils
+import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
 import it.unito.progmob.stats.presentation.components.StatsChart
 import it.unito.progmob.stats.presentation.components.StatsFilter
@@ -47,7 +53,8 @@ fun StatsScreen(
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         StatsFilter(
-            selectedFilter = uiStatsState.statsSelected,
+            statsSelected = uiStatsState.statsSelected,
+            rangeSelected = uiStatsState.rangeSelected,
             statsEvent = statsEvent
         )
         Spacer(modifier = modifier.height(small))
@@ -76,24 +83,12 @@ fun StatsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-//                            modifier = modifier.padding(top = small, start = medium),
                             text = stringResource(R.string.stats_chart_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Text(
-//                            modifier = modifier.padding(top = small, start = medium),
-                            text = " ${
-                                DateUtils.formatDateFromEpochMillis(
-                                    uiStatsState.startDate,
-                                    DateUtils.chartFormatter
-                                )
-                            } - ${
-                                DateUtils.formatDateFromEpochMillis(
-                                    uiStatsState.endDate,
-                                    DateUtils.chartFormatter
-                                )
-                            }",
+                            text = uiStatsState.rangeSelected.name,
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Normal),
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -102,10 +97,43 @@ fun StatsScreen(
                     HorizontalDivider(
                         modifier = modifier.padding(
                             vertical = small,
-//                            horizontal = small
                         )
                     )
                     StatsChart(uiStatsState = uiStatsState)
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(medium, Alignment.CenterHorizontally),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RangeType.entries.forEach {
+                            ElevatedFilterChip(
+                                onClick = { statsEvent(StatsEvent.RangeTypeSelected(it)) },
+                                selected = it == uiStatsState.rangeSelected,
+                                shape = RoundedCornerShape(medium),
+                                colors = FilterChipDefaults.elevatedFilterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
+                                    selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondary
+                                ),
+                                leadingIcon = {
+                                    AnimatedVisibility(it == uiStatsState.rangeSelected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Done,
+                                            contentDescription = stringResource(R.string.stats_selected_filter_icon_content_description),
+                                        )
+                                    }
+                                },
+                                label = {
+                                    Text(
+                                        text = it.name,
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }

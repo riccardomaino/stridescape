@@ -1,4 +1,4 @@
-package it.unito.progmob.core.domain.model
+package it.unito.progmob.core.domain.model.tuples
 
 import androidx.room.ColumnInfo
 

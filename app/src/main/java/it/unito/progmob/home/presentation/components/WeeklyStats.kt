@@ -35,7 +35,7 @@ fun WeeklyStats(
     selectedDay: Int
 ) {
     // val fontColor = if(isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-    val weekDays = listOf(
+    val weekDays = arrayOf(
         stringResource(R.string.home_weeklystats_monday),
         stringResource(R.string.home_weeklystats_tuesday),
         stringResource(R.string.home_weeklystats_wednesday),
@@ -67,12 +67,11 @@ fun WeeklyStats(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Log.d("WeeklyStats", "WeeklySteps: ${weeklySteps.contentToString()}, Weekly size: ${weeklySteps.size}")
                 weekDays.forEachIndexed { index, _ ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Log.d("WeeklyStats", "Index: $index")
+                        Log.d("WeeklyStats", "WeeklyStats: ${weeklySteps.asList()}")
                         CircularProgressBar(
                             steps = if (index < weeklySteps.size) weeklySteps[index] else 0,
                             targetStepsGoal = weeklyTarget[index],

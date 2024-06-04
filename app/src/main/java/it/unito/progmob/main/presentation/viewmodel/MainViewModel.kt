@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         viewModelScope.launch(Dispatchers.IO) {
-            mainUseCases.checkTargetExistUseCase(DateUtils.getCurrentDateFormatted())
+            mainUseCases.checkTargetExistUseCase(DateUtils.formattedCurrentDate())
         }
     }
 

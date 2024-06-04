@@ -60,4 +60,16 @@
     <string name="stats_filter_btn_txt">Seleziona Date</string>
     <string name="main_activity_go_back_icon">Icona per tornare indietro</string>
     <string name="stats_chart_title">Le Tue Statistiche</string>
+    <string name="month_january">Gen</string>
+    <string name="month_february">Feb</string>
+    <string name="month_march">Mar</string>
+    <string name="month_april">Apr</string>
+    <string name="month_may">Mag</string>
+    <string name="month_june">Giu</string>
+    <string name="month_july">Lug</string>
+    <string name="month_august">Ago</string>
+    <string name="month_september">Set</string>
+    <string name="month_october">Ott</string>
+    <string name="month_november">Nov</string>
+    <string name="december">Dic</string>
 </resources>

@@ -1,14 +1,19 @@
 package it.unito.progmob.core.domain.repository
 
-import it.unito.progmob.core.domain.model.DateCaloriesTuple
-import it.unito.progmob.core.domain.model.DateDistanceTuple
-import it.unito.progmob.core.domain.model.DateSpeedTuple
-import it.unito.progmob.core.domain.model.DateStepsTuple
-import it.unito.progmob.core.domain.model.WeekDayStepsTuple
-import it.unito.progmob.core.domain.model.DateTimeTuple
+import it.unito.progmob.core.domain.model.tuples.DateCaloriesTuple
+import it.unito.progmob.core.domain.model.tuples.DateDistanceTuple
+import it.unito.progmob.core.domain.model.tuples.DateSpeedTuple
+import it.unito.progmob.core.domain.model.tuples.DateStepsTuple
+import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
+import it.unito.progmob.core.domain.model.tuples.DateTimeTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
+import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
+import it.unito.progmob.core.domain.model.tuples.MonthSpeedTuple
+import it.unito.progmob.core.domain.model.tuples.MonthStepsTuple
+import it.unito.progmob.core.domain.model.tuples.MonthTimeTuple
 import kotlinx.coroutines.flow.Flow
 
 interface WalkRepository {
@@ -23,6 +28,11 @@ interface WalkRepository {
     fun findCaloriesForDateRange(startDate: String, endDate: String): List<DateCaloriesTuple>?
     fun findStepsForDateRange(startDate: String, endDate: String): List<DateStepsTuple>?
     fun findSpeedForDateRange(startDate: String, endDate: String): List<DateSpeedTuple>?
+    fun findDistanceForYear(year: String): List<MonthDistanceTuple>?
+    fun findTimeForYear(year: String): List<MonthTimeTuple>?
+    fun findCaloriesForYear(year: String): List<MonthCaloriesTuple>?
+    fun findStepsForYear(year: String): List<MonthStepsTuple>?
+    fun findSpeedForYear(year: String): List<MonthSpeedTuple>?
 
 
 

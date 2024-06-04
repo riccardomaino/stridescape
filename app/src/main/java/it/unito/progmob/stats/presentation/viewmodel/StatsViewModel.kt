@@ -3,6 +3,7 @@ package it.unito.progmob.stats.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
 import it.unito.progmob.stats.domain.usecase.StatsUseCases
 import it.unito.progmob.stats.presentation.StatsEvent
@@ -25,9 +26,8 @@ class StatsViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             fetchStats(
-                _uiStatsState.value.startDate,
-                _uiStatsState.value.endDate,
-                _uiStatsState.value.statsSelected
+                _uiStatsState.value.statsSelected,
+                _uiStatsState.value.rangeSelected
             )
         }
     }
@@ -39,7 +39,7 @@ class StatsViewModel @Inject constructor(
     fun onEvent(event: StatsEvent) {
         when (event) {
             is StatsEvent.StatsTypeSelected -> statsTypeSelected(event.statsSelected)
-            is StatsEvent.DateRangeSelected -> dateRangeSelected(event.startDate, event.endDate)
+            is StatsEvent.RangeTypeSelected -> rangeTypeSelected(event.rangeSelected)
         }
     }
 
@@ -51,25 +51,22 @@ class StatsViewModel @Inject constructor(
     private fun statsTypeSelected(statsSelected: StatsType){
         viewModelScope.launch(Dispatchers.IO) {
             fetchStats(
-                _uiStatsState.value.startDate,
-                _uiStatsState.value.endDate,
-                statsSelected
+                statsSelected,
+                _uiStatsState.value.rangeSelected
             )
         }
     }
 
     /**
-     * Updates the UI state based on the selected date range after fetching stats data.
+     * Updates the UI state based on the selected range type after fetching stats data.
      *
-     * @param startDate The start date in milliseconds.
-     * @param endDate The end date in milliseconds.
+     * @param rangeSelected The type of date range selected.
      */
-    private fun dateRangeSelected(startDate: Long, endDate: Long) {
+    private fun rangeTypeSelected(rangeSelected: RangeType) {
         viewModelScope.launch(Dispatchers.IO){
             fetchStats(
-                startDate,
-                endDate,
-                _uiStatsState.value.statsSelected
+                _uiStatsState.value.statsSelected,
+                rangeSelected
             )
         }
     }
@@ -77,64 +74,57 @@ class StatsViewModel @Inject constructor(
     /**
      * Fetches stats data based on the selected stats type and date range.
      *
-     * @param startDate The start date in milliseconds.
-     * @param endDate The end date in milliseconds.
      * @param statsSelected The selected stats type.
      */
-    private fun fetchStats(startDate: Long, endDate: Long, statsSelected: StatsType) {
+    private fun fetchStats(statsSelected: StatsType, rangeSelected: RangeType) {
         viewModelScope.launch(Dispatchers.IO) {
             when (statsSelected) {
                 StatsType.DISTANCE -> {
-                    val distanceStatsList =  statsUseCases.getDistanceDataUseCase(startDate, endDate)
+                    val distanceStatsList =  if(rangeSelected != RangeType.YEAR) statsUseCases.getDistanceDataUseCase(rangeSelected) else emptyList()
                     _uiStatsState.update {
                         it.copy(
-                            startDate = startDate,
-                            endDate = endDate,
                             statsSelected = statsSelected,
+                            rangeSelected = rangeSelected,
                             distanceChartValues = distanceStatsList
                         )
                     }
                 }
                 StatsType.TIME -> {
-                    val timeStatsList = statsUseCases.getTimeDataUseCase(startDate, endDate)
+                    val timeStatsList = if(rangeSelected != RangeType.YEAR) statsUseCases.getTimeDataUseCase(rangeSelected) else emptyList()
                     _uiStatsState.update {
                         it.copy(
-                            startDate = startDate,
-                            endDate = endDate,
                             statsSelected = statsSelected,
+                            rangeSelected = rangeSelected,
                             timeChartValues = timeStatsList
                         )
                     }
                 }
                 StatsType.CALORIES -> {
-                    val caloriesStatsList = statsUseCases.getCaloriesDataUseCase(startDate, endDate)
+                    val caloriesStatsList = if(rangeSelected != RangeType.YEAR)  statsUseCases.getCaloriesDataUseCase(rangeSelected) else emptyList()
                     _uiStatsState.update {
                         it.copy(
-                            startDate = startDate,
-                            endDate = endDate,
                             statsSelected = statsSelected,
+                            rangeSelected = rangeSelected,
                             caloriesChartValues = caloriesStatsList
                         )
                     }
                 }
                 StatsType.STEPS -> {
-                    val stepsStatsList = statsUseCases.getStepsDataUseCase(startDate, endDate)
+                    val stepsStatsList = if(rangeSelected != RangeType.YEAR) statsUseCases.getStepsDataUseCase(rangeSelected) else emptyList()
                     _uiStatsState.update {
                         it.copy(
-                            startDate = startDate,
-                            endDate = endDate,
                             statsSelected = statsSelected,
+                            rangeSelected = rangeSelected,
                             stepsChartValues = stepsStatsList
                         )
                     }
                 }
                 StatsType.SPEED -> {
-                    val speedStatsList = statsUseCases.getSpeedDataUseCase(startDate, endDate)
+                    val speedStatsList = if(rangeSelected != RangeType.YEAR) statsUseCases.getSpeedDataUseCase(rangeSelected) else emptyList()
                     _uiStatsState.update {
                         it.copy(
-                            startDate = startDate,
-                            endDate = endDate,
                             statsSelected = statsSelected,
+                            rangeSelected = rangeSelected,
                             speedChartValues = speedStatsList
                         )
                     }

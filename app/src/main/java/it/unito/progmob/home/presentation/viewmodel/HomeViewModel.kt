@@ -1,6 +1,5 @@
 package it.unito.progmob.home.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,7 +8,6 @@ import it.unito.progmob.home.domain.usecase.HomeUseCases
 import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -22,7 +20,7 @@ class HomeViewModel @Inject constructor(
     private val _currentDayOfWeek = MutableStateFlow(DateUtils.getCurrentDayOfWeek())
     val currentDayOfWeek = _currentDayOfWeek.asStateFlow()
 
-    private val currentDate = DateUtils.getCurrentDateFormatted()
+    private val currentDate = DateUtils.formattedCurrentDate()
 
     val stepsCurrentDay = homeUseCases.getDayStepsUseCase(currentDate)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)

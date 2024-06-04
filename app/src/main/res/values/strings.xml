@@ -67,4 +67,16 @@
     <string name="stats_chart_y_axis_speed_title" translatable="false">km/h</string>
     <string name="stats_chart_y_axis_steps_title" translatable="false">nr</string>
     <string name="stats_chart_title">Your Statistics</string>
+    <string name="month_january">Jan</string>
+    <string name="month_february">Feb</string>
+    <string name="month_march">Mar</string>
+    <string name="month_april">Apr</string>
+    <string name="month_may">May</string>
+    <string name="month_june">Jun</string>
+    <string name="month_july">Jul</string>
+    <string name="month_august">Aug</string>
+    <string name="month_september">Sep</string>
+    <string name="month_october">Oct</string>
+    <string name="month_november">Nov</string>
+    <string name="december">Dec</string>
 </resources>

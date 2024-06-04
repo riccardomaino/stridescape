@@ -1,10 +1,10 @@
 package it.unito.progmob.stats.domain.usecase
 
-import android.util.Log
 import it.unito.progmob.core.domain.ext.rangeTo
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.core.domain.util.WalkUtils
+import it.unito.progmob.stats.domain.model.RangeType
 import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
@@ -18,41 +18,51 @@ class GetDistanceDataUseCase @Inject constructor(
     /**
      * Returns a list of pairs of LocalDate and Float representing the distance walked for each day in
      * the given date range.
-     *
-     * @param startDate The start date in epoch milliseconds.
-     * @param endDate The end date in epoch milliseconds.
      */
-    operator fun invoke(startDate: Long, endDate: Long): List<Pair<LocalDate, Float>> {
-        val formattedStartDate = DateUtils.formatDateFromEpochMillis(startDate)
-        val formattedEndDate = DateUtils.formatDateFromEpochMillis(endDate)
-        val startLocalDate = DateUtils.getLocalDateFromEpochMillis(startDate)
-        val endLocalDate = DateUtils.getLocalDateFromEpochMillis(endDate)
-        val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toList()
+    operator fun invoke(rangeType: RangeType): List<Pair<LocalDate, Float>> {
+        lateinit var formattedStartDate: String
+        lateinit var formattedEndDate: String
+        lateinit var startLocalDate: LocalDate
+        lateinit var endLocalDate: LocalDate
 
-        var resultPairsList = walkRepository.findDistanceForDateRange(formattedStartDate, formattedEndDate)?.let {
-            it.map { dailyDistanceTuple ->
-                Pair(
-                    LocalDate.parse(
-                        dailyDistanceTuple.date,
-                        format = DateUtils.defaultFormatter
-                    ),
-                    WalkUtils.convertMetersToKm(dailyDistanceTuple.distance)
-                )
+        when(rangeType){
+            RangeType.WEEK -> {
+                formattedStartDate = DateUtils.formattedFirstDateOfWeek()
+                formattedEndDate = DateUtils.formattedLastDateOfWeek()
+                startLocalDate = DateUtils.getFirstDateOfWeek()
+                endLocalDate = DateUtils.getLastDateOfWeek()
             }
-        } ?: emptyList()
+            RangeType.MONTH -> {
+                formattedStartDate = DateUtils.formattedFirstDateOfMonth()
+                formattedEndDate = DateUtils.formattedLastDateOfMonth()
+                startLocalDate = DateUtils.getFirstDateOfMonth()
+                endLocalDate = DateUtils.getLastDateOfMonth()
+            }
+            else -> return emptyList()
+        }
 
-        resultPairsList.toMutableList().addAll(dateRangeList.filter { date ->
+        val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
+
+        val resultPairsList =
+            walkRepository.findDistanceForDateRange(formattedStartDate, formattedEndDate)?.let {
+                it.map { dailyDistanceTuple ->
+                    Pair(
+                        LocalDate.parse(
+                            dailyDistanceTuple.date,
+                            format = DateUtils.defaultFormatter
+                        ),
+                        WalkUtils.convertMetersToKm(dailyDistanceTuple.distance)
+                    )
+                }
+            }?.toMutableList() ?: mutableListOf()
+
+        resultPairsList.addAll(dateRangeList.filter { date ->
             resultPairsList.none { it.first == date }
         }.map { date ->
             Pair(date, 0f)
         })
 
-        resultPairsList = resultPairsList.sortedBy { it.first }
 
-        resultPairsList.forEach{
-            Log.d("GetDistanceDataUseCase", "date: ${it.first}, distance: ${it.second}")
-        }
-
-        return resultPairsList
+        return resultPairsList.sortedBy { it.first }
     }
 }
