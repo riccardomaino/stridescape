@@ -138,6 +138,13 @@ object DateUtils {
 
 
     /**
+     * Get the current date
+     *
+     * @return the [LocalDate] of the current date
+     */
+    fun getCurrentDayOfWeekFromString(date: String): Int = LocalDate.parse(date, format = defaultFormatter).dayOfWeek.value - 1
+
+    /**
      * Get the first date of the week based on the current date
      *
      * @return the [LocalDate] of the first date of the week

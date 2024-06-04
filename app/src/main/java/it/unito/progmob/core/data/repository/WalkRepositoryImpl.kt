@@ -10,6 +10,7 @@ import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
 import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
 import it.unito.progmob.core.domain.model.tuples.MonthSpeedTuple
@@ -41,8 +42,12 @@ class WalkRepositoryImpl(
         return walkDao.findTimeByDate(date)
     }
 
-    override fun findStepsBetweenDates(startDate: String, endDate: String): Flow<WeekDayStepsTuple?> {
+    override fun findStepsBetweenDates(startDate: String, endDate: String): Flow<List<WeekDayStepsTuple>?> {
         return walkDao.findStepsBetweenDates(startDate, endDate)
+    }
+
+    override fun findTargetBetweenDates(startDate: String, endDate: String): Flow<List<DateTargetTuple>?> {
+        return walkDao.findTargetBetweenDates(startDate, endDate)
     }
 
     override fun findDistanceForDateRange(startDate: String, endDate: String): List<DateDistanceTuple>? {

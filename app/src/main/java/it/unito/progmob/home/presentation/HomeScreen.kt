@@ -1,5 +1,6 @@
 package it.unito.progmob.home.presentation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.home.presentation.components.CircularProgressBar
@@ -29,17 +29,15 @@ import it.unito.progmob.ui.theme.small
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeEvent: (HomeEvent) -> Unit,
-    navController: NavController,
     currentDayOfWeek: Int,
     stepsCurrentDay: Int,
     caloriesCurrentDay: Int,
     distanceCurrentDay: Int,
     timeCurrentDay: Long,
     stepsTargetCurrentDay: Int,
-    weeklySteps: IntArray
+    weeklySteps: IntArray,
+    weeklyTarget: IntArray,
 ) {
-    val weeklyTargetStats = intArrayOf(5000, 5000, 5000, 5000, 5000, 5000, 5000)
 
     Column(
         modifier = modifier
@@ -64,10 +62,11 @@ fun HomeScreen(
             time = TimeUtils.formatMillisTimeHoursMinutes(timeCurrentDay)
         )
         Spacer(modifier = Modifier.height(small))
+        Log.d("TAG", "HomeScreen: ${weeklyTarget.asList()}")
         WeeklyStats(
             selectedDay = currentDayOfWeek,
             weeklySteps = weeklySteps,
-            weeklyTarget = weeklyTargetStats
+            weeklyTarget = weeklyTarget
         )
     }
 }

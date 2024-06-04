@@ -11,4 +11,5 @@ data class HomeUseCases(
     val addTargetUseCase: AddTargetUseCase,
     val getDateTargetUseCase: GetDateTargetUseCase,
     val getWeeklyStepsUseCase: GetWeeklyStepsUseCase,
+    val getWeeklyTargetUseCase: GetWeeklyTargetUseCase
 )

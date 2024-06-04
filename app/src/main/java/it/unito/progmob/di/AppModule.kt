@@ -53,6 +53,7 @@ import it.unito.progmob.stats.domain.usecase.GetYearDistanceStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetYearSpeedStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetYearStepsStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetYearTimeStatUseCase
+import it.unito.progmob.home.domain.usecase.GetWeeklyTargetUseCase
 import it.unito.progmob.tracking.domain.usecase.PauseTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.ResumeTrackingUseCase
 import it.unito.progmob.tracking.domain.usecase.StartTrackingUseCase
@@ -143,7 +144,8 @@ object AppModule {
         GetDayTimeUseCase(walkRepository),
         AddTargetUseCase(targetRepository),
         GetDateTargetUseCase(targetRepository),
-        GetWeeklyStepsUseCase(walkRepository)
+        GetWeeklyStepsUseCase(walkRepository),
+        GetWeeklyTargetUseCase(walkRepository)
     )
 
     @Provides

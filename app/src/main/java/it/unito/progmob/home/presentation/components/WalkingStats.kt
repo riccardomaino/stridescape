@@ -3,6 +3,7 @@ package it.unito.progmob.home.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,9 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import it.unito.progmob.R
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.large
+import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
 @Composable
@@ -36,47 +43,66 @@ fun WalkingStats(
         modifier = modifier
             .padding(small)
             .shadow(small, shape = RoundedCornerShape(large))
+            .clip(RoundedCornerShape(large))
+            .background(MaterialTheme.colorScheme.surface)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        Column(
             modifier = modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(large))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(vertical = large)
+                .padding(horizontal = small, vertical = medium)
         ) {
-            WalkingStatComponent(
-                value = kcal,
-                title = "Calories",
-                icon = Icons.Outlined.LocalFireDepartment,
-                iconDescription = "Localized description",
-                iconColor = Color.Red
+            Text(
+                modifier = modifier.padding(start = medium),
+                text = stringResource(R.string.home_walking_stats_title),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground
             )
+            HorizontalDivider(modifier = modifier.padding(vertical = small, horizontal = small))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = modifier
+                    .fillMaxWidth()
+            ) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
+                    WalkingStatComponent(
+                        value = kcal,
+                        title = "Calories",
+                        icon = Icons.Outlined.LocalFireDepartment,
+                        iconDescription = "Localized description",
+                        iconColor = Color.Red
+                    )
+                }
 
-            VerticalDivider(
-                modifier = modifier.height(doubleExtraLarge)
-            )
+                VerticalDivider(
+                    modifier = modifier.height(doubleExtraLarge)
+                )
 
-            WalkingStatComponent(
-                value = km,
-                title = "Km.",
-                icon = Icons.Outlined.Map,
-                iconDescription = "Localized description",
-                iconColor = Color(0xFF0C9B12)
-            )
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
+                    WalkingStatComponent(
+                        value = km,
+                        title = "Km.",
+                        icon = Icons.Outlined.Map,
+                        iconDescription = "Localized description",
+                        iconColor = Color(0xFF0C9B12)
+                    )
+                }
 
-            VerticalDivider(
-                modifier = modifier.height(doubleExtraLarge)
-            )
+                VerticalDivider(
+                    modifier = modifier.height(doubleExtraLarge)
+                )
 
-            WalkingStatComponent(
-                value = time,
-                title = "Time",
-                icon = Icons.Outlined.Timer,
-                iconDescription = "Localized description",
-                iconColor = Color(0xFFFF9800)
-            )
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
+                    WalkingStatComponent(
+                        value = time,
+                        title = "Time",
+                        icon = Icons.Outlined.Timer,
+                        iconDescription = "Localized description",
+                        iconColor = Color(0xFFFF9800)
+                    )
+                }
+
+            }
 
         }
     }

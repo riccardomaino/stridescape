@@ -2,7 +2,6 @@ package it.unito.progmob.stats.presentation.components
 
 import android.graphics.Typeface
 import android.text.Layout
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -11,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -42,7 +40,6 @@ import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
-import com.patrykandpatrick.vico.core.common.Defaults
 import com.patrykandpatrick.vico.core.common.Dimensions
 import com.patrykandpatrick.vico.core.common.HorizontalPosition
 import com.patrykandpatrick.vico.core.common.VerticalPosition
@@ -195,22 +192,7 @@ fun StatsChart(
                 guideline = rememberAxisGuidelineComponent(
                     thickness = 0.dp
                 ),
-                itemPlacer = AxisItemPlacer.Vertical.step({ 1f }),
-//                titleComponent = rememberTextComponent(
-//                    color = MaterialTheme.colorScheme.onSurface,
-//                    background = rememberShapeComponent(
-//                        Shape.Pill,
-//                        MaterialTheme.colorScheme.surface
-//                    ),
-//                    typeface = Typeface.MONOSPACE
-//                ),
-//                title = when (uiStatsState.statsSelected) {
-//                    StatsType.DISTANCE -> stringResource(R.string.stats_chart_y_axis_distance_title)
-//                    StatsType.TIME -> stringResource(R.string.stats_chart_y_axis_time_title)
-//                    StatsType.CALORIES -> stringResource(R.string.stats_chart_y_axis_calories_title)
-//                    StatsType.STEPS -> stringResource(R.string.stats_chart_y_axis_steps_title)
-//                    StatsType.SPEED -> stringResource(R.string.stats_chart_y_axis_speed_title)
-//                },
+                itemPlacer = AxisItemPlacer.Vertical.step({ 1f })
             ),
             bottomAxis = rememberBottomAxis(
                 label = rememberAxisLabelComponent(
@@ -238,7 +220,7 @@ fun StatsChart(
             decorations = listOf(rememberMeanHorizontalLine(meanValueExtraStoreKey, typeface)),
         ),
         modelProducer = modelProducer,
-        modifier = modifier.fillMaxHeight(0.6f),
+        modifier = modifier.fillMaxHeight(0.8f),
         marker = rememberMarker(typeface = typeface),
         horizontalLayout = HorizontalLayout.fullWidth(),
     )

@@ -36,6 +36,22 @@ val Context.monthsNames: Array<String>
         this.resources.getString(R.string.month_december)
     )
 
+val Context.monthFullNames: Array<String>
+    get() = arrayOf(
+        this.resources.getString(R.string.month_full_january),
+        this.resources.getString(R.string.month_full_february),
+        this.resources.getString(R.string.month_full_march),
+        this.resources.getString(R.string.month_full_april),
+        this.resources.getString(R.string.month_full_may),
+        this.resources.getString(R.string.month_full_june),
+        this.resources.getString(R.string.month_full_july),
+        this.resources.getString(R.string.month_full_august),
+        this.resources.getString(R.string.month_full_september),
+        this.resources.getString(R.string.month_full_october),
+        this.resources.getString(R.string.month_full_november),
+        this.resources.getString(R.string.month_full_december)
+    )
+
 
 
 val Context.allPermissions by lazy {

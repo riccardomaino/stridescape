@@ -100,17 +100,17 @@ fun NavGraph(
                 val timeCurrentDay by homeViewModel.timeCurrentDay.collectAsState()
                 val stepsTargetCurrentDay by homeViewModel.stepsTargetCurrentDay.collectAsState()
                 val weeklySteps by homeViewModel.weeklySteps.collectAsState()
+                val weeklyTarget by homeViewModel.weeklyTarget.collectAsState()
 
                 HomeScreen(
-                    homeEvent = homeViewModel::onEvent,
-                    navController = navController,
                     currentDayOfWeek = currentDayOfWeek,
                     stepsCurrentDay = stepsCurrentDay,
                     caloriesCurrentDay = caloriesCurrentDay,
                     distanceCurrentDay = distanceCurrentDay,
                     timeCurrentDay = timeCurrentDay,
                     stepsTargetCurrentDay = stepsTargetCurrentDay,
-                    weeklySteps = weeklySteps
+                    weeklySteps = weeklySteps,
+                    weeklyTarget = weeklyTarget
                 )
             }
 
@@ -144,10 +144,12 @@ fun NavGraph(
             ) {
                 val statsViewModel = hiltViewModel<StatsViewModel>()
                 val uiStatsState by statsViewModel.uiStatsState.collectAsState()
+                val uiStatsFetched by statsViewModel.uiStatsFetched.collectAsState()
+
                 StatsScreen(
                     statsEvent = statsViewModel::onEvent,
                     uiStatsState = uiStatsState,
-                    navController = navController
+                    uiStatsFetched = uiStatsFetched
                 )
 
             }

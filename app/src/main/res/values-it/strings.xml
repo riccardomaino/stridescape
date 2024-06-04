@@ -72,4 +72,25 @@
     <string name="month_october">Ott</string>
     <string name="month_november">Nov</string>
     <string name="month_december">Dic</string>
+    <string name="stats_range_filter_week">SETTIMANA</string>
+    <string name="stats_range_filter_month">MESE</string>
+    <string name="stats_range_filter_year">ANNO</string>
+    <string name="stats_stats_filter_distance_text">DISTANZA</string>
+    <string name="stats_stats_filter_time_text">TEMPO</string>
+    <string name="stats_stats_filter_calories_text">CALORIE</string>
+    <string name="stats_stats_filter_steps_text">PASSI</string>
+    <string name="stats_stats_filter_speed_text">VELOCITA\'</string>
+    <string name="month_full_january">GENNAIO</string>
+    <string name="month_full_february">FEBBRAIO</string>
+    <string name="month_full_march">MARZO</string>
+    <string name="month_full_april">APRILE</string>
+    <string name="month_full_may">MAGGIO</string>
+    <string name="month_full_june">GIUGNO</string>
+    <string name="month_full_july">LUGLIO</string>
+    <string name="month_full_august">AGOSTO</string>
+    <string name="month_full_september">SETTEMBRE</string>
+    <string name="month_full_october">OTTOBRE</string>
+    <string name="month_full_november">NOVEMBRE</string>
+    <string name="month_full_december">DICEMBRE</string>
+    <string name="home_walking_stats_title">Statistiche Giornaliere</string>
 </resources>

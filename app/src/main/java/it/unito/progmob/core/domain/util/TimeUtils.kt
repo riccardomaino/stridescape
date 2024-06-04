@@ -86,7 +86,7 @@ object TimeUtils {
     fun formatMillisTimeHoursMinutes(timeInMillis: Long): String {
         val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
         return duration.toComponents { hours, minutes, _, _ ->
-            "%02d:%02d".format(hours, minutes)
+            "%2dh%02dm".format(hours, minutes)
         }
     }
 }

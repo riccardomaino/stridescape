@@ -17,12 +17,11 @@ import it.unito.progmob.ui.theme.extraLarge
 fun WalkingStatComponent(modifier: Modifier = Modifier, value: String, title: String, icon: ImageVector, iconDescription: String, iconColor: Color) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-//                modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp*0.3f)
     ) {
         Icon(
             icon,
             contentDescription = iconDescription,
-            modifier = Modifier.size(extraLarge),
+            modifier = modifier.size(extraLarge),
             tint = iconColor
         )
         Text(

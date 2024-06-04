@@ -15,6 +15,7 @@ import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
 import it.unito.progmob.core.domain.model.tuples.MonthSpeedTuple
 import it.unito.progmob.core.domain.model.tuples.MonthStepsTuple
@@ -40,8 +41,11 @@ interface WalkDao {
     @Query("SELECT SUM(time) FROM walks WHERE date = :date")
     fun findTimeByDate(date: String): Flow<Long>
 
-    @Query("SELECT weekDay, SUM(steps) AS steps FROM walks WHERE date >= :startDate AND date <= :endDate GROUP BY date, weekDay")
-    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<WeekDayStepsTuple?>
+    @Query("SELECT weekDay, SUM(steps) AS steps FROM walks WHERE date >= :startDate AND date <= :endDate GROUP BY weekDay")
+    fun findStepsBetweenDates(startDate: String, endDate: String): Flow<List<WeekDayStepsTuple>?>
+
+    @Query("SELECT date, stepsTarget FROM targets WHERE date >= :startDate AND date <= :endDate")
+    fun findTargetBetweenDates(startDate: String, endDate: String): Flow<List<DateTargetTuple>?>
 
     @Query("SELECT date, SUM(distance) AS distance FROM walks WHERE date >= :startDate AND date <= :endDate GROUP BY date ORDER BY date ASC")
     fun findDistanceForDateRange(startDate: String, endDate: String): List<DateDistanceTuple>?

@@ -23,12 +23,16 @@ class StatsViewModel @Inject constructor(
     private val _uiStatsState = MutableStateFlow(UiStatsState())
     val uiStatsState = _uiStatsState.asStateFlow()
 
+    private val _uiStatsFetched  = MutableStateFlow(false)
+    val uiStatsFetched = _uiStatsFetched.asStateFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             fetchStats(
                 _uiStatsState.value.statsSelected,
                 _uiStatsState.value.rangeSelected
             )
+            _uiStatsFetched.value = true
         }
     }
 
@@ -50,10 +54,12 @@ class StatsViewModel @Inject constructor(
      */
     private fun statsTypeSelected(statsSelected: StatsType){
         viewModelScope.launch(Dispatchers.IO) {
+            _uiStatsFetched.value = false
             fetchStats(
                 statsSelected,
                 _uiStatsState.value.rangeSelected
             )
+            _uiStatsFetched.value = true
         }
     }
 
@@ -64,10 +70,12 @@ class StatsViewModel @Inject constructor(
      */
     private fun rangeTypeSelected(rangeSelected: RangeType) {
         viewModelScope.launch(Dispatchers.IO){
+            _uiStatsFetched.value = false
             fetchStats(
                 _uiStatsState.value.statsSelected,
                 rangeSelected
             )
+            _uiStatsFetched.value = true
         }
     }
 
