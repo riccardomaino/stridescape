@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="50dp"
+    android:height="50dp"
+    android:viewportWidth="50"
+    android:viewportHeight="50">
+  <group>
+    <clip-path
+        android:pathData="M0,0h50v50h-50z"/>
+    <path
+        android:name="InnerCircle"
+        android:pathData="M25,50C38.807,50 50,38.807 50,25C50,11.193 38.807,0 25,0C11.193,0 0,11.193 0,25C0,38.807 11.193,50 25,50Z"
+        android:fillColor="#DCC9FF"/>
+    <path
+        android:name="InnerCircleStroke"
+        android:pathData="M25,37C31.627,37 37,31.627 37,25C37,18.373 31.627,13 25,13C18.373,13 13,18.373 13,25C13,31.627 18.373,37 25,37Z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:name="OuterCircle"
+        android:pathData="M25,35C30.523,35 35,30.523 35,25C35,19.477 30.523,15 25,15C19.477,15 15,19.477 15,25C15,30.523 19.477,35 25,35Z"
+        android:fillColor="#6B00FF"/>
+  </group>
+</vector>

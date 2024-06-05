@@ -99,6 +99,8 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
     // Maps
     implementation(libs.google.maps.compose)
+    implementation(libs.google.maps.compose.utils)
+    implementation(libs.google.maps.compose.widgets)
     implementation(libs.google.play.services.maps)
     implementation(libs.google.play.services.location)
     // Vico Charts

@@ -9,7 +9,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import com.google.android.gms.maps.model.LatLng
 import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +26,6 @@ import javax.inject.Inject
 class LocationTrackingManagerImpl @Inject constructor(
     private val fusedLocationClient: FusedLocationProviderClient
 ) : LocationTrackingManager {
-    private var lastKnownLocation: LatLng? = null
-        get(){ return field }
     /**
      * Tracks the user's single location and returns the latitude and longitude as strings.
      *
@@ -40,7 +37,6 @@ class LocationTrackingManagerImpl @Inject constructor(
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             val latitude = location.latitude
             val longitude = location.longitude
-            lastKnownLocation = LatLng(latitude, longitude)
             onSuccess(latitude, longitude)
         }
     }

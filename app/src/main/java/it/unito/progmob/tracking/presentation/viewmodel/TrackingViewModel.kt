@@ -31,7 +31,7 @@ class TrackingViewModel @Inject constructor(
 
     // The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
     private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
-    val uiTrackingState: StateFlow<UiTrackingState> = _uiTrackingState.asStateFlow()
+    val uiTrackingState = _uiTrackingState.asStateFlow()
 
     // The user weight used to calculate the calories burnt
     private var userWeight: Float = 0.0f
@@ -40,7 +40,7 @@ class TrackingViewModel @Inject constructor(
     private var userHeight: Int = 0
 
     private val _currentLocation = MutableStateFlow<LatLng?>(null)
-    val currentLocation: StateFlow<LatLng?> = _currentLocation.asStateFlow()
+    val currentLocation = _currentLocation.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -83,7 +83,11 @@ class TrackingViewModel @Inject constructor(
 
     private fun trackSingleLocation() {
         viewModelScope.launch(Dispatchers.IO) {
-            trackingUseCases.trackSingleLocationUseCase()
+            trackingUseCases.trackSingleLocationUseCase(onSuccess={latitude, longitude ->
+                _currentLocation.update {
+                    LatLng(latitude, longitude)
+                }
+            })
         }
     }
 
