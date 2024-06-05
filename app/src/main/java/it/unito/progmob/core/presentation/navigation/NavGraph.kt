@@ -1,5 +1,6 @@
 package it.unito.progmob.core.presentation.navigation
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -14,6 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navDeepLink
+import it.unito.progmob.core.domain.Constants.TRACKING_DEEP_LINK
 import it.unito.progmob.home.presentation.HomeScreen
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.onboarding.presentation.OnBoardingProfileScreen
@@ -116,6 +119,10 @@ fun NavGraph(
 
             composable(
                 route = Route.TrackingScreenRoute.route,
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = TRACKING_DEEP_LINK
+                    action = Intent.ACTION_VIEW
+                }),
                 enterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Up,
