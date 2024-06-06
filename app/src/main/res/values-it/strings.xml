@@ -93,4 +93,5 @@
     <string name="month_full_november">NOVEMBRE</string>
     <string name="month_full_december">DICEMBRE</string>
     <string name="home_walking_stats_title">Statistiche Giornaliere</string>
+    <string name="tracking_dialog_confirm_btn_text">Conferma</string>
 </resources>
