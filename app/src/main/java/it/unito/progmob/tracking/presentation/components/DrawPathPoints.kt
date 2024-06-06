@@ -52,13 +52,13 @@ fun DrawPathPoints(
 
     val latLngList =  mutableListOf<LatLng>()
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LifecycleStartEffect(key1 = pathPoints, lifecycleOwner = lifecycleOwner){
-        Log.d("DrawPathPoints", "onStart")
-        onStopOrDispose {
-            Log.d("DrawPathPoints", "onStopOrDispose")
-        }
-    }
+//    val lifecycleOwner = LocalLifecycleOwner.current
+//    LifecycleStartEffect(key1 = pathPoints, lifecycleOwner = lifecycleOwner){
+//        Log.d("DrawPathPoints", "onStart")
+//        onStopOrDispose {
+//            Log.d("DrawPathPoints", "onStopOrDispose")
+//        }
+//    }
 
     var emptyPointFounded = false
     pathPoints.forEach { pathPoint ->

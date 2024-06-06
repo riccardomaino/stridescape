@@ -1,5 +1,12 @@
 package it.unito.progmob.tracking.presentation
 
+import android.app.Activity
+import android.content.Context
+import android.content.IntentSender
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeOut
@@ -8,7 +15,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,21 +46,33 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.navigation.NavController
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.Task
 import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.Constants.LOCATION_TRACKING_INTERVAL
 import it.unito.progmob.core.domain.util.WalkUtils.lastLocationPoint
 import it.unito.progmob.tracking.presentation.components.DrawPathPoints
+import it.unito.progmob.tracking.presentation.components.StopWalkDialog
 import it.unito.progmob.tracking.presentation.components.WalkingButtons
 import it.unito.progmob.tracking.presentation.components.WalkingCard
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
@@ -62,9 +80,9 @@ import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TrackingScreen(
     modifier: Modifier = Modifier,
@@ -72,13 +90,22 @@ fun TrackingScreen(
     navController: NavController,
     uiTrackingState: UiTrackingState,
     lastKnownLocation: LatLng? = null,
-    lastKnownLocationUpdatesCounter: Long
+    lastKnownLocationUpdatesCounter: Long,
+    showStopWalkDialog: Boolean,
 ) {
+    val context = LocalContext.current
     val hapticFeedback = LocalView.current
-    var switchStartStopBtn by remember { mutableStateOf(true) }
-    var switchPauseResumeBtn by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-    val btnClickScope = rememberCoroutineScope()
+    val startIntentSenderResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = {
+            if (it.resultCode != Activity.RESULT_OK) {
+                navController.popBackStack()
+            }
+        }
+    )
+
+    // Maps variables
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
     var isMapLoaded by remember { mutableStateOf(false) }
@@ -87,6 +114,7 @@ fun TrackingScreen(
     val mapUiSettings by remember {
         mutableStateOf(
             MapUiSettings(
+                myLocationButtonEnabled = true,
                 mapToolbarEnabled = false,
                 compassEnabled = true,
                 zoomControlsEnabled = false
@@ -94,22 +122,40 @@ fun TrackingScreen(
         )
     }
 
-    LaunchedEffect(key1 = lastKnownLocationUpdatesCounter) {
-        lastKnownLocation?.let {
-            zoomToCurrentPosition(
-                scope = coroutineScope,
-                cameraPositionState = cameraPositionState,
-                zoom = 17f,
-                millisAnimation = 1000,
-                latLng = it
+    LaunchedEffect(key1 = true) {
+        launch(Dispatchers.Default) {
+            checkLocationSetting(
+                context = context,
+                onDisabled = {
+                    startIntentSenderResultLauncher.launch(it)
+                },
+                onEnabled = {
+                    Log.d("TrackingScreen", "ON ENABLED: Location enabled")
+                }
             )
         }
-        followUserLocation = true
+    }
+
+    LaunchedEffect(key1 = lastKnownLocationUpdatesCounter) {
+        launch(Dispatchers.Default) {
+            lastKnownLocation?.let {
+                zoomToCurrentPosition(
+                    coroutineScope = coroutineScope,
+                    cameraPositionState = cameraPositionState,
+                    zoom = 17f,
+                    millisAnimation = 1000,
+                    latLng = it
+                )
+            }
+            followUserLocation = true
+        }
     }
 
     LaunchedEffect(key1 = cameraPositionState.position) {
-        if(cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE){
-            followUserLocation = false
+        launch(Dispatchers.Default) {
+            if (cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE) {
+                followUserLocation = false
+            }
         }
     }
 
@@ -120,14 +166,34 @@ fun TrackingScreen(
         ) {
             if (followUserLocation) {
                 LaunchedEffect(key1 = uiTrackingState.pathPoints.lastLocationPoint()) {
-                    uiTrackingState.pathPoints.lastLocationPoint()?.let {
-                        zoomToCurrentPosition(
-                            scope = coroutineScope,
-                            cameraPositionState = cameraPositionState,
-                            latLng = LatLng(it.lat, it.lng)
-                        )
+                    launch(Dispatchers.Default){
+                        uiTrackingState.pathPoints.lastLocationPoint()?.let {
+                            zoomToCurrentPosition(
+                                coroutineScope = coroutineScope,
+                                cameraPositionState = cameraPositionState,
+                                latLng = LatLng(it.lat, it.lng)
+                            )
+                        }
                     }
                 }
+            }
+            IconButton(
+                modifier = modifier
+                    .padding(large)
+                    .clip(RoundedCornerShape(medium))
+                    .background(MaterialTheme.colorScheme.primary),
+                onClick = {
+                    coroutineScope.launch {
+                        trackingEvent(TrackingEvent.TrackSingleLocation)
+                    }
+                }
+            ) {
+                Icon(
+                    Icons.Outlined.MyLocation,
+                    contentDescription = "Localized description",
+                    modifier = Modifier.size(large),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
             }
             ShowMapLoadingProgressBar(isMapLoaded)
             GoogleMap(
@@ -139,7 +205,16 @@ fun TrackingScreen(
                     },
                 uiSettings = mapUiSettings,
                 cameraPositionState = cameraPositionState,
-                onMapLoaded = { isMapLoaded = true }
+                properties = MapProperties(
+                    isMyLocationEnabled = false
+                ),
+                onMapLoaded = { isMapLoaded = true },
+                onMyLocationButtonClick = {
+                    coroutineScope.launch {
+                        trackingEvent(TrackingEvent.TrackSingleLocation)
+                    }
+                    true
+                }
             ) {
                 DrawPathPoints(
                     pathPoints = uiTrackingState.pathPoints,
@@ -156,11 +231,10 @@ fun TrackingScreen(
             ) {
                 WalkingCard(uiTrackingState = uiTrackingState)
 
-                if (switchStartStopBtn) {
+                if (!uiTrackingState.isTrackingStarted) {
                     Button(
                         onClick = {
-                            btnClickScope.launch {
-                                switchStartStopBtn = !switchStartStopBtn
+                            coroutineScope.launch {
                                 trackingEvent(TrackingEvent.StartTrackingService)
                                 hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
                             }
@@ -182,32 +256,15 @@ fun TrackingScreen(
                             .padding(vertical = medium),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
-                        IconButton(
-                            modifier = modifier
-                                .padding(large)
-                                .clip(RoundedCornerShape(medium))
-                                .background(MaterialTheme.colorScheme.primary),
-                            onClick = {
-                                btnClickScope.launch {
-                                    trackingEvent(TrackingEvent.TrackSingleLocation)
-                                }
-                            }
-                        ) {
-                            Icon(
-                                Icons.Outlined.MyLocation,
-                                contentDescription = "Localized description",
-                                modifier = Modifier.size(large),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
                         WalkingButtons(
                             modifier = modifier,
                             trackingEvent = trackingEvent,
                             onClick = {
-                                btnClickScope.launch {
-                                    switchStartStopBtn = !switchStartStopBtn
-                                    trackingEvent(TrackingEvent.StopTrackingService)
-                                    hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                coroutineScope.launch {
+                                    trackingEvent(TrackingEvent.ShowStopWalkDialog(true))
+                                    hapticFeedback.performHapticFeedback(
+                                        HapticFeedbackConstantsCompat.CONFIRM
+                                    )
                                 }
                             },
                             iconDescription = stringResource(R.string.settings_icon),
@@ -216,15 +273,16 @@ fun TrackingScreen(
                             color = MaterialTheme.colorScheme.errorContainer,
                             textColor = MaterialTheme.colorScheme.error
                         )
-                        if (switchPauseResumeBtn) {
+                        if (uiTrackingState.isTracking) {
                             WalkingButtons(
                                 modifier = modifier,
                                 trackingEvent = trackingEvent,
                                 onClick = {
-                                    btnClickScope.launch {
-                                        switchPauseResumeBtn = !switchPauseResumeBtn
+                                    coroutineScope.launch {
                                         trackingEvent(TrackingEvent.PauseTrackingService)
-                                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                        hapticFeedback.performHapticFeedback(
+                                            HapticFeedbackConstantsCompat.CONFIRM
+                                        )
                                     }
                                 },
                                 iconDescription = stringResource(R.string.settings_icon),
@@ -236,10 +294,11 @@ fun TrackingScreen(
                                 modifier = modifier,
                                 trackingEvent = trackingEvent,
                                 onClick = {
-                                    btnClickScope.launch {
-                                        switchPauseResumeBtn = !switchPauseResumeBtn
+                                    coroutineScope.launch {
                                         trackingEvent(TrackingEvent.ResumeTrackingService)
-                                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                        hapticFeedback.performHapticFeedback(
+                                            HapticFeedbackConstantsCompat.CONFIRM
+                                        )
                                     }
                                 },
                                 iconDescription = stringResource(R.string.settings_icon),
@@ -250,6 +309,10 @@ fun TrackingScreen(
                     }
                 }
             }
+            StopWalkDialog(
+                trackingEvent = trackingEvent,
+                shouldShowDialog = showStopWalkDialog
+            )
         }
 
     }
@@ -275,18 +338,53 @@ private fun BoxScope.ShowMapLoadingProgressBar(
 }
 
 private fun zoomToCurrentPosition(
-    scope: CoroutineScope,
+    coroutineScope: CoroutineScope,
     cameraPositionState: CameraPositionState,
     zoom: Float = 17f,
     millisAnimation: Int = 500,
     latLng: LatLng,
 ) {
-    scope.launch {
+    coroutineScope.launch {
         cameraPositionState.animate(
             update = CameraUpdateFactory.newCameraPosition(
                 CameraPosition.fromLatLngZoom(latLng, zoom)
             ),
             durationMs = millisAnimation
         )
+    }
+}
+
+private fun checkLocationSetting(
+    context: Context,
+    onDisabled: (IntentSenderRequest) -> Unit,
+    onEnabled: () -> Unit
+) {
+
+    val locationRequest = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        LOCATION_TRACKING_INTERVAL
+    ).setMinUpdateIntervalMillis(LOCATION_TRACKING_INTERVAL)
+        .build()
+
+    val client: SettingsClient = LocationServices.getSettingsClient(context)
+    val builder = LocationSettingsRequest.Builder()
+        .addLocationRequest(locationRequest)
+
+    val gpsSettingTask: Task<LocationSettingsResponse> =
+        client.checkLocationSettings(builder.build())
+
+    gpsSettingTask.addOnSuccessListener { onEnabled() }
+    gpsSettingTask.addOnFailureListener { exception ->
+        if (exception is ResolvableApiException) {
+            try {
+                val intentSenderRequest = IntentSenderRequest
+                    .Builder(exception.resolution)
+                    .build()
+                onDisabled(intentSenderRequest)
+            } catch (sendEx: IntentSender.SendIntentException) {
+                // Ignore the error
+                Log.d("TrackingScreen", "Ignored Exception: ${sendEx.message.toString()}")
+            }
+        }
     }
 }

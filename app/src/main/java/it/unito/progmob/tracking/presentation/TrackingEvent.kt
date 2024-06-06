@@ -7,4 +7,5 @@ sealed class TrackingEvent {
     data object PauseTrackingService: TrackingEvent()
     data object StopTrackingService: TrackingEvent()
     data object TrackSingleLocation: TrackingEvent()
+    data class ShowStopWalkDialog(val showDialog: Boolean): TrackingEvent()
 }

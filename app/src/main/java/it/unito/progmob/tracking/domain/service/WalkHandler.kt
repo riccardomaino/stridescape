@@ -17,9 +17,10 @@ class WalkHandler {
 
     private var initialSteps: Int? = null
 
-    fun trackingServiceStopped(){
+    fun clearWalk(){
         _walk.update {
             it.copy(
+                isTrackingStarted = false,
                 isTracking = false,
                 pathPoints = emptyList(),
                 distanceInMeters = 0,
@@ -83,11 +84,25 @@ class WalkHandler {
     }
 
     /**
+     * Updates the [Walk] according to the isTrackingStarted value
+     *
+     * @param isTrackingStarted the new value of the isTrackingStarted field used to update the [Walk]
+     */
+    fun updateWalkIsTrackingStarted(isTrackingStarted: Boolean){
+        _walk.update {
+            it.copy(
+                isTrackingStarted = isTrackingStarted
+            )
+        }
+    }
+
+
+    /**
      * Updates the [Walk] according to the isTracking value
      *
-     * @param isTracking the new value of the isTracking field to update the [Walk]
+     * @param isTracking the new value of the isTracking field used to update the [Walk]
      */
-    fun updateWalkTracking(isTracking: Boolean){
+    fun updateWalkIsTracking(isTracking: Boolean){
         _walk.update {
             it.copy(
                 isTracking = isTracking

@@ -34,15 +34,24 @@ class TrackingViewModel @Inject constructor(
     private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
     val uiTrackingState = _uiTrackingState.asStateFlow()
 
+    // The StateFlow used to track if the location provider is enabled
+//    private val _isLocationEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
+//    val isLocationEnabled = _isLocationEnabled.asStateFlow()
+
+    private val _showStopWalkDialog = MutableStateFlow(false)
+    val showStopWalkDialog = _showStopWalkDialog.asStateFlow()
+
     // The user weight used to calculate the calories burnt
     private var userWeight: Float = 0.0f
 
     // The user height used to calculate the calories burnt
     private var userHeight: Int = 0
 
+    // The last known location of the user used to open the map and to update the camera position when the user click on location button
     private val _lastKnownLocation = MutableStateFlow<LatLng?>(null)
     val lastKnownLocation = _lastKnownLocation.asStateFlow()
 
+    // The counter of the last known location updates
     private val _lastKnownLocationUpdatesCounter = MutableStateFlow<Long>(0)
     val lastKnownLocationUpdatesCounter = _lastKnownLocationUpdatesCounter.asStateFlow()
 
@@ -63,6 +72,7 @@ class TrackingViewModel @Inject constructor(
         walk.onEach { walkState ->
             _uiTrackingState.update {
                 it.copy(
+                    isTrackingStarted = walkState.isTrackingStarted,
                     isTracking = walkState.isTracking,
                     distanceInMeters = walkState.distanceInMeters,
                     timeInMillis = walkState.timeInMillis,
@@ -74,9 +84,7 @@ class TrackingViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
 
-        viewModelScope.launch(Dispatchers.IO) {
-            trackSingleLocation()
-        }
+        trackSingleLocation()
     }
 
     fun onEvent(event: TrackingEvent){
@@ -86,6 +94,13 @@ class TrackingViewModel @Inject constructor(
             is TrackingEvent.PauseTrackingService -> pauseTrackingService()
             is TrackingEvent.StopTrackingService -> stopTrackingService()
             is TrackingEvent.TrackSingleLocation -> trackSingleLocation()
+            is TrackingEvent.ShowStopWalkDialog -> showStopWalkDialog(event.showDialog)
+        }
+    }
+
+    private fun showStopWalkDialog(showDialog: Boolean) {
+        viewModelScope.launch {
+            _showStopWalkDialog.update { showDialog }
         }
     }
 
@@ -131,9 +146,11 @@ class TrackingViewModel @Inject constructor(
             trackingUseCases.stopTrackingUseCase()
             val walkId = trackingUseCases.addWalkUseCase(uiTrackingState.value)
             uiTrackingState.value.pathPoints.forEach { pathPoint ->
-                trackingUseCases.addPathPointUseCase(walkId, pathPoint)
+                launch(Dispatchers.IO) {
+                    trackingUseCases.addPathPointUseCase(walkId, pathPoint)
+                }
             }
-            walkHandler.trackingServiceStopped()
+            walkHandler.clearWalk()
         }
     }
 
