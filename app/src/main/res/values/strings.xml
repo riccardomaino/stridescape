@@ -100,4 +100,5 @@
     <string name="month_full_december">DECEMBER</string>
     <string name="month_full_february">FEBRUARY</string>
     <string name="home_walking_stats_title">Daily Statistics</string>
+    <string name="tracking_dialog_confirm_btn_text">Confirm</string>
 </resources>

@@ -21,7 +21,8 @@ fun OnBoardingButton(
 ) {
     Button(
         modifier = Modifier.width(150.dp).height(45.dp),
-        onClick = onClick, colors = ButtonDefaults.buttonColors(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ),

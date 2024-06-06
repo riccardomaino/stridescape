@@ -142,13 +142,15 @@ fun NavGraph(
                 val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
                 val lastKnownLocation by trackingViewModel.lastKnownLocation.collectAsState()
                 val lastKnownLocationUpdatesCounter by trackingViewModel.lastKnownLocationUpdatesCounter.collectAsState()
+                val showStopWalkDialog by trackingViewModel.showStopWalkDialog.collectAsState()
 
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
                     navController = navController,
                     uiTrackingState = uiTrackingState,
                     lastKnownLocation = lastKnownLocation,
-                    lastKnownLocationUpdatesCounter = lastKnownLocationUpdatesCounter
+                    lastKnownLocationUpdatesCounter = lastKnownLocationUpdatesCounter,
+                    showStopWalkDialog = showStopWalkDialog
                 )
             }
 
