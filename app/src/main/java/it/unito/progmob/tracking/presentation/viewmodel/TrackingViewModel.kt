@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.util.WalkUtils
+import it.unito.progmob.core.domain.util.WalkUtils.lastLocationPoint
 import it.unito.progmob.tracking.domain.model.Walk
 import it.unito.progmob.tracking.domain.service.WalkHandler
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
@@ -39,8 +40,11 @@ class TrackingViewModel @Inject constructor(
     // The user height used to calculate the calories burnt
     private var userHeight: Int = 0
 
-    private val _currentLocation = MutableStateFlow<LatLng?>(null)
-    val currentLocation = _currentLocation.asStateFlow()
+    private val _lastKnownLocation = MutableStateFlow<LatLng?>(null)
+    val lastKnownLocation = _lastKnownLocation.asStateFlow()
+
+    private val _lastKnownLocationUpdatesCounter = MutableStateFlow<Long>(0)
+    val lastKnownLocationUpdatesCounter = _lastKnownLocationUpdatesCounter.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -69,6 +73,10 @@ class TrackingViewModel @Inject constructor(
                 )
             }
         }.launchIn(viewModelScope)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            trackSingleLocation()
+        }
     }
 
     fun onEvent(event: TrackingEvent){
@@ -83,11 +91,20 @@ class TrackingViewModel @Inject constructor(
 
     private fun trackSingleLocation() {
         viewModelScope.launch(Dispatchers.IO) {
-            trackingUseCases.trackSingleLocationUseCase(onSuccess={latitude, longitude ->
-                _currentLocation.update {
-                    LatLng(latitude, longitude)
+            if(_uiTrackingState.value.isTracking){
+                _lastKnownLocation.update {
+                    _uiTrackingState.value.pathPoints.lastLocationPoint()?.let { lastLocationPoint ->
+                        LatLng(lastLocationPoint.lat, lastLocationPoint.lng)
+                    }
                 }
-            })
+                _lastKnownLocationUpdatesCounter.update { it+1 }
+            }else{
+                trackingUseCases.trackSingleLocationUseCase(onSuccess={ latitude, longitude ->
+                        _lastKnownLocation.update { LatLng(latitude, longitude) }
+                        _lastKnownLocationUpdatesCounter.update { it+1 }
+                    }
+                )
+            }
         }
     }
 

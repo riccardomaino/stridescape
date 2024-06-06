@@ -6,10 +6,10 @@
   <group>
     <clip-path
         android:pathData="M0,0h50v50h-50z"/>
-    <path
-        android:name="InnerCircle"
-        android:pathData="M25,50C38.807,50 50,38.807 50,25C50,11.193 38.807,0 25,0C11.193,0 0,11.193 0,25C0,38.807 11.193,50 25,50Z"
-        android:fillColor="#DCC9FF"/>
+<!--    <path-->
+<!--        android:name="InnerCircle"-->
+<!--        android:pathData="M25,50C38.807,50 50,38.807 50,25C50,11.193 38.807,0 25,0C11.193,0 0,11.193 0,25C0,38.807 11.193,50 25,50Z"-->
+<!--        android:fillColor="#DCC9FF"/>-->
     <path
         android:name="InnerCircleStroke"
         android:pathData="M25,37C31.627,37 37,31.627 37,25C37,18.373 31.627,13 25,13C18.373,13 13,18.373 13,25C13,31.627 18.373,37 25,37Z"

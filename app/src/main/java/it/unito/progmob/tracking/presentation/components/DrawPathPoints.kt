@@ -1,8 +1,14 @@
 package it.unito.progmob.tracking.presentation.components
 
 import android.util.Log
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +32,16 @@ fun DrawPathPoints(
     pathPoints: List<PathPoint>,
     isTracking: Boolean,
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "Infinite transition animation")
+    val alphaPositionMarker by infiniteTransition.animateFloat(
+        initialValue = 0.7f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            tween(1000),
+            repeatMode = RepeatMode.Reverse
+        ), label = "Alpha animation"
+    )
+
     val lastMarkerState = rememberMarkerState()
     val lastLocationPoint = pathPoints.lastLocationPoint()
     lastLocationPoint?.let { lastMarkerState.position = LatLng(it.lat, it.lng) }
@@ -94,8 +110,7 @@ fun DrawPathPoints(
         )
     }
 
-//    val infiniteTransition = rememberInfiniteTransition(label = "Infinite Transition Animation")
-//    val lastMarkerPointColor by infiniteTransition.animateColor(
+//    animateColor(
 //        initialValue = MaterialTheme.colorScheme.primary,
 //        targetValue = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
 //        animationSpec = infiniteRepeatable(
@@ -104,19 +119,20 @@ fun DrawPathPoints(
 //        ), label = "Current Marker Position Color"
 //    )
 
-    if(isTracking){
-        Marker(
-            icon = vectorToBitmap(
-                context = LocalContext.current,
-                parameters = BitmapParameters(
-                    id = R.drawable.current_position_marker_1
-                )
-            ),
-            state = lastMarkerState,
-            anchor = Offset(0.5f, 0.5f),
-            visible = lastLocationPoint != null
-        )
-    }
+
+    Marker(
+        alpha = alphaPositionMarker,
+        icon = vectorToBitmap(
+            context = LocalContext.current,
+            parameters = BitmapParameters(
+                id = R.drawable.current_position_marker_1
+            )
+        ),
+        state = lastMarkerState,
+        anchor = Offset(0.5f, 0.5f),
+        visible = isTracking
+    )
+
 
     startPoint?.let {
         Marker(

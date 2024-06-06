@@ -138,13 +138,15 @@ fun NavGraph(
             ) {
                 val trackingViewModel = hiltViewModel<TrackingViewModel>()
                 val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
-                val currentLocation by trackingViewModel.currentLocation.collectAsState()
+                val lastKnownLocation by trackingViewModel.lastKnownLocation.collectAsState()
+                val lastKnownLocationUpdatesCounter by trackingViewModel.lastKnownLocationUpdatesCounter.collectAsState()
 
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
                     navController = navController,
                     uiTrackingState = uiTrackingState,
-                    currentLocation = currentLocation
+                    lastKnownLocation = lastKnownLocation,
+                    lastKnownLocationUpdatesCounter = lastKnownLocationUpdatesCounter
                 )
             }
 

@@ -47,6 +47,7 @@ import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
@@ -70,15 +71,18 @@ fun TrackingScreen(
     trackingEvent: (TrackingEvent) -> Unit,
     navController: NavController,
     uiTrackingState: UiTrackingState,
-    currentLocation: LatLng? = null
+    lastKnownLocation: LatLng? = null,
+    lastKnownLocationUpdatesCounter: Long
 ) {
     val hapticFeedback = LocalView.current
     var switchStartStopBtn by remember { mutableStateOf(true) }
     var switchPauseResumeBtn by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
+    val btnClickScope = rememberCoroutineScope()
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
     var isMapLoaded by remember { mutableStateOf(false) }
+    var followUserLocation by remember { mutableStateOf(true) }
     val cameraPositionState = rememberCameraPositionState()
     val mapUiSettings by remember {
         mutableStateOf(
@@ -90,9 +94,22 @@ fun TrackingScreen(
         )
     }
 
-    LaunchedEffect(key1 = currentLocation) {
-        currentLocation?.let {
-            zoomToCurrentPosition(coroutineScope, cameraPositionState, it)
+    LaunchedEffect(key1 = lastKnownLocationUpdatesCounter) {
+        lastKnownLocation?.let {
+            zoomToCurrentPosition(
+                scope = coroutineScope,
+                cameraPositionState = cameraPositionState,
+                zoom = 17f,
+                millisAnimation = 1000,
+                latLng = it
+            )
+        }
+        followUserLocation = true
+    }
+
+    LaunchedEffect(key1 = cameraPositionState.position) {
+        if(cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE){
+            followUserLocation = false
         }
     }
 
@@ -101,13 +118,15 @@ fun TrackingScreen(
         Box(
             modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
-            LaunchedEffect(key1 = uiTrackingState.pathPoints.lastLocationPoint()) {
-                uiTrackingState.pathPoints.lastLocationPoint()?.let {
-                    zoomToCurrentPosition(
-                        coroutineScope,
-                        cameraPositionState,
-                        LatLng(it.lat, it.lng)
-                    )
+            if (followUserLocation) {
+                LaunchedEffect(key1 = uiTrackingState.pathPoints.lastLocationPoint()) {
+                    uiTrackingState.pathPoints.lastLocationPoint()?.let {
+                        zoomToCurrentPosition(
+                            scope = coroutineScope,
+                            cameraPositionState = cameraPositionState,
+                            latLng = LatLng(it.lat, it.lng)
+                        )
+                    }
                 }
             }
             ShowMapLoadingProgressBar(isMapLoaded)
@@ -120,7 +139,7 @@ fun TrackingScreen(
                     },
                 uiSettings = mapUiSettings,
                 cameraPositionState = cameraPositionState,
-                onMapLoaded = { isMapLoaded = true },
+                onMapLoaded = { isMapLoaded = true }
             ) {
                 DrawPathPoints(
                     pathPoints = uiTrackingState.pathPoints,
@@ -140,9 +159,11 @@ fun TrackingScreen(
                 if (switchStartStopBtn) {
                     Button(
                         onClick = {
-                            switchStartStopBtn = !switchStartStopBtn
-                            trackingEvent(TrackingEvent.StartTrackingService)
-                            hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                            btnClickScope.launch {
+                                switchStartStopBtn = !switchStartStopBtn
+                                trackingEvent(TrackingEvent.StartTrackingService)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                            }
                         },
                         modifier = modifier
                             .fillMaxWidth()
@@ -167,7 +188,9 @@ fun TrackingScreen(
                                 .clip(RoundedCornerShape(medium))
                                 .background(MaterialTheme.colorScheme.primary),
                             onClick = {
-                                trackingEvent(TrackingEvent.TrackSingleLocation)
+                                btnClickScope.launch {
+                                    trackingEvent(TrackingEvent.TrackSingleLocation)
+                                }
                             }
                         ) {
                             Icon(
@@ -181,9 +204,11 @@ fun TrackingScreen(
                             modifier = modifier,
                             trackingEvent = trackingEvent,
                             onClick = {
-                                switchStartStopBtn = !switchStartStopBtn
-                                trackingEvent(TrackingEvent.StopTrackingService)
-                                hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                btnClickScope.launch {
+                                    switchStartStopBtn = !switchStartStopBtn
+                                    trackingEvent(TrackingEvent.StopTrackingService)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                }
                             },
                             iconDescription = stringResource(R.string.settings_icon),
                             text = stringResource(R.string.tracking_stop_btn),
@@ -196,11 +221,11 @@ fun TrackingScreen(
                                 modifier = modifier,
                                 trackingEvent = trackingEvent,
                                 onClick = {
-                                    switchPauseResumeBtn = !switchPauseResumeBtn
-                                    trackingEvent(TrackingEvent.PauseTrackingService)
-                                    hapticFeedback.performHapticFeedback(
-                                        HapticFeedbackConstantsCompat.CONFIRM
-                                    )
+                                    btnClickScope.launch {
+                                        switchPauseResumeBtn = !switchPauseResumeBtn
+                                        trackingEvent(TrackingEvent.PauseTrackingService)
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                    }
                                 },
                                 iconDescription = stringResource(R.string.settings_icon),
                                 text = stringResource(R.string.tracking_pause_btn),
@@ -211,11 +236,11 @@ fun TrackingScreen(
                                 modifier = modifier,
                                 trackingEvent = trackingEvent,
                                 onClick = {
-                                    switchPauseResumeBtn = !switchPauseResumeBtn
-                                    trackingEvent(TrackingEvent.ResumeTrackingService)
-                                    hapticFeedback.performHapticFeedback(
-                                        HapticFeedbackConstantsCompat.CONFIRM
-                                    )
+                                    btnClickScope.launch {
+                                        switchPauseResumeBtn = !switchPauseResumeBtn
+                                        trackingEvent(TrackingEvent.ResumeTrackingService)
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                                    }
                                 },
                                 iconDescription = stringResource(R.string.settings_icon),
                                 text = stringResource(R.string.tracking_resume_btn),
@@ -252,14 +277,16 @@ private fun BoxScope.ShowMapLoadingProgressBar(
 private fun zoomToCurrentPosition(
     scope: CoroutineScope,
     cameraPositionState: CameraPositionState,
+    zoom: Float = 17f,
+    millisAnimation: Int = 500,
     latLng: LatLng,
 ) {
     scope.launch {
         cameraPositionState.animate(
             update = CameraUpdateFactory.newCameraPosition(
-                CameraPosition.fromLatLngZoom(latLng, 17f)
+                CameraPosition.fromLatLngZoom(latLng, zoom)
             ),
-            durationMs = 500
+            durationMs = millisAnimation
         )
     }
 }

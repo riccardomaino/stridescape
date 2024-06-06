@@ -29,15 +29,17 @@ class LocationTrackingManagerImpl @Inject constructor(
     /**
      * Tracks the user's single location and returns the latitude and longitude as strings.
      *
-     * @param onSuccess A callback that receives the latitude and longitude as strings.
+     * @param onSuccess A callback that receives the latitude and longitude as double.
      */
     override fun trackSingleLocation(
         onSuccess: (latitude: Double, longitude: Double) -> Unit
     ) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            val latitude = location.latitude
-            val longitude = location.longitude
-            onSuccess(latitude, longitude)
+            location?.let {
+                val latitude = location.latitude
+                val longitude = location.longitude
+                onSuccess(latitude, longitude)
+            }
         }
     }
 
