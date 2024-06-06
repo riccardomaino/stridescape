@@ -1,6 +1,5 @@
 package it.unito.progmob.history.domain.usecase
 
-import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.history.domain.model.AllWalksPerDate
 import it.unito.progmob.history.domain.model.WalkOrder

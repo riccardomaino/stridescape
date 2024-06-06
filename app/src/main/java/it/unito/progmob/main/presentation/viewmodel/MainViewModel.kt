@@ -1,17 +1,15 @@
 package it.unito.progmob.main.presentation.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.unito.progmob.main.domain.usecase.MainUseCases
 import it.unito.progmob.core.domain.util.DateUtils
-import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.core.presentation.navigation.Route
+import it.unito.progmob.main.domain.usecase.MainUseCases
+import it.unito.progmob.main.presentation.MainEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

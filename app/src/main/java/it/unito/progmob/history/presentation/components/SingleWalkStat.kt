@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
 import it.unito.progmob.ui.theme.medium

@@ -1,6 +1,5 @@
 package it.unito.progmob.home.domain.usecase
 
-import android.util.Log
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
 import kotlinx.coroutines.flow.Flow

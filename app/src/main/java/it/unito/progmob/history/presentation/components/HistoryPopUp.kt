@@ -47,7 +47,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import it.unito.progmob.core.domain.ext.findActivity
-import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
 import it.unito.progmob.tracking.domain.model.PathPoint

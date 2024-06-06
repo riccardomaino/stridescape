@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.history.domain.model.AllWalksPerDate
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
