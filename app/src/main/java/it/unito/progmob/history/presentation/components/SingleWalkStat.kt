@@ -1,6 +1,7 @@
 package it.unito.progmob.history.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,22 +21,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import it.unito.progmob.core.domain.model.WalkEntity
 import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.history.domain.model.WalkWithPathPoints
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
 @Composable
 fun SingleWalkStat(
     modifier: Modifier = Modifier,
-    singleWalk: WalkEntity
+    singleWalk: WalkWithPathPoints,
+    onClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
             .padding(vertical = small)
             .clip(RoundedCornerShape(medium))
             .background(MaterialTheme.colorScheme.surface)
+            .clickable(onClick = onClick),
     ) {
         Row(
-            modifier = modifier.fillMaxWidth().padding(vertical = medium),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = medium),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -68,5 +74,6 @@ fun SingleWalkStat(
                 modifier = modifier
             )
         }
+
     }
 }

@@ -2,6 +2,7 @@ package it.unito.progmob.main
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val visiblePermissionDialogQueue by mainViewModel.visiblePermissionDialogQueue.collectAsState()
+                val isActionButtonShown by mainViewModel.isActionButtonShown.collectAsState()
                 val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestMultiplePermissions(),
                     onResult = { perms ->
@@ -118,6 +120,13 @@ class MainActivity : ComponentActivity() {
                                                 fontWeight = FontWeight.Bold
                                             )
                                         )
+
+                                        Route.HistoryScreenRoute.route -> Text(
+                                            stringResource(R.string.history_title),
+                                            style = MaterialTheme.typography.titleLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        )
                                     }
                                 },
                                 actions = {
@@ -157,7 +166,9 @@ class MainActivity : ComponentActivity() {
                                         }
                                     },
                                     currentBackStackEntry = currentBackStackEntry,
-                                    navController = navController
+                                    navController = navController,
+                                    isActionButtonShown = isActionButtonShown,
+                                    mainEvent = mainViewModel::onEvent
                                 )
                             }
                         }

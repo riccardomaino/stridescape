@@ -1,60 +1,82 @@
 package it.unito.progmob.history.domain.usecase
 
-import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.history.domain.model.AllWalksPerDate
 import it.unito.progmob.history.domain.model.WalkOrder
 import it.unito.progmob.history.domain.model.WalkOrderType
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import it.unito.progmob.history.domain.model.WalkWithPathPoints
+import it.unito.progmob.tracking.domain.model.PathPoint
 
 class GetWalksWithPathPointsUseCase(
     private val walksRepository: WalkRepository
 ) {
     operator fun invoke(
         walkOrder: WalkOrder = WalkOrder.Date(WalkOrderType.Descending)
-    ): Flow<List<WalkWithPathPoints>> {
+    ): MutableList<AllWalksPerDate> {
         val allWalksGrouped = mutableListOf<AllWalksPerDate>()
         var prevWalk: WalkWithPathPoints? = null
-        var newWalk: AllWalksPerDate?
-
-//        walksRepository.findWalksWithPathPoints().forEach { walks ->
-//            prevWalk.let {
-//                newWalk = AllWalksPerDate(walks.walk.date, mutableListOf())
-//                newWalk?.walks?.add(walks)
-//            } ?: run {
-//                if(prevWalk?.walk?.date == walks.walk.date) {
-//                    newWalk?.walks?.add(walks)
-//                } else {
-//                    allWalksGrouped.add(newWalk!!)
-//                    newWalk = AllWalksPerDate(walks.walk.date, mutableListOf())
-//                    newWalk?.walks?.add(walks)
-//                }
-//            }
-//            prevWalk = walks
-//        }
-//        Log.d("GetWalksWithPathPointsUseCase", "allWalksGrouped: $allWalksGrouped")
-//        return allWalksGrouped
-        return walksRepository.findWalksWithPathPoints().map { walks ->
-            when (walkOrder.orderType) {
-                is WalkOrderType.Ascending -> {
-                    when (walkOrder) {
-                        is WalkOrder.Date -> walks.sortedBy { it.walk.date }
-                        is WalkOrder.Distance -> walks.sortedBy { it.walk.distance }
-                        is WalkOrder.Time -> walks.sortedBy { it.walk.time }
-                        is WalkOrder.Steps -> walks.sortedBy { it.walk.steps }
+        var newWalks: AllWalksPerDate? = null
+        var allWalks = walksRepository.findWalksWithPathPoints().map {
+            WalkWithPathPoints(
+                weekDay = it.walk.weekDay,
+                month = it.walk.month,
+                date = it.walk.date,
+                distance = it.walk.distance,
+                time = it.walk.time,
+                steps = it.walk.steps,
+                calories = it.walk.calories,
+                averageSpeed = it.walk.averageSpeed,
+                pathPoints = it.pathPoints.map { pathPointEntity ->
+                    if(pathPointEntity.pathPoint is PathPoint.LocationPoint) {
+                        PathPoint.LocationPoint(
+                            lat = pathPointEntity.pathPoint.lat,
+                            lng = pathPointEntity.pathPoint.lng,
+                            speed = pathPointEntity.pathPoint.speed
+                        )
+                    } else {
+                        PathPoint.EmptyPoint
                     }
                 }
+            )
+        }
 
-                is WalkOrderType.Descending -> {
-                    when (walkOrder) {
-                        is WalkOrder.Date -> walks.sortedByDescending { it.walk.date }
-                        is WalkOrder.Distance -> walks.sortedByDescending { it.walk.distance }
-                        is WalkOrder.Time -> walks.sortedByDescending { it.walk.time }
-                        is WalkOrder.Steps -> walks.sortedByDescending { it.walk.steps }
-                    }
+        when (walkOrder.orderType) {
+            is WalkOrderType.Ascending -> {
+                allWalks = when (walkOrder) {
+                    is WalkOrder.Date -> allWalks.sortedBy { it.date }
+                    is WalkOrder.Distance -> allWalks.sortedBy { it.distance }
+                    is WalkOrder.Time -> allWalks.sortedBy { it.time }
+                    is WalkOrder.Steps -> allWalks.sortedBy { it.steps }
+                }
+            }
+
+            is WalkOrderType.Descending -> {
+                allWalks = when (walkOrder) {
+                    is WalkOrder.Date -> allWalks.sortedByDescending { it.date }
+                    is WalkOrder.Distance -> allWalks.sortedByDescending { it.distance }
+                    is WalkOrder.Time -> allWalks.sortedByDescending { it.time }
+                    is WalkOrder.Steps -> allWalks.sortedByDescending { it.steps }
                 }
             }
         }
+
+        allWalks.forEach { walk ->
+            prevWalk?.let {
+                if (prevWalk?.date != walk.date) {
+                    allWalksGrouped.add(newWalks!!)
+                    newWalks = AllWalksPerDate(walk.date, mutableListOf())
+                }
+                newWalks?.walks?.add(walk)
+            } ?: run {
+                newWalks = AllWalksPerDate(walk.date, mutableListOf())
+                newWalks?.walks?.add(walk)
+            }
+            prevWalk = walk
+        }
+        newWalks?.let {
+            allWalksGrouped.add(it)
+        }
+        return allWalksGrouped
     }
 }

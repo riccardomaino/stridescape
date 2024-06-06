@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import it.unito.progmob.R
 import it.unito.progmob.core.presentation.navigation.Route
+import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.floatingActionButtonSize
 import it.unito.progmob.ui.theme.large
@@ -61,17 +63,12 @@ fun NavigationBar(
     modifier: Modifier = Modifier,
     onClickFloatingActionButton: () -> Unit = {},
     currentBackStackEntry: NavBackStackEntry?,
-    navController: NavController
+    navController: NavController,
+    isActionButtonShown: Boolean,
+    mainEvent: (MainEvent) -> Unit
 ) {
     val selectedPageColor = MaterialTheme.colorScheme.primary
-    val unselectedPageColor = MaterialTheme.colorScheme.onPrimary
-
-    var isActionButtonShown by remember {
-        mutableStateOf(true)
-    }
-
     val hapticFeedback = LocalView.current
-
     val animatedFloat = animateFloatAsState(
         targetValue = if (isActionButtonShown) 1f else 0f,
         animationSpec = tween(
@@ -80,7 +77,6 @@ fun NavigationBar(
         ),
         label = "Floating action button animation"
     )
-
     val animatedFloatReverse = animateFloatAsState(
         targetValue = if (!isActionButtonShown) 0f else 1f,
         animationSpec = tween(
@@ -136,7 +132,7 @@ fun NavigationBar(
                         if (currentBackStackEntry?.destination?.route != Route.HomeScreenRoute.route) {
                             navController.navigate(Route.HomeScreenRoute.route)
                             hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
-                            isActionButtonShown = true
+                            mainEvent(MainEvent.ShowFloatingActionButton(true))
                         }
                     }) {
                         Icon(
@@ -169,7 +165,7 @@ fun NavigationBar(
                             if (currentBackStackEntry?.destination?.route != Route.StatsScreenRoute.route) {
                                 navController.navigate(Route.StatsScreenRoute.route)
                                 hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
-                                isActionButtonShown = false
+                                mainEvent(MainEvent.ShowFloatingActionButton(false))
                             }
                         }
                     ) {
@@ -199,7 +195,7 @@ fun NavigationBar(
                     if (currentBackStackEntry?.destination?.route != Route.HistoryScreenRoute.route) {
                         navController.navigate(Route.HistoryScreenRoute.route)
                         hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
-                        isActionButtonShown = false
+                        mainEvent(MainEvent.ShowFloatingActionButton(false))
                     }
                 }) {
                     Icon(

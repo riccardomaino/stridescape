@@ -171,7 +171,7 @@ fun NavGraph(
                 route = Route.HistoryScreenRoute.route
             ) {
                 val historyViewModel = hiltViewModel<HistoryViewModel>()
-                val allWalks by historyViewModel.allWalks.collectAsState()
+                val allWalks = historyViewModel.allWalks
                 HistoryScreen(
                     allWalks = allWalks
                 )

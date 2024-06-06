@@ -9,7 +9,7 @@ import it.unito.progmob.core.domain.model.tuples.DateTimeTuple
 import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
-import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
 import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 class WalkRepositoryImpl(
     private val walkDao: WalkDao
 ): WalkRepository {
-    override fun findWalksWithPathPoints(): Flow<List<WalkWithPathPoints>> {
+    override fun findWalksWithPathPoints(): List<WalkWithPathPointsEntity> {
         return walkDao.findWalksWithPathPoints()
     }
 

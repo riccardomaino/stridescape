@@ -1,7 +1,9 @@
 package it.unito.progmob.main.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,9 +32,13 @@ class MainViewModel @Inject constructor(
     private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
 
-    // MutableStateFlow of String used to store the start destination of the app
+    // Compose state of String used to store the start destination of the app
     var startDestination by mutableStateOf(Route.OnBoardingNavigationRoute.route)
         private set
+
+    var isActionButtonShown = MutableStateFlow(true)
+        private set
+
 
     // MutableStateFlow of Boolean used for the splash screen to know when the app is ready
     private val _isReady = MutableStateFlow(false)
@@ -65,6 +71,13 @@ class MainViewModel @Inject constructor(
                 permission = event.permission
             )
             is MainEvent.DismissPermissionDialog -> dismissPermissionDialog()
+            is MainEvent.ShowFloatingActionButton -> showFloatingActionButton(event.isShown)
+        }
+    }
+
+    private fun showFloatingActionButton(isShown: Boolean) {
+        viewModelScope.launch(Dispatchers.Main) {
+            isActionButtonShown.update { isShown }
         }
     }
 

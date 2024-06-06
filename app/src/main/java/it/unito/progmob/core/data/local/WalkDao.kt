@@ -14,7 +14,7 @@ import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
 import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.model.PathPointEntity
 import it.unito.progmob.core.domain.model.WalkEntity
-import it.unito.progmob.core.domain.model.WalkWithPathPoints
+import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
 import it.unito.progmob.core.domain.model.tuples.MonthSpeedTuple
@@ -27,7 +27,7 @@ interface WalkDao {
 
     @Transaction
     @Query("SELECT * FROM walks")
-    fun findWalksWithPathPoints(): Flow<List<WalkWithPathPoints>>
+    fun findWalksWithPathPoints(): List<WalkWithPathPointsEntity>
 
     @Query("SELECT SUM(steps) FROM walks WHERE date = :date")
     fun findStepsByDate(date: String): Flow<Int>
