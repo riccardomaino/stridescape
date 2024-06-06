@@ -10,4 +10,5 @@ sealed class Route (
     data object HomeScreenRoute: Route(route = "stridescape/main/home")
     data object TrackingScreenRoute: Route(route = "stridescape/main/tracking")
     data object StatsScreenRoute: Route(route = "stridescape/main/stats")
+    data object HistoryScreenRoute: Route(route = "historyScreenRoute")
 }

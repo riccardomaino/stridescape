@@ -20,6 +20,8 @@ import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
+import it.unito.progmob.history.domain.usecase.GetWalksWithPathPointsUseCase
+import it.unito.progmob.history.domain.usecase.HistoryUseCases
 import it.unito.progmob.home.domain.usecase.AddTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDateTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
@@ -184,4 +186,12 @@ object AppModule {
          GetYearStepsStatUseCase(walkRepository),
          GetYearSpeedStatUseCase(walkRepository)
      )
+
+    @Provides
+    @Singleton
+    fun provideHistoryUseCases(
+        walkRepository: WalkRepository
+    ) = HistoryUseCases(
+        GetWalksWithPathPointsUseCase(walkRepository)
+    )
 }

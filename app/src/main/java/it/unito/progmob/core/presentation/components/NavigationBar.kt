@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -87,10 +89,10 @@ fun NavigationBar(
         label = "Floating action button animation"
     )
 
-
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(Color.Transparent)
             .padding(small),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -119,7 +121,7 @@ fun NavigationBar(
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
-                    if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route || currentBackStackEntry?.destination?.route == Route.TrackingScreenRoute.route){
+                    if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route || currentBackStackEntry?.destination?.route == Route.TrackingScreenRoute.route) {
                         Canvas(
                             modifier = Modifier.size(small)
                         ) {
@@ -179,15 +181,35 @@ fun NavigationBar(
                         )
                     }
                 }
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    if (currentBackStackEntry?.destination?.route == Route.HistoryScreenRoute.route) {
+                        Canvas(
+                            modifier = Modifier.size(small)
+                        ) {
+                            drawCircle(
+                                color = selectedPageColor,
+                                radius = 22.dp.toPx(),
+                            )
+                        }
+                    }
                 IconButton(onClick = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                    if (currentBackStackEntry?.destination?.route != Route.HistoryScreenRoute.route) {
+                        navController.navigate(Route.HistoryScreenRoute.route)
+                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                        isActionButtonShown = false
+                    }
                 }) {
                     Icon(
                         Icons.Filled.History,
                         contentDescription = "Localized description",
                         modifier = Modifier.size(large),
+                        tint = if (currentBackStackEntry?.destination?.route == Route.HistoryScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
+            }
             }
         }
 

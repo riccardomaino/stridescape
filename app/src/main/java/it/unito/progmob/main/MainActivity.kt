@@ -162,7 +162,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-
                 ) { padding ->
                     Surface(
                         modifier = Modifier

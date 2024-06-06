@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import it.unito.progmob.core.domain.Constants.TRACKING_DEEP_LINK
+import it.unito.progmob.history.presentation.HistoryScreen
+import it.unito.progmob.history.presentation.viewmodel.HistoryViewModel
 import it.unito.progmob.home.presentation.HomeScreen
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.onboarding.presentation.OnBoardingProfileScreen
@@ -163,6 +165,16 @@ fun NavGraph(
                     uiStatsFetched = uiStatsFetched
                 )
 
+            }
+
+            composable(
+                route = Route.HistoryScreenRoute.route
+            ) {
+                val historyViewModel = hiltViewModel<HistoryViewModel>()
+                val allWalks by historyViewModel.allWalks.collectAsState()
+                HistoryScreen(
+                    allWalks = allWalks
+                )
             }
         }
     }

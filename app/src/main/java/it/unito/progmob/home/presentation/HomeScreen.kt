@@ -1,6 +1,5 @@
 package it.unito.progmob.home.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,7 +61,6 @@ fun HomeScreen(
             time = TimeUtils.formatMillisTimeHoursMinutes(timeCurrentDay)
         )
         Spacer(modifier = Modifier.height(small))
-        Log.d("TAG", "HomeScreen: ${weeklyTarget.asList()}")
         WeeklyStats(
             selectedDay = currentDayOfWeek,
             weeklySteps = weeklySteps,

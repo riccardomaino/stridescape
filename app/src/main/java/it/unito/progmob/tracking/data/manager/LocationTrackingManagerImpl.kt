@@ -59,7 +59,10 @@ class LocationTrackingManagerImpl @Inject constructor(
                     locationResult.locations.lastOrNull()?.let { location ->
                         launch {
                             send(location)
-                            Log.d(TAG, "LocationCallback: sending new location (${location.latitude}, ${location.longitude})")
+                            Log.d(
+                                TAG,
+                                "LocationCallback: sending new location (${location.latitude}, ${location.longitude})"
+                            )
                         }
                     }
                 }
@@ -83,7 +86,7 @@ class LocationTrackingManagerImpl @Inject constructor(
         }
     }
 
-    companion object{
+    companion object {
         private val TAG = LocationTrackingManagerImpl::class.java.simpleName.toString()
     }
 }

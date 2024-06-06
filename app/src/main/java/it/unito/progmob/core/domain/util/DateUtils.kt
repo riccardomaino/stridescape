@@ -27,6 +27,14 @@ object DateUtils {
         dayOfMonth()
     }
 
+    val standardFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
+        dayOfMonth()
+        char('/')
+        monthNumber()
+        char('/')
+        year()
+    }
+
     /**
      * Format a date [LocalDate] using the formatter provided or the default one if it is not provided
      *
