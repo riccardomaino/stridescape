@@ -4,9 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,16 +36,6 @@ fun HistoryScreen(
     val showPopUp = remember { mutableStateOf(false) }
     var walkToShow by remember { mutableStateOf<WalkWithPathPoints?>(null) }
 
-//    DisposableEffect(key1 = true) {
-//        Log.d("HistoryScreen", "DisposableEffect")
-//        val onBackInvokedCallback = {showPopUp = false}
-//        mainActivity.onBackInvokedDispatcher.registerOnBackInvokedCallback(PRIORITY_DEFAULT, onBackInvokedCallback)
-//        onDispose {
-//            Log.d("HistoryScreen", "onDispose")
-//            mainActivity.onBackInvokedDispatcher.unregisterOnBackInvokedCallback(onBackInvokedCallback)
-//        }
-//    }
-
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -57,6 +45,7 @@ fun HistoryScreen(
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .padding(small),
             state = scrollState,
+            userScrollEnabled = !showPopUp.value
         ) {
             items(allWalks) { walk ->
                 if (DateUtils.formattedCurrentDate(formatter = DateUtils.defaultFormatter) == walk.date) {
@@ -65,29 +54,29 @@ fun HistoryScreen(
                     WalkDate(date = walk.date)
                 }
                 walk.walks.forEach { walkWithPathPoints ->
-                    SingleWalkStat(singleWalk = walkWithPathPoints, onClick = {
+                    SingleWalkStat(singleWalk = walkWithPathPoints, showPopUp = showPopUp.value, onClick = {
                         walkToShow = walkWithPathPoints
                         showPopUp.value = !showPopUp.value
                     })
                 }
             }
         }
-        AnimatedVisibility(
-            visible = showPopUp.value, enter = fadeIn(
-                animationSpec = tween(durationMillis = 150)
-            ), exit =
-            fadeOut(
-                animationSpec = tween(durationMillis = 150, delayMillis = 100)
-            )
-        ) {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
-                    .clickable(onClick = { showPopUp.value = !showPopUp.value }),
-                contentAlignment = Alignment.Center,
-            ) {}
-        }
+//        AnimatedVisibility(
+//            visible = showPopUp.value, enter = fadeIn(
+//                animationSpec = tween(durationMillis = 150)
+//            ), exit =
+//            fadeOut(
+//                animationSpec = tween(durationMillis = 150, delayMillis = 100)
+//            )
+//        ) {
+//            Box(
+//                modifier = modifier
+//                    .fillMaxSize()
+//                    .background(Color.Transparent)
+//                    .clickable(onClick = { showPopUp.value = !showPopUp.value }),
+//                contentAlignment = Alignment.Center,
+//            ) {}
+//        }
         AnimatedVisibility(
             visible = showPopUp.value, enter = fadeIn(
                 animationSpec = tween(durationMillis = 150, delayMillis = 100)

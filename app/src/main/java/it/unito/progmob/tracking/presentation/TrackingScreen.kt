@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -114,7 +115,7 @@ fun TrackingScreen(
     val mapUiSettings by remember {
         mutableStateOf(
             MapUiSettings(
-                myLocationButtonEnabled = true,
+                myLocationButtonEnabled = false,
                 mapToolbarEnabled = false,
                 compassEnabled = true,
                 zoomControlsEnabled = false
@@ -158,79 +159,88 @@ fun TrackingScreen(
             }
         }
     }
-
-
-    Column(Modifier.fillMaxSize()) {
-        Box(
-            modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+    Box(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surfaceVariant),
+//            .fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        if (followUserLocation) {
+            LaunchedEffect(key1 = uiTrackingState.pathPoints.lastLocationPoint()) {
+                launch(Dispatchers.Default){
+                    uiTrackingState.pathPoints.lastLocationPoint()?.let {
+                        zoomToCurrentPosition(
+                            coroutineScope = coroutineScope,
+                            cameraPositionState = cameraPositionState,
+                            latLng = LatLng(it.lat, it.lng)
+                        )
+                    }
+                }
+            }
+        }
+        ShowMapLoadingProgressBar(isMapLoaded)
+        GoogleMap(
+            modifier = modifier
+                .fillMaxSize()
+                .drawBehind {
+                    mapSize = size
+                    mapCenter = center
+                },
+            uiSettings = mapUiSettings,
+            cameraPositionState = cameraPositionState,
+            properties = MapProperties(
+                isMyLocationEnabled = !uiTrackingState.isTracking
+            ),
+            onMapLoaded = { isMapLoaded = true },
+            onMyLocationButtonClick = {
+                coroutineScope.launch {
+                    trackingEvent(TrackingEvent.TrackSingleLocation)
+                }
+                true
+            }
         ) {
-            if (followUserLocation) {
-                LaunchedEffect(key1 = uiTrackingState.pathPoints.lastLocationPoint()) {
-                    launch(Dispatchers.Default){
-                        uiTrackingState.pathPoints.lastLocationPoint()?.let {
-                            zoomToCurrentPosition(
-                                coroutineScope = coroutineScope,
-                                cameraPositionState = cameraPositionState,
-                                latLng = LatLng(it.lat, it.lng)
-                            )
+
+            DrawPathPoints(
+                pathPoints = uiTrackingState.pathPoints,
+                isTracking = uiTrackingState.isTracking
+            )
+        }
+
+        Column(
+            modifier = Modifier.background(Color.Transparent).fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.BottomEnd
+            ){
+                IconButton(
+                    modifier = modifier
+                        .padding(horizontal = small, vertical = small)
+                        .clip(RoundedCornerShape(medium))
+                        .background(MaterialTheme.colorScheme.primary),
+                    onClick = {
+                        coroutineScope.launch {
+                            trackingEvent(TrackingEvent.TrackSingleLocation)
                         }
                     }
+                ) {
+                    Icon(
+                        Icons.Outlined.MyLocation,
+                        contentDescription = "Localized description",
+                        modifier = Modifier.size(large),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
-            }
-            IconButton(
-                modifier = modifier
-                    .padding(large)
-                    .clip(RoundedCornerShape(medium))
-                    .background(MaterialTheme.colorScheme.primary),
-                onClick = {
-                    coroutineScope.launch {
-                        trackingEvent(TrackingEvent.TrackSingleLocation)
-                    }
-                }
-            ) {
-                Icon(
-                    Icons.Outlined.MyLocation,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(large),
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-            ShowMapLoadingProgressBar(isMapLoaded)
-            GoogleMap(
-                modifier = modifier
-                    .fillMaxSize()
-                    .drawBehind {
-                        mapSize = size
-                        mapCenter = center
-                    },
-                uiSettings = mapUiSettings,
-                cameraPositionState = cameraPositionState,
-                properties = MapProperties(
-                    isMyLocationEnabled = false
-                ),
-                onMapLoaded = { isMapLoaded = true },
-                onMyLocationButtonClick = {
-                    coroutineScope.launch {
-                        trackingEvent(TrackingEvent.TrackSingleLocation)
-                    }
-                    true
-                }
-            ) {
-                DrawPathPoints(
-                    pathPoints = uiTrackingState.pathPoints,
-                    isTracking = uiTrackingState.isTracking
-                )
             }
             Column(
                 modifier = modifier
-                    .align(Alignment.BottomCenter)
                     .clip(
                         RoundedCornerShape(topStart = large, topEnd = large)
                     )
                     .background(MaterialTheme.colorScheme.surface)
             ) {
                 WalkingCard(uiTrackingState = uiTrackingState)
-
                 if (!uiTrackingState.isTrackingStarted) {
                     Button(
                         onClick = {
@@ -309,12 +319,11 @@ fun TrackingScreen(
                     }
                 }
             }
-            StopWalkDialog(
-                trackingEvent = trackingEvent,
-                shouldShowDialog = showStopWalkDialog
-            )
         }
-
+        StopWalkDialog(
+            trackingEvent = trackingEvent,
+            shouldShowDialog = showStopWalkDialog
+        )
     }
 }
 

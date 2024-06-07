@@ -26,12 +26,13 @@ import javax.inject.Inject
 class TrackingViewModel @Inject constructor(
     private val trackingUseCases: TrackingUseCases,
     private val walkHandler: WalkHandler
-): ViewModel() {
+) : ViewModel() {
     // The StateFlow of the WalkState obtained through the WalkHandler
     private val walk: StateFlow<Walk> = walkHandler.walk
 
     // The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
-    private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
+    private val _uiTrackingState: MutableStateFlow<UiTrackingState> =
+        MutableStateFlow(UiTrackingState())
     val uiTrackingState = _uiTrackingState.asStateFlow()
 
     // The StateFlow used to track if the location provider is enabled
@@ -79,7 +80,10 @@ class TrackingViewModel @Inject constructor(
                     speedInKMH = walkState.speedInKMH,
                     pathPoints = walkState.pathPoints,
                     steps = walkState.steps,
-                    caloriesBurnt = WalkUtils.getCaloriesBurnt(userWeight, walkState.distanceInMeters)
+                    caloriesBurnt = WalkUtils.getCaloriesBurnt(
+                        userWeight,
+                        walkState.distanceInMeters
+                    )
                 )
             }
         }.launchIn(viewModelScope)
@@ -87,10 +91,10 @@ class TrackingViewModel @Inject constructor(
         trackSingleLocation()
     }
 
-    fun onEvent(event: TrackingEvent){
-        when(event){
+    fun onEvent(event: TrackingEvent) {
+        when (event) {
             is TrackingEvent.StartTrackingService -> startTrackingService()
-            is TrackingEvent.ResumeTrackingService-> resumeTrackingService()
+            is TrackingEvent.ResumeTrackingService -> resumeTrackingService()
             is TrackingEvent.PauseTrackingService -> pauseTrackingService()
             is TrackingEvent.StopTrackingService -> stopTrackingService()
             is TrackingEvent.TrackSingleLocation -> trackSingleLocation()
@@ -106,18 +110,19 @@ class TrackingViewModel @Inject constructor(
 
     private fun trackSingleLocation() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(_uiTrackingState.value.isTracking){
+            if (_uiTrackingState.value.isTracking) {
                 _lastKnownLocation.update {
-                    _uiTrackingState.value.pathPoints.lastLocationPoint()?.let { lastLocationPoint ->
-                        LatLng(lastLocationPoint.lat, lastLocationPoint.lng)
-                    }
+                    _uiTrackingState.value.pathPoints.lastLocationPoint()
+                        ?.let { lastLocationPoint ->
+                            LatLng(lastLocationPoint.lat, lastLocationPoint.lng)
+                        }
                 }
-                _lastKnownLocationUpdatesCounter.update { it+1 }
-            }else{
-                trackingUseCases.trackSingleLocationUseCase(onSuccess={ latitude, longitude ->
-                        _lastKnownLocation.update { LatLng(latitude, longitude) }
-                        _lastKnownLocationUpdatesCounter.update { it+1 }
-                    }
+                _lastKnownLocationUpdatesCounter.update { it + 1 }
+            } else {
+                trackingUseCases.trackSingleLocationUseCase(onSuccess = { latitude, longitude ->
+                    _lastKnownLocation.update { LatLng(latitude, longitude) }
+                    _lastKnownLocationUpdatesCounter.update { it + 1 }
+                }
                 )
             }
         }
@@ -146,16 +151,14 @@ class TrackingViewModel @Inject constructor(
             trackingUseCases.stopTrackingUseCase()
             val walkId = trackingUseCases.addWalkUseCase(uiTrackingState.value)
             uiTrackingState.value.pathPoints.forEach { pathPoint ->
-                launch(Dispatchers.IO) {
-                    trackingUseCases.addPathPointUseCase(walkId, pathPoint)
-                }
+                trackingUseCases.addPathPointUseCase(walkId, pathPoint)
             }
             walkHandler.clearWalk()
         }
     }
 
-    companion object{
-        private val TAG = TrackingViewModel::class.java.simpleName
-    }
+//    companion object {
+//        private val TAG = TrackingViewModel::class.java.simpleName
+//    }
 
 }

@@ -32,27 +32,32 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import it.unito.progmob.core.domain.ext.findActivity
 import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils.firstLocationPoint
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
-import it.unito.progmob.tracking.domain.model.PathPoint
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun HistoryPopUp(
@@ -64,9 +69,7 @@ fun HistoryPopUp(
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
     var isMapLoaded by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState()
-    val latLngList = mutableListOf<LatLng>()
-    val context = LocalContext.current
-    val mainActivity = context.findActivity()
+    val coroutineScope = rememberCoroutineScope()
     val mapUiSettings by remember {
         mutableStateOf(
             MapUiSettings(
@@ -77,29 +80,31 @@ fun HistoryPopUp(
         )
     }
 
-
     BackHandler {
         showPopUp.value = false
     }
 
     LaunchedEffect(key1 = true) {
-        walkToShow.pathPoints.forEach {
-            if (it is PathPoint.LocationPoint) {
-                latLngList.add(LatLng(it.lat, it.lng))
-            }
+        walkToShow.pathPoints.firstLocationPoint()?.let { LatLng(it.lat, it.lng) }?.let {
+            zoomToCurrentPosition(
+                coroutineScope = coroutineScope,
+                cameraPositionState = cameraPositionState,
+                latLng = it
+            )
         }
     }
 
     Box(
         modifier = modifier
             .fillMaxSize(0.9f)
+            .shadow(medium, shape = RoundedCornerShape(medium))
             .clip(RoundedCornerShape(medium))
             .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
     ) {
         ShowMapLoadingProgressBar(isMapLoaded)
         Column(
-           modifier = modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize()
         ) {
             GoogleMap(
                 modifier = modifier
@@ -123,7 +128,7 @@ fun HistoryPopUp(
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.surface),
                 verticalArrangement = Arrangement.spacedBy(medium, Alignment.CenterVertically)
-            ){
+            ) {
                 Column(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -138,7 +143,7 @@ fun HistoryPopUp(
 //                    )
                     Text(
                         text = walkToShow.steps.toString(),
-                        style = MaterialTheme.typography.displayMedium .copy(
+                        style = MaterialTheme.typography.displayMedium.copy(
                             fontWeight = FontWeight.Bold,
                         ),
                         color = MaterialTheme.colorScheme.primary
@@ -215,6 +220,23 @@ private fun BoxScope.ShowMapLoadingProgressBar(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .wrapContentSize()
+        )
+    }
+}
+
+private fun zoomToCurrentPosition(
+    coroutineScope: CoroutineScope,
+    cameraPositionState: CameraPositionState,
+    zoom: Float = 17f,
+    millisAnimation: Int = 500,
+    latLng: LatLng,
+) {
+    coroutineScope.launch {
+        cameraPositionState.animate(
+            update = CameraUpdateFactory.newCameraPosition(
+                CameraPosition.fromLatLngZoom(latLng, zoom)
+            ),
+            durationMs = millisAnimation
         )
     }
 }

@@ -28,14 +28,25 @@ import it.unito.progmob.ui.theme.small
 fun SingleWalkStat(
     modifier: Modifier = Modifier,
     singleWalk: WalkWithPathPoints,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    showPopUp: Boolean
 ) {
+    val color = MaterialTheme.colorScheme.surface
     Box(
-        modifier = modifier
-            .padding(vertical = small)
-            .clip(RoundedCornerShape(medium))
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable(onClick = onClick),
+        modifier = modifier.then(
+            if (!showPopUp) {
+                modifier
+                    .padding(vertical = small)
+                    .clip(RoundedCornerShape(medium))
+                    .background(color)
+                    .clickable(onClick = onClick)
+            } else {
+                modifier
+                    .padding(vertical = small)
+                    .clip(RoundedCornerShape(medium))
+                    .background(color)
+            }
+        )
     ) {
         Row(
             modifier = modifier
