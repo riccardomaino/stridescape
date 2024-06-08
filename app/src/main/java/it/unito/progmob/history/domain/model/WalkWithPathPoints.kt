@@ -3,6 +3,7 @@ package it.unito.progmob.history.domain.model
 import it.unito.progmob.tracking.domain.model.PathPoint
 
 data class WalkWithPathPoints(
+    val walkId: Int,
     val weekDay: Int,
     val date: String,
     val month: Int,

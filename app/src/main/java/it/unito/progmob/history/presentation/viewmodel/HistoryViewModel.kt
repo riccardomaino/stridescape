@@ -6,8 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.history.domain.model.AllWalksPerDate
 import it.unito.progmob.history.domain.usecase.HistoryUseCases
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,9 +17,14 @@ class HistoryViewModel @Inject constructor(
     var allWalks: MutableList<AllWalksPerDate> = mutableListOf()
         private set
 
+    var isDataLoaded = MutableStateFlow(false)
+        private set
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            isDataLoaded.value = false
             allWalks = historyUseCases.getWalksWithPathPointsUseCase()
+            isDataLoaded.value = true
         }
     }
 }

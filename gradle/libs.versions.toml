@@ -32,7 +32,9 @@ splashScreen = "1.0.1"
 kotlinxSerialization = "1.6.3"
 kotlinxSerializationPlugIn = "2.0.0"
 vico = "2.0.0-alpha.20"
+composeAnimation = "1.7.0-beta02"
 kotlinxDatetime = "0.6.0"
+composeFoundation = "1.7.0-beta02"
 
 [libraries]
 # Core
@@ -40,6 +42,8 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splashscreen = {group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen"}
 kotlinx-serialization = {group= "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
 kotlinx-datetime = {group= "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime"}
+androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "composeAnimation" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeFoundation" }
 # Test & Debug
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

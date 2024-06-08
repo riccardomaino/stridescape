@@ -131,7 +131,9 @@ class MainActivity : ComponentActivity() {
                                 actions = {
                                     if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route && currentBackStackEntry?.destination?.route != Route.TrackingScreenRoute.route) {
                                         IconButton(
-                                            onClick = {}
+                                            onClick = {
+                                                navController.navigate(Route.ProfileScreenRoute.route)
+                                            }
                                         ) {
                                             Icon(
                                                 Icons.Default.Person,

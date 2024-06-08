@@ -24,6 +24,7 @@ import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.onboarding.presentation.OnBoardingProfileScreen
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
 import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
+import it.unito.progmob.profile.ProfileScreen
 import it.unito.progmob.stats.presentation.StatsScreen
 import it.unito.progmob.stats.presentation.viewmodel.StatsViewModel
 import it.unito.progmob.tracking.presentation.TrackingScreen
@@ -40,30 +41,6 @@ fun NavGraph(
         startDestination = startDestination,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
-//        enterTransition = {
-//            slideIntoContainer(
-//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-//                animationSpec = tween(150, delayMillis = 0)
-//            ) + fadeIn(animationSpec = tween(200, delayMillis = 0))
-//        },
-//        exitTransition = {
-//            slideOutOfContainer(
-//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-//                animationSpec = tween(150, delayMillis = 0)
-//            ) + fadeOut(animationSpec = tween(200, delayMillis = 0))
-//        },
-//        popEnterTransition = {
-//            slideIntoContainer(
-//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-//                animationSpec = tween(150, delayMillis = 0)
-//            ) + fadeIn(animationSpec = tween(200, delayMillis = 0))
-//        },
-//        popExitTransition = {
-//            slideOutOfContainer(
-//                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-//                animationSpec = tween(150, delayMillis = 0)
-//            ) + fadeOut(animationSpec = tween(200, delayMillis = 0))
-//        }
     ) {
         navigation(
             route = Route.OnBoardingNavigationRoute.route,
@@ -173,10 +150,18 @@ fun NavGraph(
                 route = Route.HistoryScreenRoute.route
             ) {
                 val historyViewModel = hiltViewModel<HistoryViewModel>()
+                val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
                 val allWalks = historyViewModel.allWalks
                 HistoryScreen(
-                    allWalks = allWalks
+                    allWalks = allWalks,
+                    isDataLoaded = isDataLoaded
                 )
+            }
+
+            composable(
+                route = Route.ProfileScreenRoute.route
+            ) {
+                 ProfileScreen()
             }
         }
     }

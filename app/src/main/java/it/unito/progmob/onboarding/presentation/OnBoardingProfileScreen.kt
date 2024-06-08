@@ -12,7 +12,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import it.unito.progmob.R
@@ -33,7 +32,6 @@ fun OnBoardingProfileScreen(
     userName: MutableState<String>
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     Column {
         OnBoardingProfileTop(userName = userName, userHeight = userHeight, userWeight = userWeight)

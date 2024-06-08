@@ -91,6 +91,8 @@ class TrackingService : Service() {
      */
     private var hasBeenResumed = false
 
+    private lateinit var pendingIntent: PendingIntent
+
 
     /**
      * Handles the start and stop actions for the service. This method is called when the service is
@@ -138,7 +140,7 @@ class TrackingService : Service() {
 
         // Create a new coroutine scope with a SupervisorJob and the IO dispatcher
         trackingServiceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
+        pendingIntent = getPendingIntent()
         // Update the walk state isTracking field to true
         if(!hasBeenResumed){
             walkHandler.updateWalkIsTrackingStarted(true)

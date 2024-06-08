@@ -2,6 +2,7 @@ package it.unito.progmob.history.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,23 +35,31 @@ fun SingleWalkStat(
 ) {
     val color = MaterialTheme.colorScheme.surface
     Box(
-        modifier = modifier.then(
-            if (!showPopUp) {
-                modifier
-                    .padding(vertical = small)
-                    .clip(RoundedCornerShape(medium))
-                    .background(color)
-                    .clickable(onClick = onClick)
-            } else {
-                modifier
-                    .padding(vertical = small)
-                    .clip(RoundedCornerShape(medium))
-                    .background(color)
-            }
-        )
+        modifier = modifier
+            .padding(vertical = small)
+            .clip(RoundedCornerShape(medium))
+            .background(color)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { onClick() }
+//            .then(
+//            if (!showPopUp) {
+//                modifier
+//                    .padding(vertical = small)
+//                    .clip(RoundedCornerShape(medium))
+//                    .background(color)
+//                    .clickable(onClick = onClick)
+//            } else {
+//                modifier
+//                    .padding(vertical = small)
+//                    .clip(RoundedCornerShape(medium))
+//                    .background(color)
+//            }
+//        )
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = medium),
             verticalAlignment = Alignment.CenterVertically,
@@ -60,28 +70,28 @@ fun SingleWalkStat(
                 iconColor = MaterialTheme.colorScheme.primary,
                 value = singleWalk.steps.toString(),
                 contentDescription = "Total steps of the walk",
-                modifier = modifier
+                modifier = Modifier
             )
             SingleStatBlock(
                 icon = Icons.Outlined.LocalFireDepartment,
                 iconColor = Color.Red,
                 value = singleWalk.calories.toString(),
                 contentDescription = "Total calories of the walk",
-                modifier = modifier
+                modifier = Modifier
             )
             SingleStatBlock(
                 icon = Icons.Outlined.Map,
                 iconColor = Color(0xFF0C9B12),
                 value = singleWalk.distance.toString(),
                 contentDescription = "Total kilometers of the walk",
-                modifier = modifier
+                modifier = Modifier
             )
             SingleStatBlock(
                 icon = Icons.Outlined.Timer,
                 iconColor = Color(0xFFFF9800),
                 value = TimeUtils.formatMillisTimeHoursMinutes(singleWalk.time),
                 contentDescription = "Total duration of the walk",
-                modifier = modifier
+                modifier = Modifier
             )
         }
 

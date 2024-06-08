@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.serialization)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.foundation)
     // Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

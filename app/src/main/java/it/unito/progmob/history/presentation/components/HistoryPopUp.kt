@@ -1,10 +1,16 @@
 package it.unito.progmob.history.presentation.components
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -28,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,13 +62,16 @@ import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HistoryPopUp(
+fun SharedTransitionScope.HistoryPopUp(
     modifier: Modifier = Modifier,
-    walkToShow: WalkWithPathPoints,
-    showPopUp: MutableState<Boolean>
+    walkToShow: WalkWithPathPoints?,
+    backHandler: () -> Unit,
+    onClick: () -> Unit
 ) {
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
@@ -81,11 +89,19 @@ fun HistoryPopUp(
     }
 
     BackHandler {
-        showPopUp.value = false
+//        showPopUp.value = false
+        backHandler()
     }
 
-    LaunchedEffect(key1 = true) {
-        walkToShow.pathPoints.firstLocationPoint()?.let { LatLng(it.lat, it.lng) }?.let {
+    LaunchedEffect(walkToShow) {
+        isMapLoaded = false
+        delay(500)
+        isMapLoaded = true
+    }
+
+    LaunchedEffect(key1 = walkToShow) {
+        delay(1000)
+        walkToShow?.pathPoints?.firstLocationPoint()?.let { LatLng(it.lat, it.lng) }?.let {
             zoomToCurrentPosition(
                 coroutineScope = coroutineScope,
                 cameraPositionState = cameraPositionState,
@@ -93,114 +109,154 @@ fun HistoryPopUp(
             )
         }
     }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize(0.9f)
-            .shadow(medium, shape = RoundedCornerShape(medium))
-            .clip(RoundedCornerShape(medium))
-            .background(MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center
-    ) {
-        ShowMapLoadingProgressBar(isMapLoaded)
-        Column(
-            modifier = modifier.fillMaxSize()
+    AnimatedContent(
+        modifier = modifier,
+        targetState = walkToShow,
+        transitionSpec = {
+            fadeIn() togetherWith fadeOut()
+        },
+        label = "",
+    ) { targetWalk ->
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            GoogleMap(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.6f)
-                    .drawBehind {
-                        mapSize = size
-                        mapCenter = center
-                    },
-                uiSettings = mapUiSettings,
-                cameraPositionState = cameraPositionState,
-                onMapLoaded = { isMapLoaded = true }
-            ) {
-                DrawHistoryPathPoints(
-                    pathPoints = walkToShow.pathPoints
+            if (targetWalk != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f)),
                 )
-            }
-            Column(
-                modifier = modifier
-                    .padding(horizontal = small)
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface),
-                verticalArrangement = Arrangement.spacedBy(medium, Alignment.CenterVertically)
-            ) {
                 Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
-                        .fillMaxWidth()
+                        .padding(medium)
+                        .shadow(medium, shape = RoundedCornerShape(medium))
+                        .clickable { onClick() }
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "${targetWalk.walkId}-bounds"),
+                            animatedVisibilityScope = this@AnimatedContent,
+                            clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(medium))
+                        )
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clip(RoundedCornerShape(medium))
                 ) {
-//                    Icon(
-//                        Icons.AutoMirrored.Outlined.DirectionsWalk,
-//                        contentDescription = "Localized description",
-//                        modifier = modifier.size(extraLarge),
-//                        tint = Color(0xFF2952BB),
-//                    )
-                    Text(
-                        text = walkToShow.steps.toString(),
-                        style = MaterialTheme.typography.displayMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Steps",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
-                HorizontalDivider(modifier.fillMaxWidth())
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(bottom = medium)
-                ) {
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        WalkingStatComponent(
-                            value = walkToShow.calories.toString(),
-                            title = "Calories",
-                            icon = Icons.Outlined.LocalFireDepartment,
-                            iconDescription = "Localized description",
-                            iconColor = Color.Red
-                        )
+                    Box(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.6f)
+                    ) {
+                        if(isMapLoaded) {
+                            ShowMapLoadingProgressBar()
+                            GoogleMap(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .drawBehind {
+                                        mapSize = size
+                                        mapCenter = center
+                                    },
+                                uiSettings = mapUiSettings,
+                                cameraPositionState = cameraPositionState,
+                            ) {
+                                DrawHistoryPathPoints(
+                                    pathPoints = targetWalk.pathPoints
+                                )
+                            }
+                        }
                     }
-
-                    VerticalDivider(
-                        modifier = modifier.height(doubleExtraLarge)
-                    )
-
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        WalkingStatComponent(
-                            value = walkToShow.distance.toString(),
-                            title = "Km.",
-                            icon = Icons.Outlined.Map,
-                            iconDescription = "Localized description",
-                            iconColor = Color(0xFF0C9B12)
+                    Column(
+                        modifier = modifier
+                            .padding(horizontal = small)
+                            .fillMaxSize()
+                            .sharedElement(
+                                state = rememberSharedContentState(key = targetWalk.walkId),
+                                animatedVisibilityScope = this@AnimatedContent,
+                            )
+                            .background(MaterialTheme.colorScheme.surface),
+                        verticalArrangement = Arrangement.spacedBy(
+                            medium,
+                            Alignment.CenterVertically
                         )
-                    }
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = targetWalk.steps.toString(),
+                                style = MaterialTheme.typography.displayMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Steps",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                        HorizontalDivider(modifier.fillMaxWidth())
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(bottom = medium)
 
-                    VerticalDivider(
-                        modifier = modifier.height(doubleExtraLarge)
-                    )
+                        ) {
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                WalkingStatComponent(
+                                    value = targetWalk.calories.toString(),
+                                    title = "Calories",
+                                    icon = Icons.Outlined.LocalFireDepartment,
+                                    iconDescription = "Localized description",
+                                    iconColor = Color.Red
+                                )
+                            }
 
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        WalkingStatComponent(
-                            value = TimeUtils.formatMillisTimeHoursMinutes(walkToShow.time),
-                            title = "Time",
-                            icon = Icons.Outlined.Timer,
-                            iconDescription = "Localized description",
-                            iconColor = Color(0xFFFF9800)
-                        )
+                            VerticalDivider(
+                                modifier = modifier.height(doubleExtraLarge)
+                            )
+
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                WalkingStatComponent(
+                                    value = targetWalk.distance.toString(),
+                                    title = "Km.",
+                                    icon = Icons.Outlined.Map,
+                                    iconDescription = "Localized description",
+                                    iconColor = Color(0xFF0C9B12)
+                                )
+                            }
+
+                            VerticalDivider(
+                                modifier = modifier.height(doubleExtraLarge)
+                            )
+
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                WalkingStatComponent(
+                                    value = TimeUtils.formatMillisTimeHoursMinutes(targetWalk.time),
+                                    title = "Time",
+                                    icon = Icons.Outlined.Timer,
+                                    iconDescription = "Localized description",
+                                    iconColor = Color(0xFFFF9800)
+                                )
+                            }
+                        }
                     }
                 }
             }
+
         }
     }
 }

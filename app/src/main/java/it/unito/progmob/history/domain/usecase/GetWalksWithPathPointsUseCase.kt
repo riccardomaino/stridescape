@@ -26,6 +26,7 @@ class GetWalksWithPathPointsUseCase(
                 steps = it.walk.steps,
                 calories = it.walk.calories,
                 averageSpeed = it.walk.averageSpeed,
+                walkId = it.walk.id!!,
                 pathPoints = it.pathPoints.map { pathPointEntity ->
                     if(pathPointEntity.pathPoint is PathPoint.LocationPoint) {
                         PathPoint.LocationPoint(

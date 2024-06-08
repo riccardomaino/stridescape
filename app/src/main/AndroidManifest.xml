@@ -42,8 +42,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="it.unito.progmob"
-                    android:scheme="app" />
+                    android:host="progmob.unito.com"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
