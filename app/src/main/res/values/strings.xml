@@ -102,4 +102,20 @@
     <string name="home_walking_stats_title">Daily Statistics</string>
     <string name="history_title">History</string>
     <string name="tracking_dialog_confirm_btn_text">Confirm</string>
+    <string name="validation_error_blank_height">Please enter a value for the height.</string>
+    <string name="validation_error_invalid_number_height">"Please enter a valid integer number for the height. "</string>
+    <string name="validation_error_invalid_range_height">Please enter a valid number for the height (25..250).</string>
+    <string name="validation_error_blank_weight">Please enter a value for the weight.</string>
+    <string name="validation_error_invalid_number_weight">Please enter a valid integer number for the weight.</string>
+    <string name="validation_error_invalid_range_weight">Please enter a valid number for the height (15..300).</string>
+    <string name="validation_error_blank_target">Please enter a value for the steps target.</string>
+    <string name="validation_error_invalid_number_target">Please enter a valid integer number for the steps target</string>
+    <string name="validation_error_invalid_range_target">Please enter a positive number for the steps target.</string>
+    <string name="validation_error_blank_username">Please enter a value for the username.</string>
+    <string name="user_height_textfield_title">Height</string>
+    <string name="user_weight_textfield_title">Weight</string>
+    <string name="user_steps_target_textfield_title">Steps Target</string>
+    <string name="height_unit_measure_textfield" translatable="false">cm</string>
+    <string name="weight_unit_measure_textfield" translatable="false">kg</string>
+    <string name="steps_number_textfield" translatable="false">nr°</string>
 </resources>

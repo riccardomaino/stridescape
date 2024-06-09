@@ -24,7 +24,8 @@ import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
 import it.unito.progmob.onboarding.presentation.OnBoardingProfileScreen
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
 import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
-import it.unito.progmob.profile.ProfileScreen
+import it.unito.progmob.profile.presentation.ProfileScreen
+import it.unito.progmob.profile.presentation.viewmodel.ProfileViewModel
 import it.unito.progmob.stats.presentation.StatsScreen
 import it.unito.progmob.stats.presentation.viewmodel.StatsViewModel
 import it.unito.progmob.tracking.presentation.TrackingScreen
@@ -161,7 +162,12 @@ fun NavGraph(
             composable(
                 route = Route.ProfileScreenRoute.route
             ) {
-                 ProfileScreen()
+                val profileViewModel = hiltViewModel<ProfileViewModel>()
+                val profileState by profileViewModel.profileState
+                 ProfileScreen(
+                     profileEvent = profileViewModel::onEvent,
+                     profileState = profileState
+                 )
             }
         }
     }

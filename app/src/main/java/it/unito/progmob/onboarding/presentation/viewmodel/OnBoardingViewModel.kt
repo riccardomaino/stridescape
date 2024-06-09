@@ -37,7 +37,7 @@ class OnBoardingViewModel @Inject constructor(
      */
     private fun saveEntries() {
         viewModelScope.launch(Dispatchers.IO) {
-            launch { onBoardingUseCases.saveUserNameEntryUseCase(userName.value) }
+            launch { onBoardingUseCases.saveUsernameEntryUseCase(userName.value) }
             launch { onBoardingUseCases.saveUserHeightEntryUseCase(userHeight.value) }
             launch { onBoardingUseCases.saveUserWeightEntryUseCase(userWeight.value) }
             launch { onBoardingUseCases.saveOnboardingEntryUseCase() }

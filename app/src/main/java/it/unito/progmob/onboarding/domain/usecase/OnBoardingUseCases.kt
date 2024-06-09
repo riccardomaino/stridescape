@@ -1,7 +1,7 @@
 package it.unito.progmob.onboarding.domain.usecase
 
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
-import it.unito.progmob.core.domain.usecase.SaveUserNameEntryUseCase
+import it.unito.progmob.core.domain.usecase.SaveUsernameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
 
 /**
@@ -9,7 +9,7 @@ import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
  */
 data class OnBoardingUseCases(
     val saveOnboardingEntryUseCase: SaveOnboardingEntryUseCase,
-    val saveUserNameEntryUseCase: SaveUserNameEntryUseCase,
+    val saveUsernameEntryUseCase: SaveUsernameEntryUseCase,
     val saveUserWeightEntryUseCase: SaveUserWeightEntryUseCase,
     val saveUserHeightEntryUseCase: SaveUserHeightEntryUseCase,
 )

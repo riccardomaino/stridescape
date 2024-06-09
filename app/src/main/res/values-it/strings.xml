@@ -95,4 +95,17 @@
     <string name="home_walking_stats_title">Statistiche Giornaliere</string>
     <string name="history_title">Cronologia</string>
     <string name="tracking_dialog_confirm_btn_text">Conferma</string>
+    <string name="validation_error_blank_height">Inserisci un valore per l\'altezza.</string>
+    <string name="validation_error_invalid_range_height">Inserisci un numero valido per l\'altezza (25..250).</string>
+    <string name="validation_error_invalid_number_height">Inserisci un numero intero valido per l\'altezza.</string>
+    <string name="validation_error_blank_weight">Inserisci un valore per il peso.</string>
+    <string name="validation_error_invalid_number_weight">Inserisci un numero intero valido per il peso.</string>
+    <string name="validation_error_invalid_range_weight">Inserisci un numero valido per il peso (15..300).</string>
+    <string name="validation_error_blank_target">Inserisci un valore per l\'obiettivo di passi</string>
+    <string name="validation_error_invalid_number_target">Inserisci un numero intero valido per l\'obiettivo di passi</string>
+    <string name="validation_error_invalid_range_target">Inserisci un numero positivo per l\'obiettivo di passi</string>
+    <string name="validation_error_blank_username">Inserisci un valore per il nome utente.</string>
+    <string name="user_height_textfield_title">Altezza</string>
+    <string name="user_weight_textfield_title">Peso</string>
+    <string name="user_steps_target_textfield_title">Obiettivo Passi</string>
 </resources>

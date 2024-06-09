@@ -33,7 +33,7 @@ fun OnBoardingTextField(
     suffix: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
     onValueChange: (String) -> Unit,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -59,7 +59,7 @@ fun OnBoardingTextField(
             textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = textAlign),
             keyboardOptions = keyboardOptions,
             shape = RoundedCornerShape(medium),
-            modifier = modifier.width(150.dp),
+            modifier = modifier.width(150.dp)
         )
     }
 }

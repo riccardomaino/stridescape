@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "targets")
 data class TargetEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey val date: String,
     val stepsTarget: Int,
-    val date: String
 )

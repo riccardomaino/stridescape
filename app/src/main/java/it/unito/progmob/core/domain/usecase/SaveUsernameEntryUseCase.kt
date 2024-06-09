@@ -2,7 +2,7 @@ package it.unito.progmob.core.domain.usecase
 
 import it.unito.progmob.core.domain.manager.DataStoreManager
 
-class SaveUserNameEntryUseCase (
+class SaveUsernameEntryUseCase (
     private val dataStoreManager: DataStoreManager
 ) {
 

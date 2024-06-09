@@ -3,7 +3,7 @@ package it.unito.progmob.core.domain.usecase
 import it.unito.progmob.core.domain.manager.DataStoreManager
 import kotlinx.coroutines.flow.Flow
 
-class ReadUserNameEntryUseCase (
+class ReadUsernameEntryUseCase (
     private val dataStoreManager: DataStoreManager
 ) {
     /**
