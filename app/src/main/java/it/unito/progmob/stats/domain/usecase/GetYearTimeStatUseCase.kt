@@ -1,10 +1,8 @@
 package it.unito.progmob.stats.domain.usecase
 
-import android.util.Log
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.core.domain.util.TimeUtils
-import it.unito.progmob.core.domain.util.WalkUtils
 import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 

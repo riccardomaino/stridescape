@@ -1,11 +1,14 @@
 package it.unito.progmob.tracking.presentation.viewmodel
 
+import androidx.activity.result.IntentSenderRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.core.domain.util.WalkUtils.lastLocationPoint
+import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
 import it.unito.progmob.tracking.domain.model.Walk
 import it.unito.progmob.tracking.domain.service.WalkHandler
 import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
@@ -22,10 +25,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel class tha handles the tracking feature.
+ *
+ * This ViewModel manages the state of the walk, handles tracking events,
+ * and interacts with use cases to start/stop tracking, store walk data,
+ * and retrieve user information.
+ *
+ * @param trackingUseCases The use cases related to the tracking feature.
+ * @param walkHandler The handler for managing the state of the walk.
+ * @param locationTrackingManager The manager for tracking location updates.
+ */
 @HiltViewModel
 class TrackingViewModel @Inject constructor(
     private val trackingUseCases: TrackingUseCases,
-    private val walkHandler: WalkHandler
+    private val walkHandler: WalkHandler,
+    private val locationTrackingManager: LocationTrackingManager
 ) : ViewModel() {
     // The StateFlow of the WalkState obtained through the WalkHandler
     private val walk: StateFlow<Walk> = walkHandler.walk
@@ -35,9 +50,9 @@ class TrackingViewModel @Inject constructor(
         MutableStateFlow(UiTrackingState())
     val uiTrackingState = _uiTrackingState.asStateFlow()
 
-    // The StateFlow used to track if the location provider is enabled
-//    private val _isLocationEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
-//    val isLocationEnabled = _isLocationEnabled.asStateFlow()
+    // The MutableStateFlow used to track if the location provider is enabled. It is exposed as a StateFlow to the UI
+    private val _isLocationEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isLocationEnabled = _isLocationEnabled.asStateFlow()
 
     private val _showStopWalkDialog = MutableStateFlow(false)
     val showStopWalkDialog = _showStopWalkDialog.asStateFlow()
@@ -48,7 +63,7 @@ class TrackingViewModel @Inject constructor(
     // The user height used to calculate the calories burnt
     private var userHeight: Int = 0
 
-    // The last known location of the user used to open the map and to update the camera position when the user click on location button
+    // The last known location of the user used to open the map and to update the camera position when the user click on current location button
     private val _lastKnownLocation = MutableStateFlow<LatLng?>(null)
     val lastKnownLocation = _lastKnownLocation.asStateFlow()
 
@@ -70,6 +85,14 @@ class TrackingViewModel @Inject constructor(
             }
         }
 
+        viewModelScope.launch {
+            updateIsLocationEnabledStatus(locationTrackingManager.isConnected())
+        }
+
+        viewModelScope.launch {
+            trackSingleLocation()
+        }
+
         walk.onEach { walkState ->
             _uiTrackingState.update {
                 it.copy(
@@ -87,10 +110,12 @@ class TrackingViewModel @Inject constructor(
                 )
             }
         }.launchIn(viewModelScope)
-
-        trackSingleLocation()
     }
 
+    /**
+     * Handles Tracking events emitted from the UI.
+     * @param event The TrackingEvent to be processed.
+     */
     fun onEvent(event: TrackingEvent) {
         when (event) {
             is TrackingEvent.StartTrackingService -> startTrackingService()
@@ -99,6 +124,20 @@ class TrackingViewModel @Inject constructor(
             is TrackingEvent.StopTrackingService -> stopTrackingService()
             is TrackingEvent.TrackSingleLocation -> trackSingleLocation()
             is TrackingEvent.ShowStopWalkDialog -> showStopWalkDialog(event.showDialog)
+            is TrackingEvent.CheckLocationSettings -> checkLocationSettings(event.onEnabled, event.onDisabled)
+            is TrackingEvent.UpdateIsLocationEnabledStatus -> updateIsLocationEnabledStatus(event.status)
+        }
+    }
+
+    private fun checkLocationSettings(
+        onEnabled: (LocationSettingsResponse) -> Unit,
+        onDisabled: (IntentSenderRequest) -> Unit
+    ) {
+        viewModelScope.launch {
+            locationTrackingManager.checkLocationSettings(
+                onDisabled = onDisabled,
+                onEnabled = onEnabled
+            )
         }
     }
 
@@ -108,21 +147,26 @@ class TrackingViewModel @Inject constructor(
         }
     }
 
+    private fun updateIsLocationEnabledStatus(status: Boolean){
+        viewModelScope.launch {
+            _isLocationEnabled.update { status }
+        }
+    }
+
     private fun trackSingleLocation() {
         viewModelScope.launch(Dispatchers.IO) {
             if (_uiTrackingState.value.isTracking) {
                 _lastKnownLocation.update {
-                    _uiTrackingState.value.pathPoints.lastLocationPoint()
-                        ?.let { lastLocationPoint ->
-                            LatLng(lastLocationPoint.lat, lastLocationPoint.lng)
-                        }
+                    _uiTrackingState.value.pathPoints.lastLocationPoint()?.let { lastLocationPoint ->
+                        LatLng(lastLocationPoint.lat, lastLocationPoint.lng)
+                    }
                 }
                 _lastKnownLocationUpdatesCounter.update { it + 1 }
             } else {
                 trackingUseCases.trackSingleLocationUseCase(onSuccess = { latitude, longitude ->
-                    _lastKnownLocation.update { LatLng(latitude, longitude) }
-                    _lastKnownLocationUpdatesCounter.update { it + 1 }
-                }
+                        _lastKnownLocation.update { LatLng(latitude, longitude) }
+                        _lastKnownLocationUpdatesCounter.update { it + 1 }
+                    }
                 )
             }
         }
@@ -156,9 +200,4 @@ class TrackingViewModel @Inject constructor(
             walkHandler.clearWalk()
         }
     }
-
-//    companion object {
-//        private val TAG = TrackingViewModel::class.java.simpleName
-//    }
-
 }

@@ -95,6 +95,8 @@
     <string name="home_walking_stats_title">Statistiche Giornaliere</string>
     <string name="history_title">Cronologia</string>
     <string name="tracking_dialog_confirm_btn_text">Conferma</string>
+    <string name="tracking_stop_dialog_title">Terminare?</string>
+    <string name="tracking_stop_dialog_description">Sei sicuro di voler interrompere la tua passeggiata? Ciò terminerà la sessione di monitoraggio corrente.</string>
     <string name="validation_error_blank_height">Inserisci un valore per l\'altezza.</string>
     <string name="validation_error_invalid_range_height">Inserisci un numero valido per l\'altezza (25..250).</string>
     <string name="validation_error_invalid_number_height">Inserisci un numero intero valido per l\'altezza.</string>

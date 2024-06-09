@@ -11,6 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel class that handles the onboarding feature.
+ *
+ * @param onBoardingUseCases The use cases related to the OnBoarding feature.
+ */
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases,

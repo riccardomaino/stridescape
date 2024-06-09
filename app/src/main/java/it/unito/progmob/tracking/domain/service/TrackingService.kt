@@ -38,12 +38,13 @@ import javax.inject.Named
 
 /**
  * A service that tracks the user's location and displays a notification with the current location.
- * This service uses the [LocationTrackingManager] to track the user's location and displays a notification
- * with the current location.
+ * This service uses the [LocationTrackingManager] to track the user's location, the
+ * [TimeTrackingManager] to track the time spent walking, the [StepCounterSensor] to track the
+ * number of steps. It displays a notification with the current number of steps and the time spent
+ * walking.
  */
 @AndroidEntryPoint
 class TrackingService : Service() {
-
     /**
      * The [LocationTrackingManager] is field injected by Dagger since a Service is an Android
      * component and we can only use field injection. It is used to track the user's location
@@ -128,7 +129,8 @@ class TrackingService : Service() {
     /**
      * Starts the location tracking service. This method creates a notification to display the
      * current location and starts a coroutine to collect location updates from the
-     * [LocationTrackingManager].
+     * [LocationTrackingManager], timer updates from the [TimeTrackingManager], and updates from the
+     * step counter
      */
     private fun start() {
         Log.d(TAG, "start(): called")
@@ -220,13 +222,18 @@ class TrackingService : Service() {
         }
     }
 
-
+    /**
+     * Resumes the tracking service. This method starts the location updates and the step counter sensor.
+     */
     private fun resume() {
         Log.d(TAG, "resume() called")
         hasBeenResumed = true
         start()
     }
 
+    /**
+     * Pauses the tracking service. This method stops the location updates and the step counter sensor.
+     */
     private fun pause() {
         Log.d(TAG, "pause() called")
         trackingServiceScope.cancel()
@@ -251,6 +258,10 @@ class TrackingService : Service() {
         stopSelf() // Stops the service
     }
 
+    /**
+     * Returns a PendingIntent that opens the app when the notification is clicked.
+     * @return a PendingIntent object
+     */
     private fun getPendingIntent(): PendingIntent {
         return TaskStackBuilder.create(applicationContext).run {
             addNextIntentWithParentStack(

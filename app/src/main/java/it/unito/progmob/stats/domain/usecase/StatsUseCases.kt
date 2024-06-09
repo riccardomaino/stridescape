@@ -1,5 +1,8 @@
 package it.unito.progmob.stats.domain.usecase
 
+/**
+ * Data class that holds all use cases related to the stats feature.
+ */
 data class StatsUseCases(
     val getWeekOrMonthDistanceStatUseCase: GetWeekOrMonthDistanceStatUseCase,
     val getWeekOrMonthTimeStatUseCase: GetWeekOrMonthTimeStatUseCase,

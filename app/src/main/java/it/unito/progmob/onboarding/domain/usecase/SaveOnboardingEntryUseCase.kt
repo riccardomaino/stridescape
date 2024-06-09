@@ -2,6 +2,11 @@ package it.unito.progmob.onboarding.domain.usecase
 
 import it.unito.progmob.core.domain.manager.DataStoreManager
 
+/**
+ * Use case that saves the onboarding entry value to the preferences DataStore.
+ *
+ * @param dataStoreManager The manager that handles the preferences DataStore.
+ */
 class SaveOnboardingEntryUseCase(
     private val dataStoreManager: DataStoreManager
 ) {

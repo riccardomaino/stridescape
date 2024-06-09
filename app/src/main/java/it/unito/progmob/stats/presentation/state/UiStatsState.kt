@@ -4,6 +4,9 @@ import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
 import kotlinx.datetime.LocalDate
 
+/**
+ * Data class that holds the state of the UI for the stats feature.
+ */
 data class UiStatsState(
     val rangeSelected: RangeType = RangeType.WEEK,
     val statsSelected: StatsType = StatsType.STEPS,

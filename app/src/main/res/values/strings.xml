@@ -102,6 +102,8 @@
     <string name="home_walking_stats_title">Daily Statistics</string>
     <string name="history_title">History</string>
     <string name="tracking_dialog_confirm_btn_text">Confirm</string>
+    <string name="tracking_stop_dialog_title">Stop Walk?</string>
+    <string name="tracking_stop_dialog_description">Are you sure you want to stop your walk? This will end your current tracking session.</string>
     <string name="validation_error_blank_height">Please enter a value for the height.</string>
     <string name="validation_error_invalid_number_height">"Please enter a valid integer number for the height. "</string>
     <string name="validation_error_invalid_range_height">Please enter a valid number for the height (25..250).</string>

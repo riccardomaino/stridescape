@@ -1,5 +1,8 @@
 package it.unito.progmob.tracking.domain.manager
 
+/**
+ * Interface for the tracking service manager.
+ */
 interface TrackingServiceManager {
     fun startTrackingService()
 

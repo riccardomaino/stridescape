@@ -15,6 +15,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel class that handles the stats feature.
+ *
+ * @param statsUseCases The use cases related to the stats feature.
+ */
 @HiltViewModel
 class StatsViewModel @Inject constructor(
     private val statsUseCases: StatsUseCases
@@ -23,6 +28,7 @@ class StatsViewModel @Inject constructor(
     private val _uiStatsState = MutableStateFlow(UiStatsState())
     val uiStatsState = _uiStatsState.asStateFlow()
 
+    // MutableStateFlow of Boolean used to determine if the stats data has been fetched.
     private val _uiStatsFetched  = MutableStateFlow(false)
     val uiStatsFetched = _uiStatsFetched.asStateFlow()
 
@@ -32,7 +38,6 @@ class StatsViewModel @Inject constructor(
                 _uiStatsState.value.statsSelected,
                 _uiStatsState.value.rangeSelected
             )
-            _uiStatsFetched.value = true
         }
     }
 
@@ -48,34 +53,32 @@ class StatsViewModel @Inject constructor(
     }
 
     /**
-     * Updates the UI state based on the selected stats type after fetching stats data.
+     * Updates the UI state based on the selected stats type and fetches stats data.
      *
      * @param statsSelected The selected stats type.
      */
     private fun statsTypeSelected(statsSelected: StatsType){
         viewModelScope.launch(Dispatchers.IO) {
-            _uiStatsFetched.value = false
+            _uiStatsFetched.update { false }
             fetchStats(
                 statsSelected,
                 _uiStatsState.value.rangeSelected
             )
-            _uiStatsFetched.value = true
         }
     }
 
     /**
-     * Updates the UI state based on the selected range type after fetching stats data.
+     * Updates the UI state based on the selected range type and fetches stats data.
      *
      * @param rangeSelected The type of date range selected.
      */
     private fun rangeTypeSelected(rangeSelected: RangeType) {
         viewModelScope.launch(Dispatchers.IO){
-            _uiStatsFetched.value = false
+            _uiStatsFetched.update { false }
             fetchStats(
                 _uiStatsState.value.statsSelected,
                 rangeSelected
             )
-            _uiStatsFetched.value = true
         }
     }
 
@@ -100,6 +103,7 @@ class StatsViewModel @Inject constructor(
                             distanceChartValues = distanceStatsList
                         )
                     }
+                    _uiStatsFetched.update { true }
                 }
                 StatsType.TIME -> {
                     val timeStatsList = if(rangeSelected != RangeType.YEAR) {
@@ -114,6 +118,7 @@ class StatsViewModel @Inject constructor(
                             timeChartValues = timeStatsList
                         )
                     }
+                    _uiStatsFetched.update { true }
                 }
                 StatsType.CALORIES -> {
                     val caloriesStatsList = if(rangeSelected != RangeType.YEAR) {
@@ -128,6 +133,7 @@ class StatsViewModel @Inject constructor(
                             caloriesChartValues = caloriesStatsList
                         )
                     }
+                    _uiStatsFetched.update { true }
                 }
                 StatsType.STEPS -> {
                     val stepsStatsList = if(rangeSelected != RangeType.YEAR) {
@@ -142,6 +148,7 @@ class StatsViewModel @Inject constructor(
                             stepsChartValues = stepsStatsList
                         )
                     }
+                    _uiStatsFetched.update { true }
                 }
                 StatsType.SPEED -> {
                     val speedStatsList = if(rangeSelected != RangeType.YEAR) {
@@ -156,6 +163,7 @@ class StatsViewModel @Inject constructor(
                             speedChartValues = speedStatsList
                         )
                     }
+                    _uiStatsFetched.update { true }
                 }
             }
         }

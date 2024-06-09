@@ -18,26 +18,22 @@ import it.unito.progmob.ui.theme.extralargeRadius
 @Composable
 fun StopWalkDialog(
     modifier: Modifier = Modifier,
-    trackingEvent: (TrackingEvent) -> Unit,
-    shouldShowDialog: Boolean
+    shouldShowDialog: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     if (shouldShowDialog) {
         AlertDialog(
-            onDismissRequest = {
-                trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
-            },
+            onDismissRequest = onDismiss,
             title = {
-                Text(text = "Stop Walk?")
+                Text(text = stringResource(R.string.tracking_stop_dialog_title))
             },
             text = {
-                Text(text = "Are you sure you want to stop your walk? This will end your current tracking session.")
+                Text(text = stringResource(R.string.tracking_stop_dialog_description))
             },
             confirmButton = {
                 Button(
-                    onClick = {
-                        trackingEvent(TrackingEvent.StopTrackingService)
-                        trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
-                    },
+                    onClick = onConfirm,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
@@ -51,9 +47,9 @@ fun StopWalkDialog(
                 }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
-                }) {
+                TextButton(
+                    onClick = onDismiss
+                ) {
                     Text(
                         text = "Cancel",
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),

@@ -91,8 +91,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLocationTrackingManager(
+        @ApplicationContext context: Context,
         fusedLocationProviderClient: FusedLocationProviderClient
-    ): LocationTrackingManager = LocationTrackingManagerImpl(fusedLocationProviderClient)
+    ): LocationTrackingManager = LocationTrackingManagerImpl(context, fusedLocationProviderClient)
 
     @Provides
     @Singleton

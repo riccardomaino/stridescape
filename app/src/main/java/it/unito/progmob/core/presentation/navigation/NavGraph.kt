@@ -121,6 +121,7 @@ fun NavGraph(
                 val lastKnownLocation by trackingViewModel.lastKnownLocation.collectAsState()
                 val lastKnownLocationUpdatesCounter by trackingViewModel.lastKnownLocationUpdatesCounter.collectAsState()
                 val showStopWalkDialog by trackingViewModel.showStopWalkDialog.collectAsState()
+                val isLocationEnabled by trackingViewModel.isLocationEnabled.collectAsState()
 
                 TrackingScreen(
                     trackingEvent = trackingViewModel::onEvent,
@@ -128,7 +129,8 @@ fun NavGraph(
                     uiTrackingState = uiTrackingState,
                     lastKnownLocation = lastKnownLocation,
                     lastKnownLocationUpdatesCounter = lastKnownLocationUpdatesCounter,
-                    showStopWalkDialog = showStopWalkDialog
+                    showStopWalkDialog = showStopWalkDialog,
+                    isLocationEnabled = isLocationEnabled
                 )
             }
 

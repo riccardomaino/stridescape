@@ -7,9 +7,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 
+/**
+ * Implementation of [TimeTrackingManager] that keeps track of elapsed time.
+ */
 class TimeTrackingManagerImpl : TimeTrackingManager {
     private var timeElapsed = 0L
 
+    /**
+     * Starts tracking time and emits the elapsed time in milliseconds as a [Flow]. The flow emits
+     * the elapsed time every second while the coroutine context remains active.
+     *
+     * @return A [Flow] emitting the elapsed time in milliseconds.
+     */
     override fun startTrackingTime(): Flow<Long> {
         return flow {
             while(currentCoroutineContext().isActive){
@@ -20,13 +29,10 @@ class TimeTrackingManagerImpl : TimeTrackingManager {
         }
     }
 
+    /**
+     * Resets the elapsed time to zero.
+     */
     override fun stopTrackingTime() {
         timeElapsed = 0L
-    }
-
-
-
-    companion object {
-        private val TAG = TimeTrackingManagerImpl::class.java.simpleName
     }
 }

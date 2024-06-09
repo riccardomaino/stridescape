@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * Handles the state of a walk and provides methods to update it.
+ */
 class WalkHandler {
     /**
      * The [MutableStateFlow] object that holds the current state of the walk. It is exposed to a
@@ -138,10 +141,5 @@ class WalkHandler {
                 pathPoints = walkState.pathPoints + emptyPoint,
             )
         }
-    }
-
-
-    companion object {
-        private val TAG = WalkHandler::class.java.simpleName
     }
 }
