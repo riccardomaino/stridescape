@@ -5,30 +5,29 @@
     <string name="onboarding_getstarted_btn">Get Started</string>
     <string name="onboarding_page1_description">Track your steps, calories, and more! With Stridescape you can track your daily activities and improve your health.</string>
     <string name="onboarding_page1_title">Welcome</string>
-    <string name="onboarding_page1_image_content_description">On boarding image to welcome users</string>
+    <string name="onboarding_page1_image_content_desc">On boarding image to welcome users</string>
     <string name="onboarding_page2_description">Keep track on your position with the live map! Make sure to allow all the permissions to ensure a precise localization</string>
     <string name="onboarding_page2_title">Live map</string>
-    <string name="onboarding_page2_image_content_description">On boarding image regarding the live map functionality</string>
+    <string name="onboarding_page2_image_content_desc">On boarding image regarding the live map tracking functionality</string>
     <string name="onboarding_page3_description">Check all your previous walks with the history and keep track on your improvements!</string>
     <string name="onboarding_page3_title">History</string>
-    <string name="onboarding_page3_image_content_description">On boarding image regarding the history functionality</string>
-    <string name="user_icon">User icon</string>
-    <string name="settings_icon">Settings icon</string>
+    <string name="onboarding_page3_image_content_desc">On boarding image regarding the history functionality</string>
+    <string name="topappbar_user_icon_content_desc">Icon used to open the profile page</string>
     <string name="home_title" translatable="false">Home</string>
     <string name="home_open_settings">Open settings</string>
     <string name="home_permissiondialog_grant_permission_btn">Grant Permission</string>
     <string name="dialog_ok_btn">OK</string>
-    <string name="home_permissiondialog_title">Permission required</string>
-    <string name="home_permissiondialog_activity_recognition_declined_txt">You have been permanently denied permission to access your physical activity. Go to the app settings and grant permission.</string>
-    <string name="home_permissiondialog_activity_recognition_txt">It is necessary to access your physical activity to track your steps</string>
-    <string name="home_permissiondialog_fine_location_declined_txt">You have permanently denied permission to access your precise location. Go to the app settings and grant permission.</string>
-    <string name="home_permissiondialog_fine_location_txt">It is necessary to access your precise location to track your walks</string>
-    <string name="home_permissiondialog_post_notifications_declined_txt">You have permanently denied permission to send you notifications. Go to the app settings and grant permission.</string>
-    <string name="home_permissiondialog_post_notifications_txt">It is necessary to send you notifications to show you updates on your walks</string>
+    <string name="permissiondialog_title">Permission required</string>
+    <string name="permissiondialog_activity_recognition_declined_txt">You have been permanently denied permission to access your physical activity. Go to the app settings and grant permission.</string>
+    <string name="permissiondialog_activity_recognition_txt">It is necessary to access your physical activity to track your steps</string>
+    <string name="permissiondialog_fine_location_declined_txt">You have permanently denied permission to access your precise location. Go to the app settings and grant permission.</string>
+    <string name="permissiondialog_fine_location_txt">It is necessary to access your precise location to track your walks</string>
+    <string name="permissiondialog_post_notifications_declined_txt">You have permanently denied permission to send you notifications. Go to the app settings and grant permission.</string>
+    <string name="permissiondialog_post_notifications_txt">It is necessary to send you notifications to show you updates on your walks</string>
     <string name="notification_content_title">Walking statistics</string>
     <string name="tracking_title" translatable="false">Tracking</string>
     <string name="notification_channel_description">This notification channel allows you to receive updates regarding your walks via notification.</string>
-    <string name="tracking_stop_icon">Icon used to stop the tracking</string>
+    <string name="tracking_stop_icon_content_desc">Icon of the button used to stop the tracking</string>
     <string name="home_walk_icon">Navigation icon for tracking section</string>
     <string name="home_weeklystats_title">Your Progresses</string>
     <string name="week_monday">Mon</string>
@@ -38,10 +37,10 @@
     <string name="week_friday">Fri</string>
     <string name="week_saturday">Sat</string>
     <string name="week_sunday">Sun</string>
-    <string name="onboparding_page4_title">Personal information</string>
+    <string name="onboparding_page4_title">Personal Information</string>
     <string name="onboarding_page4_description">Enter your personal information so we can provide you with more precise data</string>
-    <string name="tracking_play_icon">Icon used to start the tracking</string>
-    <string name="tracking_pause_icon">Icon used to pause the tracking</string>
+    <string name="tracking_play_icon_content_desc">Icon of the button used to start the tracking</string>
+    <string name="tracking_pause_icon_content_desc">Icon of the button used to pause the tracking</string>
     <string name="tracking_steps_walking_stat_icon_desc">Icon for the amount of steps perfomed</string>
     <string name="tracking_steps_walking_stat_title">Steps</string>
     <string name="tracking_calories_walking_stat_icon_desc">Icon for calories burnt</string>
@@ -59,7 +58,6 @@
     <string name="stats_datepicker_title">Select a date range</string>
     <string name="dialog_cancel_btn">Cancel</string>
     <string name="stats_button_icon_content_description">Icon of the button used to select a range of dates</string>
-    <string name="stats_filter_btn_txt">Select Dates</string>
     <string name="main_activity_go_back_icon">Go back icon</string>
     <string name="stats_chart_y_axis_distance_title" translatable="false">KM</string>
     <string name="stats_chart_y_axis_time_title" translatable="false">MIN</string>
@@ -101,9 +99,9 @@
     <string name="month_full_february">FEBRUARY</string>
     <string name="home_walking_stats_title">Daily Statistics</string>
     <string name="history_title">History</string>
-    <string name="tracking_dialog_confirm_btn_text">Confirm</string>
-    <string name="tracking_stop_dialog_title">Stop Walk?</string>
-    <string name="tracking_stop_dialog_description">Are you sure you want to stop your walk? This will end your current tracking session.</string>
+    <string name="stopwalkdialog_confirm_btn_text">Confirm</string>
+    <string name="stopwalkdialog_title">Stop Walk?</string>
+    <string name="stopwalkdialog_description">Are you sure you want to stop your walk? This will end your current tracking session.</string>
     <string name="validation_error_blank_height">Please enter a value for the height.</string>
     <string name="validation_error_invalid_number_height">"Please enter a valid integer number for the height. "</string>
     <string name="validation_error_invalid_range_height">Please enter a valid number for the height (25..250).</string>
@@ -114,10 +112,16 @@
     <string name="validation_error_invalid_number_target">Please enter a valid integer number for the steps target</string>
     <string name="validation_error_invalid_range_target">Please enter a positive number for the steps target.</string>
     <string name="validation_error_blank_username">Please enter a value for the username.</string>
-    <string name="user_height_textfield_title">Height</string>
-    <string name="user_weight_textfield_title">Weight</string>
-    <string name="user_steps_target_textfield_title">Steps Target</string>
-    <string name="height_unit_measure_textfield" translatable="false">cm</string>
-    <string name="weight_unit_measure_textfield" translatable="false">kg</string>
-    <string name="steps_number_textfield" translatable="false">nr°</string>
+    <string name="textfield_user_height_title">Height</string>
+    <string name="texfield_user_weight_title">Weight</string>
+    <string name="texfield_user_steps_target_title">Steps Target</string>
+    <string name="textfield_height_unit_measure" translatable="false">cm</string>
+    <string name="textfield_weight_unit_measure" translatable="false">kg</string>
+    <string name="textfield_steps_unit_measure" translatable="false">nr°</string>
+    <string name="history_today_text">Today</string>
+    <string name="navigationbar_home_icon_content_desc">Icon used to open the home page</string>
+    <string name="navigationbar_stats_icon_content_desc">Icon used to open the statistic page</string>
+    <string name="navigationbar_history_icon_content_desc">Icon used to open the history page</string>
+    <string name="stopwalkdialog_cancel_btn">Cancel</string>
+    <string name="tracking_resume_icon_content_desc">Icon of the button used to resume the tracking</string>
 </resources>

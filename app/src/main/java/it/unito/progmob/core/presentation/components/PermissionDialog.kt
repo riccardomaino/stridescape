@@ -40,7 +40,7 @@ fun PermissionDialog(
             }
         },
         title = {
-            Text(text = stringResource(R.string.home_permissiondialog_title))
+            Text(text = stringResource(R.string.permissiondialog_title))
         },
         text = {
             Text(
@@ -61,9 +61,9 @@ interface PermissionTextProvider {
 class ActivityRecognitionPermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean, context: Context): String {
         return if (isPermanentlyDeclined) {
-            context.getString(R.string.home_permissiondialog_activity_recognition_declined_txt)
+            context.getString(R.string.permissiondialog_activity_recognition_declined_txt)
         } else {
-            context.getString(R.string.home_permissiondialog_activity_recognition_txt)
+            context.getString(R.string.permissiondialog_activity_recognition_txt)
         }
     }
 }
@@ -71,9 +71,9 @@ class ActivityRecognitionPermissionTextProvider : PermissionTextProvider {
 class AccessFineLocationPermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean, context: Context): String {
         return if (isPermanentlyDeclined) {
-            context.getString(R.string.home_permissiondialog_fine_location_declined_txt)
+            context.getString(R.string.permissiondialog_fine_location_declined_txt)
         } else {
-            context.getString(R.string.home_permissiondialog_fine_location_txt)
+            context.getString(R.string.permissiondialog_fine_location_txt)
         }
     }
 }
@@ -81,9 +81,9 @@ class AccessFineLocationPermissionTextProvider : PermissionTextProvider {
 class PostNotificationsPermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean, context: Context): String {
         return if (isPermanentlyDeclined) {
-            context.getString(R.string.home_permissiondialog_post_notifications_declined_txt)
+            context.getString(R.string.permissiondialog_post_notifications_declined_txt)
         } else {
-            context.getString(R.string.home_permissiondialog_post_notifications_txt)
+            context.getString(R.string.permissiondialog_post_notifications_txt)
         }
     }
 }

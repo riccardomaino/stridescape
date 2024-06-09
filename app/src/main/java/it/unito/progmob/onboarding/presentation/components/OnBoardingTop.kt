@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,14 +48,14 @@ fun OnBoardingTop(
                         .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(topStart = large, topEnd = large)),
                     painter = it,
-                    contentDescription = page.imageContentDescription,
+                    contentDescription = page.imageContentDescription.asString(),
                     contentScale = ContentScale.Crop,
                     )
             }
         }
         Spacer(modifier = Modifier.height(large))
         Text(
-            text = page.title,
+            text = page.title.asString(),
             modifier = Modifier
                 .padding(horizontal = extraLarge),
             style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold),
@@ -64,7 +63,7 @@ fun OnBoardingTop(
         )
         Spacer(modifier = Modifier.height(large))
         Text(
-            text = page.description,
+            text = page.description.asString(),
             modifier = Modifier.padding(horizontal = extraLarge),
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal),
             color = MaterialTheme.colorScheme.onSurface
@@ -76,7 +75,7 @@ fun OnBoardingTop(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun OnBoardingTopPreview() {
-    val pages = getOnboardingPages(LocalContext.current)
+    val pages = getOnboardingPages()
     OnBoardingTop(
         page = pages[0]
     )

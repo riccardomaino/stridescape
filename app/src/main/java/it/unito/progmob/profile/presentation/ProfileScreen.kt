@@ -70,9 +70,9 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ProfileTextField(
-                    textFieldTitle = stringResource(R.string.user_height_textfield_title),
+                    textFieldTitle = stringResource(R.string.textfield_user_height_title),
                     value = profileState.height,
-                    suffix = stringResource(R.string.height_unit_measure_textfield),
+                    suffix = stringResource(R.string.textfield_height_unit_measure),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -85,9 +85,9 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = modifier.weight(0.5f))
                 ProfileTextField(
-                    textFieldTitle = stringResource(R.string.user_weight_textfield_title),
+                    textFieldTitle = stringResource(R.string.texfield_user_weight_title),
                     value = profileState.weight,
-                    suffix = stringResource(R.string.weight_unit_measure_textfield),
+                    suffix = stringResource(R.string.textfield_weight_unit_measure),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -100,9 +100,9 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = modifier.weight(0.5f))
                 ProfileTextField(
-                    textFieldTitle = stringResource(R.string.user_steps_target_textfield_title),
+                    textFieldTitle = stringResource(R.string.texfield_user_steps_target_title),
                     value = profileState.target,
-                    suffix = stringResource(R.string.steps_number_textfield),
+                    suffix = stringResource(R.string.textfield_steps_unit_measure),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),

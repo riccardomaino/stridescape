@@ -77,8 +77,8 @@ import java.math.RoundingMode
 
 @Composable
 fun StatsChart(
-    uiStatsState: UiStatsState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    uiStatsState: UiStatsState
 ) {
     val context = LocalContext.current
     val weekDaysNames = remember { context.weekDaysNames }
@@ -95,7 +95,10 @@ fun StatsChart(
 
 
     // LaunchedEffect used to update the chart data when the uiStatsState changes
-    LaunchedEffect(key1 = uiStatsState) {
+    LaunchedEffect(
+        key1 = uiStatsState.statsSelected,
+        key2 = uiStatsState.rangeSelected,
+    ) {
         withContext(Dispatchers.Default) {
             val chartData: MutableMap<LocalDate, Float> = mutableMapOf()
             var meanValue = 0f
@@ -220,7 +223,7 @@ fun StatsChart(
             decorations = listOf(rememberMeanHorizontalLine(meanValueExtraStoreKey, typeface)),
         ),
         modelProducer = modelProducer,
-        modifier = modifier.fillMaxHeight(0.8f),
+        modifier = modifier.fillMaxHeight(),
         marker = rememberMarker(typeface = typeface),
         horizontalLayout = HorizontalLayout.fullWidth(),
     )
@@ -243,7 +246,6 @@ private fun rememberMeanHorizontalLine(meanValueExtraStoreKey: ExtraStore.Key<Fl
             thickness = CHART_HORIZONTAL_LINE_THICKNESS.dp
         ),
         labelComponent = rememberTextComponent(
-
             background = rememberShapeComponent(Shape.Pill, lineLabelColor),
             color = lineLabelTextColor,
             padding = Dimensions.of(

@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import it.unito.progmob.R
-import it.unito.progmob.tracking.presentation.TrackingEvent
 import it.unito.progmob.ui.theme.extralargeRadius
 
 @Composable
@@ -26,10 +25,10 @@ fun StopWalkDialog(
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
-                Text(text = stringResource(R.string.tracking_stop_dialog_title))
+                Text(text = stringResource(R.string.stopwalkdialog_title))
             },
             text = {
-                Text(text = stringResource(R.string.tracking_stop_dialog_description))
+                Text(text = stringResource(R.string.stopwalkdialog_description))
             },
             confirmButton = {
                 Button(
@@ -41,7 +40,7 @@ fun StopWalkDialog(
                     shape = RoundedCornerShape(extralargeRadius)
                 ) {
                     Text(
-                        text = stringResource(R.string.tracking_dialog_confirm_btn_text),
+                        text = stringResource(R.string.stopwalkdialog_confirm_btn_text),
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
                     )
                 }
@@ -51,7 +50,7 @@ fun StopWalkDialog(
                     onClick = onDismiss
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.stopwalkdialog_cancel_btn),
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.onSurface
                     )

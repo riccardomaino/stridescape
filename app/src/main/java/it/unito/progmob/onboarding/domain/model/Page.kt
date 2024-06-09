@@ -1,42 +1,36 @@
 package it.unito.progmob.onboarding.domain.model
 
-import android.content.Context
 import androidx.annotation.DrawableRes
 import it.unito.progmob.R
+import it.unito.progmob.core.presentation.util.UiText
 
 data class Page(
-    val title: String,
-    val description: String,
-    val imageContentDescription: String = title,
+    val title: UiText,
+    val description: UiText,
+    val imageContentDescription: UiText,
     @DrawableRes val image: Int?
 )
 
-fun getOnboardingPages(
-    context: Context
-): List<Page> {
+fun getOnboardingPages(): List<Page> {
     val pages = listOf(
         Page(
-            title = context.getString(R.string.onboarding_page1_title),
-            description = context.getString(R.string.onboarding_page1_description),
-            imageContentDescription = context.getString(R.string.onboarding_page1_image_content_description),
+            title = UiText.StringResource(resId = R.string.onboarding_page1_title),
+            description = UiText.StringResource(resId = R.string.onboarding_page1_description),
+            imageContentDescription = UiText.StringResource(resId = R.string.onboarding_page1_image_content_desc),
             image = R.drawable.homepage
         ),
         Page(
-            title = context.getString(R.string.onboarding_page2_title),
-            description = context.getString(R.string.onboarding_page2_description),
-            imageContentDescription = "",
+            title = UiText.StringResource(resId = R.string.onboarding_page2_title),
+            description = UiText.StringResource(resId = R.string.onboarding_page2_description),
+            imageContentDescription = UiText.StringResource(resId = R.string.onboarding_page2_image_content_desc),
             image = R.drawable.livemap
         ),
         Page(
-            title = context.getString(R.string.onboarding_page3_title),
-            description = context.getString(R.string.onboarding_page3_description),
+            title = UiText.StringResource(resId = R.string.onboarding_page3_title),
+            description = UiText.StringResource(resId = R.string.onboarding_page3_description),
+            imageContentDescription = UiText.StringResource(resId = R.string.onboarding_page3_image_content_desc),
             image = R.drawable.history
-        ),
-//        Page(
-//            title = context.getString(R.string.onboparding_page4_title),
-//            description = context.getString(R.string.onboarding_page4_description),
-//            image = null
-//        )
+        )
     )
 
     return pages

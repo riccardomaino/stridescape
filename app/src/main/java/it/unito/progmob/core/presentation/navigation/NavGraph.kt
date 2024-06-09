@@ -139,12 +139,12 @@ fun NavGraph(
             ) {
                 val statsViewModel = hiltViewModel<StatsViewModel>()
                 val uiStatsState by statsViewModel.uiStatsState.collectAsState()
-                val uiStatsFetched by statsViewModel.uiStatsFetched.collectAsState()
+                val isDataLoaded by statsViewModel.isDataLoaded.collectAsState()
 
                 StatsScreen(
                     statsEvent = statsViewModel::onEvent,
                     uiStatsState = uiStatsState,
-                    uiStatsFetched = uiStatsFetched
+                    isDataLoaded = isDataLoaded
                 )
 
             }
@@ -153,10 +153,11 @@ fun NavGraph(
                 route = Route.HistoryScreenRoute.route
             ) {
                 val historyViewModel = hiltViewModel<HistoryViewModel>()
-                val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
                 val allWalks = historyViewModel.allWalks
+                val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
+
                 HistoryScreen(
-                    allWalks = allWalks,
+                    allWalksList = allWalks,
                     isDataLoaded = isDataLoaded
                 )
             }

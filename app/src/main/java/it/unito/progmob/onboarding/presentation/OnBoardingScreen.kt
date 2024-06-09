@@ -15,6 +15,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,27 +35,28 @@ import kotlinx.coroutines.launch
 fun OnBoardingScreen(
     navController: NavController
 ) {
-    Column {
-        val context = LocalContext.current
-        val pages = remember { mutableStateOf(getOnboardingPages(context)) }
-        val pagerState = rememberPagerState(initialPage = 0) { pages.value.size }
-
-        val buttonState = remember {
-            derivedStateOf {
-                when (pagerState.currentPage) {
-                    0 -> listOf("", context.getString(R.string.onboarding_next_btn))
-                    1 -> listOf(
-                        context.getString(R.string.onboarding_back_btn),
-                        context.getString(R.string.onboarding_next_btn)
-                    )
-                    2 -> listOf(
-                        context.getString(R.string.onboarding_back_btn),
-                        context.getString(R.string.onboarding_next_btn)
-                    )
-                    else -> listOf("", "")
-                }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val pages = rememberSaveable { mutableStateOf(getOnboardingPages()) }
+    val pagerState = rememberPagerState(initialPage = 0) { pages.value.size }
+    val buttonState = remember {
+        derivedStateOf {
+            when (pagerState.currentPage) {
+                0 -> listOf("", context.getString(R.string.onboarding_next_btn))
+                1 -> listOf(
+                    context.getString(R.string.onboarding_back_btn),
+                    context.getString(R.string.onboarding_next_btn)
+                )
+                2 -> listOf(
+                    context.getString(R.string.onboarding_back_btn),
+                    context.getString(R.string.onboarding_next_btn)
+                )
+                else -> listOf("", "")
             }
         }
+    }
+
+    Column {
         HorizontalPager(state = pagerState, verticalAlignment = Alignment.Top) { index ->
             OnBoardingTop(page = pages.value[index])
         }
@@ -72,8 +74,6 @@ fun OnBoardingScreen(
                 pagerState = pagerState
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                val coroutineScope = rememberCoroutineScope()
-
                 if (buttonState.value[0].isNotEmpty()) {
                     OnBoardingTextButton(text = buttonState.value[0], onClick = {
                         coroutineScope.launch {

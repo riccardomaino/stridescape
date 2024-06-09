@@ -3,11 +3,9 @@ package it.unito.progmob.tracking.presentation
 import android.app.Activity
 import android.content.IntentFilter
 import android.location.LocationManager
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -27,13 +25,10 @@ import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Stop
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -71,7 +66,7 @@ import it.unito.progmob.tracking.domain.broadcastreceiver.LocationBroadcastRecei
 import it.unito.progmob.tracking.domain.broadcastreceiver.LocationSettingsListener
 import it.unito.progmob.tracking.presentation.components.DrawPathPoints
 import it.unito.progmob.tracking.presentation.components.StopWalkDialog
-import it.unito.progmob.tracking.presentation.components.WalkingButtons
+import it.unito.progmob.tracking.presentation.components.WalkingButton
 import it.unito.progmob.tracking.presentation.components.WalkingCard
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import it.unito.progmob.ui.theme.large
@@ -79,7 +74,6 @@ import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -100,14 +94,14 @@ fun TrackingScreen(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
             if (it.resultCode == Activity.RESULT_OK) {
-                if(uiTrackingState.isTrackingStarted && !uiTrackingState.isTracking){
+                if (uiTrackingState.isTrackingStarted && !uiTrackingState.isTracking) {
                     trackingEvent(TrackingEvent.ResumeTrackingService)
                 }
             } else {
-                if (!isLocationEnabled){
-                    if(!uiTrackingState.isTrackingStarted){
+                if (!isLocationEnabled) {
+                    if (!uiTrackingState.isTrackingStarted) {
                         navController.popBackStack()
-                    } else if(uiTrackingState.isTracking){
+                    } else if (uiTrackingState.isTracking) {
                         trackingEvent(TrackingEvent.PauseTrackingService)
                     }
                 }
@@ -141,9 +135,13 @@ fun TrackingScreen(
             }
         }
 
-        val locationBroadcastReceiver = LocationBroadcastReceiver(locationSettingsListener = locationSettingsListener)
+        val locationBroadcastReceiver =
+            LocationBroadcastReceiver(locationSettingsListener = locationSettingsListener)
 
-        context.registerReceiver(locationBroadcastReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
+        context.registerReceiver(
+            locationBroadcastReceiver,
+            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        )
 
         onDispose {
             context.unregisterReceiver(locationBroadcastReceiver)
@@ -151,47 +149,40 @@ fun TrackingScreen(
     }
 
     LaunchedEffect(key1 = isLocationEnabled) {
-        launch {
-            if((!isLocationEnabled && !uiTrackingState.isTrackingStarted) ||
-                (!isLocationEnabled && uiTrackingState.isTracking)){
-                trackingEvent(TrackingEvent.CheckLocationSettings(
-                        onDisabled = { intentSenderRequest ->
-                            startIntentSenderResultLauncher.launch(intentSenderRequest)
-                        },
-                        onEnabled = {}
-                    )
+        if ((!isLocationEnabled && !uiTrackingState.isTrackingStarted) ||
+            (!isLocationEnabled && uiTrackingState.isTracking)
+        ) {
+            trackingEvent(TrackingEvent.CheckLocationSettings(
+                    onDisabled = { intentSenderRequest ->
+                        startIntentSenderResultLauncher.launch(intentSenderRequest)
+                    },
+                    onEnabled = {}
                 )
-            }
+            )
         }
     }
 
     LaunchedEffect(key1 = cameraPositionState.position) {
-        launch(Dispatchers.Default) {
-            if (cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE) {
-                followUserLocation = false
-            }
+        if (cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE) {
+            followUserLocation = false
         }
     }
 
-    LaunchedEffect(
-        key1 = lastKnownLocationUpdatesCounter
-    ) {
-        launch(Dispatchers.Default) {
-            lastKnownLocation?.let {
-                zoomToCurrentPosition(
-                    coroutineScope = coroutineScope,
-                    cameraPositionState = cameraPositionState,
-                    zoom = 17f,
-                    millisAnimation = 1000,
-                    latLng = it
-                )
-            }
+    LaunchedEffect(key1 = lastKnownLocationUpdatesCounter) {
+        lastKnownLocation?.let {
+            zoomToCurrentPosition(
+                coroutineScope = coroutineScope,
+                cameraPositionState = cameraPositionState,
+                zoom = 17f,
+                millisAnimation = 1000,
+                latLng = it
+            )
         }
     }
 
     if (followUserLocation) {
         LaunchedEffect(key1 = uiTrackingState.pathPoints.lastLocationPoint()) {
-            launch(Dispatchers.Default){
+            launch(Dispatchers.Default) {
                 uiTrackingState.pathPoints.lastLocationPoint()?.let {
                     zoomToCurrentPosition(
                         coroutineScope = coroutineScope,
@@ -208,7 +199,7 @@ fun TrackingScreen(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        ShowMapLoadingProgressBar(isMapLoaded = isMapLoaded)
+        ShowLoadingProgressIndicator(isLoaded = isMapLoaded)
         GoogleMap(
             modifier = modifier
                 .fillMaxSize()
@@ -228,7 +219,6 @@ fun TrackingScreen(
                 isTracking = uiTrackingState.isTracking
             )
         }
-
         Column(
             modifier = Modifier
                 .background(Color.Transparent)
@@ -238,7 +228,7 @@ fun TrackingScreen(
             Box(
                 Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.BottomEnd
-            ){
+            ) {
                 IconButton(
                     modifier = modifier
                         .padding(horizontal = small, vertical = small)
@@ -266,23 +256,18 @@ fun TrackingScreen(
             ) {
                 WalkingCard(uiTrackingState = uiTrackingState)
                 if (!uiTrackingState.isTrackingStarted) {
-                    Button(
+                    WalkingButton(
                         onClick = {
                             coroutineScope.launch {
                                 trackingEvent(TrackingEvent.StartTrackingService)
                                 hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
                             }
                         },
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = large, vertical = medium)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.tracking_start_btn),
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = modifier.padding(vertical = small)
-                        )
-                    }
+                        text = stringResource(R.string.tracking_start_btn),
+                        icon = Icons.Outlined.PlayArrow,
+                        iconDescription = stringResource(R.string.tracking_play_icon_content_desc),
+                        isStartButton = true
+                    )
                 } else {
                     Row(
                         modifier = modifier
@@ -290,9 +275,8 @@ fun TrackingScreen(
                             .padding(vertical = medium),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
-                        WalkingButtons(
+                        WalkingButton(
                             modifier = modifier,
-                            trackingEvent = trackingEvent,
                             onClick = {
                                 coroutineScope.launch {
                                     trackingEvent(TrackingEvent.ShowStopWalkDialog(true))
@@ -301,16 +285,15 @@ fun TrackingScreen(
                                     )
                                 }
                             },
-                            iconDescription = stringResource(R.string.settings_icon),
+                            iconDescription = stringResource(R.string.tracking_stop_icon_content_desc),
                             text = stringResource(R.string.tracking_stop_btn),
                             icon = Icons.Outlined.Stop,
-                            color = MaterialTheme.colorScheme.errorContainer,
+                            backgroundColor = MaterialTheme.colorScheme.errorContainer,
                             textColor = MaterialTheme.colorScheme.error
                         )
                         if (uiTrackingState.isTracking) {
-                            WalkingButtons(
+                            WalkingButton(
                                 modifier = modifier,
-                                trackingEvent = trackingEvent,
                                 onClick = {
                                     coroutineScope.launch {
                                         trackingEvent(TrackingEvent.PauseTrackingService)
@@ -319,25 +302,24 @@ fun TrackingScreen(
                                         )
                                     }
                                 },
-                                iconDescription = stringResource(R.string.settings_icon),
+                                iconDescription = stringResource(R.string.tracking_pause_icon_content_desc),
                                 text = stringResource(R.string.tracking_pause_btn),
                                 icon = Icons.Outlined.Pause,
                             )
                         } else {
-                            WalkingButtons(
+                            WalkingButton(
                                 modifier = modifier,
-                                trackingEvent = trackingEvent,
                                 onClick = {
                                     coroutineScope.launch {
-                                        if(!isLocationEnabled){
+                                        if (!isLocationEnabled) {
                                             trackingEvent(TrackingEvent.CheckLocationSettings(
-                                                onDisabled = {
-                                                    Log.d("TrackingScreen", "ON_RESUME Location Settings: DISABLED")
-                                                    startIntentSenderResultLauncher.launch(it)
+                                                onDisabled = { intentSenderRequest ->
+                                                    startIntentSenderResultLauncher.launch(
+                                                        intentSenderRequest
+                                                    )
                                                 },
-                                                onEnabled = {
-                                                    Log.d("TrackingScreen", "ON_RESUME Location Settings: ENABLED")
-                                                })
+                                                onEnabled = {}
+                                            )
                                             )
                                         } else {
                                             trackingEvent(TrackingEvent.ResumeTrackingService)
@@ -347,7 +329,7 @@ fun TrackingScreen(
                                         )
                                     }
                                 },
-                                iconDescription = stringResource(R.string.settings_icon),
+                                iconDescription = stringResource(R.string.tracking_resume_icon_content_desc),
                                 text = stringResource(R.string.tracking_resume_btn),
                                 icon = Icons.Outlined.PlayArrow
                             )
@@ -361,8 +343,8 @@ fun TrackingScreen(
             onConfirm = {
                 trackingEvent(TrackingEvent.StopTrackingService)
                 trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
-                navController.navigate(Route.HomeScreenRoute.route){
-                    popUpTo(Route.HomeScreenRoute.route){
+                navController.navigate(Route.HomeScreenRoute.route) {
+                    popUpTo(Route.HomeScreenRoute.route) {
                         inclusive = true
                     }
                 }
@@ -375,13 +357,13 @@ fun TrackingScreen(
 }
 
 @Composable
-private fun BoxScope.ShowMapLoadingProgressBar(
-    isMapLoaded: Boolean
+private fun BoxScope.ShowLoadingProgressIndicator(
+    isLoaded: Boolean
 ) {
     AnimatedVisibility(
         modifier = Modifier
             .matchParentSize(),
-        visible = !isMapLoaded,
+        visible = !isLoaded,
         enter = fadeIn(),
         exit = fadeOut(),
     ) {

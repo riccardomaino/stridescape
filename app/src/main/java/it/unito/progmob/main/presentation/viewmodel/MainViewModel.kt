@@ -74,7 +74,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun showFloatingActionButton(isShown: Boolean) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Default) {
             isActionButtonShown.update { isShown }
         }
     }
@@ -105,7 +105,7 @@ class MainViewModel @Inject constructor(
         permission: String,
         isGranted: Boolean
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             if(!isGranted && !_visiblePermissionDialogQueue.value.contains(permission)) {
                 _visiblePermissionDialogQueue.update {
                     it.toMutableList().apply {

@@ -1,7 +1,9 @@
 package it.unito.progmob.history.domain.model
 
+import androidx.compose.runtime.Immutable
 import it.unito.progmob.tracking.domain.model.PathPoint
 
+@Immutable
 data class WalkWithPathPoints(
     val walkId: Int,
     val weekDay: Int,

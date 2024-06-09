@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_page1_image_content_description">Immagine di on boarding per dare il benvenuto agli utenti</string>
+    <string name="onboarding_page1_image_content_desc">Immagine di on boarding per dare il benvenuto agli utenti</string>
     <string name="onboarding_next_btn">Avanti</string>
     <string name="onboarding_back_btn">Indietro</string>
     <string name="onboarding_getstarted_btn">Inizia</string>
@@ -10,21 +10,21 @@
     <string name="onboarding_page2_description">Tieni traccia della tua posizione con la mappa live! Assicurati di concedere tutti i permessi per permettere una localizzazione precisa.</string>
     <string name="onboarding_page3_description">Accedi a tutti le tue camminate grazie alla cronologia e tieni traccia dei tuoi miglioramenti!</string>
     <string name="onboarding_page3_title">Cronologia</string>
-    <string name="user_icon">Icona utente</string>
-    <string name="settings_icon">Icona impostazioni</string>
+    <string name="history_today_text">Oggi</string>
+    <string name="topappbar_user_icon_content_desc">Icona utilizzata per aprire la pagine del profilo</string>
     <string name="home_open_settings">Apri impostazioni</string>
     <string name="home_permissiondialog_grant_permission_btn">Concedi Permesso</string>
     <string name="dialog_ok_btn">OK</string>
-    <string name="home_permissiondialog_title">Permesso richiesto</string>
-    <string name="home_permissiondialog_activity_recognition_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua attività fisica. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
-    <string name="home_permissiondialog_activity_recognition_txt">E\' necessario accedere alla tua attività fisica per monitorare i tuoi passi</string>
-    <string name="home_permissiondialog_fine_location_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua posizione precisa. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione</string>
-    <string name="home_permissiondialog_fine_location_txt">E\' necessario accedere alla tua posizione precisa per tracciare le tue camminate</string>
-    <string name="home_permissiondialog_post_notifications_declined_txt">Hai negato permanentemente l\'autorizzazione di inviarti notifiche. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
-    <string name="home_permissiondialog_post_notifications_txt">E\' necessario inviarti notiifche per mostrarti aggiornamenti sulle tue camminate</string>
-    <string name="onboarding_page2_image_content_description">Immagine di on boarding per la funzionalità di mappa live</string>
-    <string name="onboarding_page3_image_content_description">Immagine di on boarding per la funzionalità di cronologia</string>
-    <string name="tracking_stop_icon">Icona utilizzata per fermare il tracciamento</string>
+    <string name="permissiondialog_title">Permesso richiesto</string>
+    <string name="permissiondialog_activity_recognition_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua attività fisica. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
+    <string name="permissiondialog_activity_recognition_txt">E\' necessario accedere alla tua attività fisica per monitorare i tuoi passi</string>
+    <string name="permissiondialog_fine_location_declined_txt">Hai negato permanentemente l\'autorizzazione per accedere alla tua posizione precisa. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione</string>
+    <string name="permissiondialog_fine_location_txt">E\' necessario accedere alla tua posizione precisa per tracciare le tue camminate</string>
+    <string name="permissiondialog_post_notifications_declined_txt">Hai negato permanentemente l\'autorizzazione di inviarti notifiche. Vai nelle impostazioni dell\'app e concedi l\'autorizzazione.</string>
+    <string name="permissiondialog_post_notifications_txt">E\' necessario inviarti notiifche per mostrarti aggiornamenti sulle tue camminate</string>
+    <string name="onboarding_page2_image_content_desc">Immagine di on boarding per la funzionalità di tracking con mappa live</string>
+    <string name="onboarding_page3_image_content_desc">Immagine di on boarding per la funzionalità di cronologia</string>
+    <string name="tracking_stop_icon_content_desc">Icona del bottone utilizzata per fermare il tracciamento</string>
     <string name="home_walk_icon">Icona di navigazione per sezione tracking</string>
     <string name="home_weeklystats_title">I Tuoi Progressi</string>
     <string name="week_monday">Lun</string>
@@ -36,10 +36,10 @@
     <string name="week_sunday">Dom</string>
     <string name="notification_content_title">Statistiche camminata</string>
     <string name="notification_channel_description">Questo canale di notifiche permette di ricevere gli aggiornamenti riguardanti le tue camminate tramite notifica.</string>
-    <string name="onboparding_page4_title">Informazioini personali</string>
+    <string name="onboparding_page4_title">Informazioni Personali</string>
     <string name="onboarding_page4_description">Inserisci le tue informazioni personali per poterti fornire dati più precisi</string>
-    <string name="tracking_play_icon">Icona utilizzata per avviare il tracciamento</string>
-    <string name="tracking_pause_icon">Icona utilizzata per mettere in pausa il tracciamento</string>
+    <string name="tracking_play_icon_content_desc">Icona del bottone utilizzata per avviare il tracciamento</string>
+    <string name="tracking_pause_icon_content_desc">Icona del bottone utilizzato per mettere in pausa il tracciamento</string>
     <string name="tracking_steps_walking_stat_icon_desc">Icona per il numero di passi effettuati</string>
     <string name="tracking_steps_walking_stat_title">Passi</string>
     <string name="tracking_calories_walking_stat_icon_desc">Icona per le calorie bruciate</string>
@@ -57,7 +57,6 @@
     <string name="stats_datepicker_title">Seleziona un intervallo di date</string>
     <string name="dialog_cancel_btn">Annulla</string>
     <string name="stats_button_icon_content_description">Icona del bottone utilizzato per selezionare un intervallo di date</string>
-    <string name="stats_filter_btn_txt">Seleziona Date</string>
     <string name="main_activity_go_back_icon">Icona per tornare indietro</string>
     <string name="stats_chart_title">Le Tue Statistiche</string>
     <string name="month_january">Gen</string>
@@ -94,9 +93,9 @@
     <string name="month_full_december">DICEMBRE</string>
     <string name="home_walking_stats_title">Statistiche Giornaliere</string>
     <string name="history_title">Cronologia</string>
-    <string name="tracking_dialog_confirm_btn_text">Conferma</string>
-    <string name="tracking_stop_dialog_title">Terminare?</string>
-    <string name="tracking_stop_dialog_description">Sei sicuro di voler interrompere la tua passeggiata? Ciò terminerà la sessione di monitoraggio corrente.</string>
+    <string name="stopwalkdialog_confirm_btn_text">Conferma</string>
+    <string name="stopwalkdialog_title">Terminare?</string>
+    <string name="stopwalkdialog_description">Sei sicuro di voler interrompere la tua passeggiata? Ciò terminerà la sessione di monitoraggio corrente.</string>
     <string name="validation_error_blank_height">Inserisci un valore per l\'altezza.</string>
     <string name="validation_error_invalid_range_height">Inserisci un numero valido per l\'altezza (25..250).</string>
     <string name="validation_error_invalid_number_height">Inserisci un numero intero valido per l\'altezza.</string>
@@ -107,7 +106,12 @@
     <string name="validation_error_invalid_number_target">Inserisci un numero intero valido per l\'obiettivo di passi</string>
     <string name="validation_error_invalid_range_target">Inserisci un numero positivo per l\'obiettivo di passi</string>
     <string name="validation_error_blank_username">Inserisci un valore per il nome utente.</string>
-    <string name="user_height_textfield_title">Altezza</string>
-    <string name="user_weight_textfield_title">Peso</string>
-    <string name="user_steps_target_textfield_title">Obiettivo Passi</string>
+    <string name="textfield_user_height_title">Altezza</string>
+    <string name="texfield_user_weight_title">Peso</string>
+    <string name="texfield_user_steps_target_title">Obiettivo Passi</string>
+    <string name="navigationbar_home_icon_content_desc">Icona utilizzata per aprire la pagina della home</string>
+    <string name="navigationbar_stats_icon_content_desc">Icona utilizzata per aprire la pagina delle statistiche</string>
+    <string name="navigationbar_history_icon_content_desc">Icona utilizzata per aprire la pagina della cronologia</string>
+    <string name="stopwalkdialog_cancel_btn">Annulla</string>
+    <string name="tracking_resume_icon_content_desc">Icona del bottone utilizzato per riprendere  il tracciamento</string>
 </resources>

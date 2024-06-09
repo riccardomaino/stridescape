@@ -137,7 +137,7 @@ class MainActivity : ComponentActivity() {
                                         ) {
                                             Icon(
                                                 Icons.Default.Person,
-                                                contentDescription = stringResource(R.string.user_icon),
+                                                contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
                                             )
                                         }
                                     }

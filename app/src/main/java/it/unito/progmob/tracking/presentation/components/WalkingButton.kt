@@ -1,6 +1,7 @@
 package it.unito.progmob.tracking.presentation.components
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,37 +16,46 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import it.unito.progmob.tracking.presentation.TrackingEvent
 import it.unito.progmob.ui.theme.extraLarge
+import it.unito.progmob.ui.theme.large
+import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
 @Composable
-fun WalkingButtons(
+fun WalkingButton(
     modifier: Modifier = Modifier,
-    trackingEvent: (TrackingEvent) -> Unit,
     onClick: () -> Unit,
-    iconDescription: String,
     text: String,
-    icon: ImageVector?,
+    icon: ImageVector,
+    iconDescription: String,
     showIcon: Boolean = true,
-    color: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = MaterialTheme.colorScheme.onPrimary
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    isStartButton: Boolean = false
 ) {
 
     Button(
         onClick = onClick,
-        modifier = modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f),
-        colors = ButtonDefaults.buttonColors(containerColor = color)
+        modifier = modifier.then(
+            if(isStartButton){
+                modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = large, vertical = medium)
+            } else {
+                modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.45f)
+            }
+        ),
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor)
     ) {
         if(showIcon){
             Icon(
-                icon!!,
+                icon,
                 modifier = modifier.size(extraLarge),
                 contentDescription = iconDescription,
                 tint = textColor
             )
+            Spacer(modifier = Modifier.width(small))
         }
-        Spacer(modifier = Modifier.width(small))
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium,
@@ -53,5 +63,4 @@ fun WalkingButtons(
             color = textColor
         )
     }
-
 }

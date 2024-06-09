@@ -96,11 +96,7 @@ fun NavigationBar(
                 .width(LocalContext.current.resources.configuration.screenWidthDp.dp * 0.4f)
                 .height(navigationBarHeight)
                 .shadow(navigationBarShadow, shape = RoundedCornerShape(doubleExtraLarge))
-                .clip(
-                    shape = RoundedCornerShape(
-                        doubleExtraLarge
-                    )
-                )
+                .clip(shape = RoundedCornerShape(doubleExtraLarge))
         ) {
             Row(
                 modifier = Modifier
@@ -132,7 +128,7 @@ fun NavigationBar(
                     }) {
                         Icon(
                             Icons.Filled.Home,
-                            contentDescription = "Localized description",
+                            contentDescription = stringResource(R.string.navigationbar_home_icon_content_desc),
                             modifier = Modifier.size(large),
                             tint = if (currentBackStackEntry?.destination?.route == Route.HomeScreenRoute.route || currentBackStackEntry?.destination?.route == Route.TrackingScreenRoute.route)
                                 MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
@@ -166,7 +162,7 @@ fun NavigationBar(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ShowChart,
-                            contentDescription = "Localized description",
+                            contentDescription = stringResource(R.string.navigationbar_stats_icon_content_desc),
                             modifier = Modifier.size(large),
                             tint = if (currentBackStackEntry?.destination?.route == Route.StatsScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -195,7 +191,7 @@ fun NavigationBar(
                 }) {
                     Icon(
                         Icons.Filled.History,
-                        contentDescription = "Localized description",
+                        contentDescription = stringResource(R.string.navigationbar_history_icon_content_desc),
                         modifier = Modifier.size(large),
                         tint = if (currentBackStackEntry?.destination?.route == Route.HistoryScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
                     )
@@ -208,13 +204,13 @@ fun NavigationBar(
             visible = isActionButtonShown,
             enter = expandHorizontally(
                 animationSpec = tween(
-                    durationMillis = 200,
+                    durationMillis = 200
                 )
             ),
             exit = shrinkOut(
                 animationSpec = tween(
                     durationMillis = 200,
-                    delayMillis = 100,
+                    delayMillis = 100
                 ),
                 shrinkTowards = Alignment.Center
             )
