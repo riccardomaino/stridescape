@@ -2,6 +2,7 @@ package it.unito.progmob.core.domain.util
 
 import android.content.Context
 import it.unito.progmob.core.domain.ext.monthFullNames
+import it.unito.progmob.core.domain.ext.monthsNames
 import it.unito.progmob.core.domain.ext.weekDaysNames
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -89,6 +90,35 @@ object DateUtils {
         } ?: formatDate(localDate)
     }
 
+    /**
+     * Extract the component of a date as strings, based on the date provided as milliseconds since epoch
+     *
+     * @param epochMillis the date to format as milliseconds since epoch
+     * @param context the context
+     * @return an array of strings containing the month, day and year. Null if the epochMillis date is null
+     */
+    fun extractDateComponentsFromEpochMillis(
+        epochMillis: Long?,
+        context: Context,
+    ): Array<String>? {
+        return epochMillis?.let{
+            val instant = Instant.fromEpochMilliseconds(epochMillis)
+            val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+            val monthStr = context.monthsNames[localDate.monthNumber - 1].lowercase().replaceFirstChar{ it.uppercase() }
+            val dayStr = localDate.dayOfMonth.toString()
+            val yearStr = localDate.year.toString()
+            arrayOf(monthStr, dayStr, yearStr)
+        }
+    }
+
+    /**
+     * Format a date for the history screen based on the date provided as a string
+     *
+     * @param date the date to format
+     * @param context the context
+     * @param parseFormatter the formatter to use
+     * @return the formatted date
+     */
     fun formatDateForHistory(
         date: String,
         context: Context,

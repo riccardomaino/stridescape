@@ -39,9 +39,9 @@ import javax.inject.Named
 /**
  * A service that tracks the user's location and displays a notification with the current location.
  * This service uses the [LocationTrackingManager] to track the user's location, the
- * [TimeTrackingManager] to track the time spent walking, the [StepCounterSensor] to track the
- * number of steps. It displays a notification with the current number of steps and the time spent
- * walking.
+ * [TimeTrackingManager] to track the time spent walking, the [StepCounterSensor] (or
+ * [AccelerometerSensor]) to track the number of steps. It displays a notification with the current
+ * number of steps and the time spent walking.
  */
 @AndroidEntryPoint
 class TrackingService : Service() {
@@ -76,6 +76,19 @@ class TrackingService : Service() {
     lateinit var stepCounterSensor: MeasurableSensor
 
     /**
+     * The [AccelerometerSensor] object represent the sensor used used to track the number of steps
+     * taken by the user if the step counter sensor is not available.
+     */
+    @Inject
+    @Named("AccelerometerSensor")
+    lateinit var accelerometerSensor: MeasurableSensor
+
+    /**
+     * The actual sensor used to track the number of steps taken by the user.
+     */
+    private lateinit var stepSensor: MeasurableSensor
+
+    /**
      * The service uses a [CoroutineScope] in which to launch various coroutines that will collects
      * the location updates from the [LocationTrackingManager], collects the timer updates from the
      * [TimeTrackingManager], collects the updates the step counter, and finally updates the
@@ -92,6 +105,9 @@ class TrackingService : Service() {
      */
     private var hasBeenResumed = false
 
+    /**
+     * The [PendingIntent] used to open the app when the notification is clicked.
+     */
     private lateinit var pendingIntent: PendingIntent
 
 
@@ -142,6 +158,14 @@ class TrackingService : Service() {
 
         // Create a new coroutine scope with a SupervisorJob and the IO dispatcher
         trackingServiceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+        stepSensor = if (stepCounterSensor.doesSensorExists) {
+            stepCounterSensor
+        } else {
+            accelerometerSensor
+        }
+
+
         pendingIntent = getPendingIntent()
         // Update the walk state isTracking field to true
         if(!hasBeenResumed){

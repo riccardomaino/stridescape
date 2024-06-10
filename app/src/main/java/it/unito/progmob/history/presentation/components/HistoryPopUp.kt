@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -66,19 +68,20 @@ import it.unito.progmob.ui.theme.small
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SharedTransitionScope.HistoryPopUp(
     modifier: Modifier = Modifier,
     walkToShow: WalkWithPathPoints?,
-    backHandler: () -> Unit,
+    onBackBehaviour: () -> Unit,
     onClick: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val interactionSource = remember { MutableInteractionSource() }
+    var isMapLoaded by remember { mutableStateOf(false) }
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var mapCenter by remember { mutableStateOf(Offset(0f, 0f)) }
-    var isMapLoaded by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState()
-    val coroutineScope = rememberCoroutineScope()
     val mapUiSettings by remember {
         mutableStateOf(
             MapUiSettings(
@@ -89,11 +92,6 @@ fun SharedTransitionScope.HistoryPopUp(
         )
     }
 
-    BackHandler {
-        backHandler()
-    }
-
-
     AnimatedContent(
         modifier = modifier,
         targetState = walkToShow,
@@ -101,15 +99,22 @@ fun SharedTransitionScope.HistoryPopUp(
             fadeIn() togetherWith fadeOut()
         },
         label = "Animated content",
-    ) { targetWalk ->
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (targetWalk != null) {
+    ) { targetState ->
+        if(targetState != null){
+            BackHandler {
+                onBackBehaviour()
+            }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ){}
                         .background(Color.Black.copy(alpha = 0.5f)),
                 )
                 Column(
@@ -118,7 +123,7 @@ fun SharedTransitionScope.HistoryPopUp(
                         .shadow(medium, shape = RoundedCornerShape(medium))
                         .clickable { onClick() }
                         .sharedBounds(
-                            sharedContentState = rememberSharedContentState(key = "${targetWalk.walkId}-bounds"),
+                            sharedContentState = rememberSharedContentState(key = "${targetState.walkId}-bounds"),
                             animatedVisibilityScope = this@AnimatedContent,
                             clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(medium))
                         )
@@ -153,7 +158,7 @@ fun SharedTransitionScope.HistoryPopUp(
                             }
                         ) {
                             DrawHistoryPathPoints(
-                                pathPoints = targetWalk.pathPoints
+                                pathPoints = targetState.pathPoints
                             )
                         }
                     }
@@ -162,7 +167,7 @@ fun SharedTransitionScope.HistoryPopUp(
                             .padding(horizontal = small)
                             .fillMaxSize()
                             .sharedElement(
-                                state = rememberSharedContentState(key = targetWalk.walkId),
+                                state = rememberSharedContentState(key = targetState.walkId),
                                 animatedVisibilityScope = this@AnimatedContent,
                             )
                             .background(MaterialTheme.colorScheme.surface),
@@ -178,7 +183,7 @@ fun SharedTransitionScope.HistoryPopUp(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = targetWalk.steps.toString(),
+                                text = targetState.steps.toString(),
                                 style = MaterialTheme.typography.displayMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                 ),
@@ -204,7 +209,7 @@ fun SharedTransitionScope.HistoryPopUp(
                                 contentAlignment = Alignment.Center
                             ) {
                                 WalkingStatComponent(
-                                    value = targetWalk.calories.toString(),
+                                    value = targetState.calories.toString(),
                                     title = stringResource(R.string.tracking_calories_walking_stat_title),
                                     icon = Icons.Outlined.LocalFireDepartment,
                                     iconDescription = stringResource(R.string.tracking_calories_walking_stat_icon_desc),
@@ -217,7 +222,7 @@ fun SharedTransitionScope.HistoryPopUp(
                                 contentAlignment = Alignment.Center
                             ) {
                                 WalkingStatComponent(
-                                    value = WalkUtils.formatDistanceToKm(targetWalk.distance),
+                                    value = WalkUtils.formatDistanceToKm(targetState.distance),
                                     title = stringResource(R.string.tracking_distance_walking_stat_title),
                                     icon = Icons.Outlined.Map,
                                     iconDescription = stringResource(R.string.tracking_distance_walking_stat_icon_desc),
@@ -230,7 +235,7 @@ fun SharedTransitionScope.HistoryPopUp(
                                 contentAlignment = Alignment.Center
                             ) {
                                 WalkingStatComponent(
-                                    value = TimeUtils.formatMillisTimeHoursMinutes(targetWalk.time),
+                                    value = TimeUtils.formatMillisTimeHoursMinutes(targetState.time),
                                     title = stringResource(R.string.tracking_time_walking_stat_title),
                                     icon = Icons.Outlined.Timer,
                                     iconDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
@@ -241,7 +246,6 @@ fun SharedTransitionScope.HistoryPopUp(
                     }
                 }
             }
-
         }
     }
 }
