@@ -39,7 +39,8 @@ fun CircularProgressBar(
     strokeWidth: Dp = large,
     animDuration: Int = 1000,
     animDelay: Int = 0,
-    showStepsInfo: Boolean = true
+    showStepsInfo: Boolean = true,
+    modifier: Modifier
 ) {
     var animationPlayed by remember {
         mutableStateOf(false)
@@ -60,7 +61,7 @@ fun CircularProgressBar(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .size(radius * 2.8f)
     ) {
         Canvas(modifier = Modifier.size(radius * 2.2f)) {

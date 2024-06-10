@@ -44,19 +44,19 @@ import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
-
 @Composable
 fun StatsScreen(
     statsEvent: (StatsEvent) -> Unit,
     uiStatsState: UiStatsState,
     isDataLoaded: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(MaterialTheme.colorScheme.surfaceVariant),
+        verticalArrangement = Arrangement.Top
     ) {
         StatsFilter(
             statsSelected = uiStatsState.statsSelected,
@@ -70,6 +70,7 @@ fun StatsScreen(
                 .shadow(small, shape = RoundedCornerShape(large))
                 .clip(shape = RoundedCornerShape(large))
                 .background(MaterialTheme.colorScheme.surface)
+
         ) {
             Column(
                 modifier = modifier.padding(horizontal = medium, vertical = small)
@@ -114,9 +115,9 @@ fun StatsScreen(
                         .fillMaxWidth()
                         .fillMaxHeight(0.8f)
                         .background(Color.Transparent)
-                ){
+                ) {
                     ShowLoadingProgressIndicator(isLoaded = isDataLoaded)
-                    if(isDataLoaded){
+                    if (isDataLoaded) {
                         StatsChart(uiStatsState = uiStatsState)
                     }
                 }
@@ -128,7 +129,9 @@ fun StatsScreen(
             }
         }
     }
+
 }
+
 
 @Composable
 private fun BoxScope.ShowLoadingProgressIndicator(

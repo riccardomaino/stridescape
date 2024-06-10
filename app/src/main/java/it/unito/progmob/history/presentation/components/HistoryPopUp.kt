@@ -89,8 +89,7 @@ fun SharedTransitionScope.HistoryPopUp(
     }
 
     BackHandler {
-//        showPopUp.value = false
-        backHandler()
+
     }
 
     LaunchedEffect(walkToShow) {

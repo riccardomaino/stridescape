@@ -108,7 +108,6 @@ class ProfileViewModel @Inject constructor(
                 username = username,
                 usernameError = validationResult.message
             )
-
         }
     }
 

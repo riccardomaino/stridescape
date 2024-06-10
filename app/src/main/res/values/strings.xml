@@ -124,4 +124,5 @@
     <string name="navigationbar_history_icon_content_desc">Icon used to open the history page</string>
     <string name="stopwalkdialog_cancel_btn">Cancel</string>
     <string name="tracking_resume_icon_content_desc">Icon of the button used to resume the tracking</string>
+    <string name="profile_save_icon_content_desc">Icon for the button used to save the changes in the profile</string>
 </resources>

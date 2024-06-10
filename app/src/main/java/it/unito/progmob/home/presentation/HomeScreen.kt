@@ -24,7 +24,6 @@ import it.unito.progmob.home.presentation.components.WeeklyStats
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
 
-
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -51,8 +50,15 @@ fun HomeScreen(
                 .shadow(small, shape = RoundedCornerShape(large))
                 .clip(shape = RoundedCornerShape(large))
                 .background(MaterialTheme.colorScheme.surface)
+
         ) {
-            CircularProgressBar(steps = stepsCurrentDay, targetStepsGoal = stepsTargetCurrentDay, radius = 88.dp)
+            CircularProgressBar(
+                steps = stepsCurrentDay,
+                targetStepsGoal = stepsTargetCurrentDay,
+                radius = 88.dp,
+                modifier = modifier
+            )
+
         }
         Spacer(modifier = Modifier.height(small))
         WalkingStats(
@@ -62,9 +68,12 @@ fun HomeScreen(
         )
         Spacer(modifier = Modifier.height(small))
         WeeklyStats(
-            selectedDay = currentDayOfWeek,
+            modifier = modifier,
             weeklySteps = weeklySteps,
-            weeklyTarget = weeklyTarget
+            weeklyTarget = weeklyTarget,
+            selectedDay = currentDayOfWeek
         )
     }
+
+
 }

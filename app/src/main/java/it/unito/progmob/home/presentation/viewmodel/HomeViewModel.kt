@@ -43,6 +43,7 @@ class HomeViewModel @Inject constructor(
     val weeklyTarget = homeUseCases.getWeeklyTargetUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf(1, 1, 1, 1, 1, 1, 1))
 
+
     /**
      * Handles Home events emitted from the UI.
      * @param event The HomeEvent to be processed.

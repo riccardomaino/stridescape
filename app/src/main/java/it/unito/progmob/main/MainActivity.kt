@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -87,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     topBar = {
-                        if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route) {
+                        if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route && currentBackStackEntry?.destination?.route != Route.OnBoardingProfileScreenRoute.route) {
                             TopAppBar(
                                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                                 title = {
@@ -129,16 +130,39 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 actions = {
-                                    if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route && currentBackStackEntry?.destination?.route != Route.TrackingScreenRoute.route) {
-                                        IconButton(
-                                            onClick = {
-                                                navController.navigate(Route.ProfileScreenRoute.route)
+                                    when(currentBackStackEntry?.destination?.route){
+                                        Route.TrackingScreenRoute.route -> {}
+                                        Route.ProfileScreenRoute.route -> {
+                                            IconButton(
+                                                onClick = {
+                                                    if(navController.previousBackStackEntry?.destination?.route == Route.HomeScreenRoute.route){
+                                                        mainViewModel.onEvent(MainEvent.ShowFloatingActionButton(true))
+                                                    }
+                                                    navController.popBackStack()
+                                                }
+                                            ) {
+                                                Icon(
+                                                    Icons.Default.ArrowBackIosNew,
+                                                    contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
+                                                )
                                             }
-                                        ) {
-                                            Icon(
-                                                Icons.Default.Person,
-                                                contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
-                                            )
+                                        }
+                                        else -> {
+                                            IconButton(
+                                                onClick = {
+                                                    navController.navigate(Route.ProfileScreenRoute.route)
+                                                    mainViewModel.onEvent(
+                                                        MainEvent.ShowFloatingActionButton(
+                                                            false
+                                                        )
+                                                    )
+                                                }
+                                            ) {
+                                                Icon(
+                                                    Icons.Default.Person,
+                                                    contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
+                                                )
+                                            }
                                         }
                                     }
                                 }

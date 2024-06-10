@@ -72,6 +72,7 @@ fun NavigationBar(
         ),
         label = "Floating action button animation"
     )
+
     val animatedFloatReverse = animateFloatAsState(
         targetValue = if (!isActionButtonShown) 0f else 1f,
         animationSpec = tween(

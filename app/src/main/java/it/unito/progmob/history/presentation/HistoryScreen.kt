@@ -78,7 +78,9 @@ fun HistoryScreen(
                                     sharedContentState = rememberSharedContentState(key = "${walkWithPathPoints.walkId}-bounds"),
                                     // Using the scope provided by AnimatedVisibility
                                     animatedVisibilityScope = this,
-                                    clipInOverlayDuringTransition = OverlayClip(shapeForSharedElement)
+                                    clipInOverlayDuringTransition = OverlayClip(
+                                        shapeForSharedElement
+                                    )
                                 )
                         ) {
                             SingleWalkStat(
@@ -108,9 +110,8 @@ fun HistoryScreen(
                 walkToShow = null
             }
         )
-    }
-}
 
+    }
 //        AnimatedVisibility(
 //            visible = showPopUp.value,
 //            enter = fadeIn(
@@ -132,23 +133,24 @@ fun HistoryScreen(
 //        }
 
 
-@Composable
-private fun BoxScope.ShowLoadingProgressIndicator(
-    isLoaded: Boolean
-) {
-    AnimatedVisibility(
-        modifier = Modifier
-            .matchParentSize(),
-        visible = !isLoaded,
-        enter = fadeIn(),
-        exit = fadeOut(),
+    @Composable
+    fun BoxScope.ShowLoadingProgressIndicator(
+        isLoaded: Boolean
     ) {
-        CircularProgressIndicator(
-            strokeWidth = 10.dp,
+        AnimatedVisibility(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .wrapContentSize()
-        )
+                .matchParentSize(),
+            visible = !isLoaded,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            CircularProgressIndicator(
+                strokeWidth = 10.dp,
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .wrapContentSize()
+            )
+        }
     }
 }
 

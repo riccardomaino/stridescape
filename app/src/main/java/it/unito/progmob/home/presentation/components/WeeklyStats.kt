@@ -31,10 +31,10 @@ import it.unito.progmob.ui.theme.small
 
 @Composable
 fun WeeklyStats(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     weeklySteps: IntArray,
     weeklyTarget: IntArray,
-    selectedDay: Int
+    selectedDay: Int,
 ) {
     val context = LocalContext.current
     val weekDaysNames = remember {
@@ -49,19 +49,19 @@ fun WeeklyStats(
             .background(color = MaterialTheme.colorScheme.surface),
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = small, vertical = medium)
         ) {
             Text(
-                modifier = modifier.padding(start = medium),
+                modifier = Modifier.padding(start = medium),
                 text = stringResource(R.string.home_weeklystats_title),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground
             )
-            HorizontalDivider(modifier = modifier.padding(vertical = small, horizontal = small))
+            HorizontalDivider(modifier = Modifier.padding(vertical = small, horizontal = small))
             Row(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 weekDaysNames.forEachIndexed { index, _ ->
@@ -74,9 +74,10 @@ fun WeeklyStats(
                             showStepsInfo = false,
                             radius = medium,
                             strokeWidth = small,
-                            animDelay = 1000
+                            animDelay = 1000,
+                            modifier = Modifier
                         )
-                        Spacer(modifier = modifier.height(small))
+                        Spacer(modifier = Modifier.height(small))
                         Text(
                             text = weekDaysNames[index],
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.ExtraBold),
@@ -95,6 +96,7 @@ private fun WeeklyStatsPreview() {
     WeeklyStats(
         weeklySteps = intArrayOf(300, 200, 3200, 2000, 250, 6200, 12000),
         weeklyTarget = intArrayOf(6000, 6000, 6000, 6000, 6000, 6000, 6000),
-        selectedDay = 2
+        selectedDay = 2,
+        modifier = Modifier
     )
 }
