@@ -7,6 +7,12 @@ import javax.inject.Inject
 class GetDayDistanceUseCase @Inject constructor(
     private val walkRepository: WalkRepository
 ) {
+    /**
+     * Retrieves the total distance walked for the given date.
+     *
+     * @param date The date for which to retrieve the distance.
+     * @return A flow emitting the total distance walked for the given date.
+     */
     operator fun invoke(date: String): Flow<Int> {
         return walkRepository.findDistanceByDate(date)
     }

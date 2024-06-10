@@ -9,6 +9,9 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import it.unito.progmob.R
 
+/**
+ * Returns an array of localized weekday names, starting from Monday.
+ */
 val Context.weekDaysNames: Array<String>
     get() = arrayOf(
         this.resources.getString(R.string.week_monday),
@@ -20,6 +23,9 @@ val Context.weekDaysNames: Array<String>
         this.resources.getString(R.string.week_sunday)
     )
 
+/**
+ * Returns an array of localized short month names (e.g., "Jan", "Feb").
+ */
 val Context.monthsNames: Array<String>
     get() = arrayOf(
         this.resources.getString(R.string.month_january),
@@ -36,6 +42,9 @@ val Context.monthsNames: Array<String>
         this.resources.getString(R.string.month_december)
     )
 
+/**
+ * Returns an array of localized full month names (e.g., "January", "February").
+ */
 val Context.monthFullNames: Array<String>
     get() = arrayOf(
         this.resources.getString(R.string.month_full_january),
@@ -52,6 +61,10 @@ val Context.monthFullNames: Array<String>
         this.resources.getString(R.string.month_full_december)
     )
 
+/**
+ * Returns an array of all permissions required by the app, adjusted for the current
+ * Android SDK version.
+ */
 val Context.allPermissions by lazy {
     mutableListOf(
         Manifest.permission.ACCESS_FINE_LOCATION

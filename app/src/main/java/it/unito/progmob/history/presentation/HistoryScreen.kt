@@ -103,7 +103,7 @@ fun HistoryScreen(
     }
 
 
-    SharedTransitionLayout(modifier = modifier.fillMaxSize()) {
+    SharedTransitionLayout(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant)) {
         Column(
             modifier = modifier
                 .fillMaxSize()

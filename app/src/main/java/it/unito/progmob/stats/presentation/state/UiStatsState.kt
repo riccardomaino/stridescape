@@ -5,7 +5,15 @@ import it.unito.progmob.stats.domain.model.StatsType
 import kotlinx.datetime.LocalDate
 
 /**
- * Data class that holds the state of the UI for the stats feature.
+ * Data class representing the UI state for the statistics screen.
+ *
+ * @param rangeSelected The currently selected range.
+ * @param statsSelected The currently selected statistic.
+ * @param distanceChartValues The values for the distance chart.
+ * @param timeChartValues The values for the time chart.
+ * @param caloriesChartValues The values for the calories chart.
+ * @param stepsChartValues The values for the steps chart.
+ * @param speedChartValues The values for the speed chart.
  */
 data class UiStatsState(
     val rangeSelected: RangeType = RangeType.WEEK,

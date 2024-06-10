@@ -31,6 +31,12 @@ import it.unito.progmob.stats.presentation.viewmodel.StatsViewModel
 import it.unito.progmob.tracking.presentation.TrackingScreen
 import it.unito.progmob.tracking.presentation.viewmodel.TrackingViewModel
 
+/**
+ * Defines the navigation graph for the application.
+ *
+ * @param startDestination The initial destination of the navigation graph.
+ * @param navController The [NavHostController] used to manage navigation.
+ */
 @Composable
 fun NavGraph(
     startDestination: String,
@@ -42,11 +48,13 @@ fun NavGraph(
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
     ) {
+        // Onboarding navigation graph
         navigation(
             route = Route.OnBoardingNavigationRoute.route,
             startDestination = Route.OnBoardingScreenRoute.route,
             exitTransition = { fadeOut(animationSpec = tween(200, delayMillis = 0)) }
         ) {
+            // Onboarding welcome screen
             composable(
                 route = Route.OnBoardingScreenRoute.route,
             ) {
@@ -54,6 +62,7 @@ fun NavGraph(
                     navController = navController
                 )
             }
+            // Onboarding profile screen
             composable(
                 route = Route.OnBoardingProfileScreenRoute.route,
                 enterTransition = { fadeIn(animationSpec = tween(200, delayMillis = 0)) },
@@ -69,14 +78,18 @@ fun NavGraph(
             }
         }
 
+        // Main navigation graph
         navigation(
             route = Route.MainNavigationRoute.route,
             startDestination = Route.HomeScreenRoute.route
         ) {
+            // Home screen
             composable(
                 route = Route.HomeScreenRoute.route
             ) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
+
+                // Collect state variables for the Home screen from the home screen viewmodel
                 val currentDayOfWeek by homeViewModel.currentDayOfWeek.collectAsState()
                 val stepsCurrentDay by homeViewModel.stepsCurrentDay.collectAsState()
                 val caloriesCurrentDay by homeViewModel.caloriesCurrentDay.collectAsState()
@@ -98,6 +111,7 @@ fun NavGraph(
                 )
             }
 
+            // Tracking screen
             composable(
                 route = Route.TrackingScreenRoute.route,
                 deepLinks = listOf(navDeepLink {
@@ -118,6 +132,8 @@ fun NavGraph(
                 },
             ) {
                 val trackingViewModel = hiltViewModel<TrackingViewModel>()
+
+                // Collect state variables for the Tracking screen from the tracking screen viewmodel
                 val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
                 val lastKnownLocation by trackingViewModel.lastKnownLocation.collectAsState()
                 val lastKnownLocationUpdatesCounter by trackingViewModel.lastKnownLocationUpdatesCounter.collectAsState()
@@ -135,10 +151,13 @@ fun NavGraph(
                 )
             }
 
+            // Stats screen
             composable(
                 route = Route.StatsScreenRoute.route
             ) {
                 val statsViewModel = hiltViewModel<StatsViewModel>()
+
+                // Collect state variables for the Stats screen from the stats screen viewmodel
                 val uiStatsState by statsViewModel.uiStatsState.collectAsState()
                 val isDataLoaded by statsViewModel.isDataLoaded.collectAsState()
 
@@ -150,10 +169,13 @@ fun NavGraph(
 
             }
 
+            // History screen
             composable(
                 route = Route.HistoryScreenRoute.route
             ) {
                 val historyViewModel = hiltViewModel<HistoryViewModel>()
+
+                // Collect state variables for the History screen from the history screen viewmodel
                 val allGroupedWalks by historyViewModel.allGroupedWalks.collectAsState()
                 val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
 
@@ -164,6 +186,7 @@ fun NavGraph(
                 )
             }
 
+            // Profile screen
             composable(
                 route = Route.ProfileScreenRoute.route,
                 enterTransition = { fadeIn(animationSpec = tween(150, delayMillis = 0)) },
@@ -178,5 +201,4 @@ fun NavGraph(
             }
         }
     }
-
 }

@@ -12,19 +12,32 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the profile screen.
+ *
+ * @param profileUseCases The use cases for interacting with profile data.
+ */
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases
 ) : ViewModel() {
 
+    /**
+     * The mutable state of the UI for the profile screen.
+     */
     var profileState = mutableStateOf(UiProfileState())
         private set
-
+    /**
+    * The initial values for the profile fields.
+    */
     private lateinit var initialUsername: String
     private lateinit var initialHeight: String
     private lateinit var initialWeight: String
     private lateinit var initialTarget: String
 
+    /**
+     * Initializes the ViewModel by fetching the initial profile data.
+     */
     init {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
@@ -55,8 +68,9 @@ class ProfileViewModel @Inject constructor(
     }
 
     /**
-     * Handles Profile events emitted from the UI.
-     * @param event The ProfileEvent to be processed.
+     * Handles events from the UI.
+     *
+     * @param event The event to handle.
      */
     fun onEvent(event: ProfileEvent) {
         when (event) {
@@ -68,6 +82,9 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Saves the profile information.
+     */
     private fun saveProfile() {
         viewModelScope.launch(Dispatchers.Default) {
             if (profileState.value.usernameError == null &&
@@ -91,6 +108,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the weight input.
+     *
+     * @param weight The weight input to validate.
+     */
     private fun validateWeight(weight: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateWeightUseCase(weight)
@@ -101,6 +123,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the username input.
+     *
+     * @param username The username input to validate.
+     */
     private fun validateUsername(username: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateUsernameUseCase(username)
@@ -111,6 +138,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the target input.
+     *
+     * @param target The target input to validate.
+     */
     private fun validateTarget(target: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateTargetUseCase(target)
@@ -121,6 +153,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the height input.
+     *
+     * @param height The height input to validate.
+     */
     private fun validateHeight(height: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateHeightUseCase(height)

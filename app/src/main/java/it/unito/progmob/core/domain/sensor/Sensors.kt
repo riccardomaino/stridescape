@@ -4,6 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 
+/**
+ * A wrapper class for the step counter sensor, providing access to step count data.
+ *
+ * @param context The application context.
+ */
 class StepCounterSensor(
     context: Context
 ): AndroidSensor(
@@ -12,6 +17,11 @@ class StepCounterSensor(
     sensorType = Sensor.TYPE_STEP_COUNTER
 )
 
+/**
+ * A wrapper class for the accelerometer sensor, providing access to acceleration data.
+ *
+ * @param context The application context.
+ */
 class AccelerometerSensor(
     context: Context
 ): AndroidSensor(

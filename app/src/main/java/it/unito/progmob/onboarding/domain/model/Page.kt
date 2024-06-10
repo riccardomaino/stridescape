@@ -4,6 +4,14 @@ import androidx.annotation.DrawableRes
 import it.unito.progmob.R
 import it.unito.progmob.core.presentation.util.UiText
 
+/**
+ * Data class representing a single page in the onboarding flow.
+ *
+ * @param title The title of the page.
+ *@param description The description of the page.
+ * @param imageContentDescription The content description for the image on the page.
+ * @param image The resource ID of the image on the page.
+ */
 data class Page(
     val title: UiText,
     val description: UiText,
@@ -11,6 +19,11 @@ data class Page(
     @DrawableRes val image: Int?
 )
 
+/**
+ * Returns a list of onboarding pages.
+ *
+ * @return A list of [Page] objects.
+ */
 fun getOnboardingPages(): List<Page> {
     val pages = listOf(
         Page(
@@ -32,7 +45,6 @@ fun getOnboardingPages(): List<Page> {
             image = R.drawable.history
         )
     )
-
     return pages
 }
 

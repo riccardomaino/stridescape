@@ -8,6 +8,12 @@ import kotlinx.coroutines.flow.map
 class GetWeeklyTargetUseCase(
     private val walkRepository: WalkRepository
 ) {
+    /**
+     * Retrieves the daily step targets for each day of the current week.
+     *
+     * @return A flow emitting an integer array representing the step targets for each day of the week,
+     *         starting with Monday at index 0.
+     */
     operator fun invoke(): Flow<IntArray> {
         val startDate = DateUtils.formattedFirstDateOfWeek()
         val endDate = DateUtils.formattedCurrentDate()

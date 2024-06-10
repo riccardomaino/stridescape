@@ -19,6 +19,9 @@ import kotlinx.datetime.toLocalDateTime
 
 object DateUtils {
 
+    /**
+     * The default formatter for displaying dates in the format "yyyy/MM/dd".
+     */
     val defaultFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
         year()
         char('/')
@@ -27,10 +30,16 @@ object DateUtils {
         dayOfMonth()
     }
 
+    /**
+     * A formatter for displaying only the day of the month from a [LocalDate].
+     */
     val monthFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
         dayOfMonth()
     }
 
+    /**
+     * A formatter for displaying dates in the format "dd/MM/yyyy".
+     */
     val standardFormatter: DateTimeFormat<LocalDate> = LocalDate.Format {
         dayOfMonth()
         char('/')

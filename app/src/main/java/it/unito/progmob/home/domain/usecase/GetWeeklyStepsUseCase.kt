@@ -8,6 +8,12 @@ import kotlinx.coroutines.flow.map
 class GetWeeklyStepsUseCase(
     private val walkRepository: WalkRepository
 ) {
+    /**
+     * Retrieves the total number of steps taken for each day of the current week.
+     *
+     * @return A flow emitting an integer array representing the steps for each day of the week,
+     *         starting with Monday at index 0.
+     */
     operator fun invoke(): Flow<IntArray> {
         val startDate = DateUtils.formattedFirstDateOfWeek()
         val endDate = DateUtils.formattedCurrentDate()

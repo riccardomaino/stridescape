@@ -12,20 +12,27 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * ViewModel class that handles the onboarding feature.
+ * ViewModel for the OnBoarding screen.
  *
- * @param onBoardingUseCases The use cases related to the OnBoarding feature.
+ * This ViewModel handles events emitted from the UI and updates the [onBoardingState] accordingly.
+ * It also validates user input and saves the user's profile information.
+ *
+ * @param onBoardingUseCases The use cases for the OnBoarding screen.
  */
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val onBoardingUseCases: OnBoardingUseCases,
 ) : ViewModel() {
 
+    /**
+     * The current state of the OnBoarding screen.
+     */
     var onBoardingState = mutableStateOf(UiOnBoardingState())
         private set
 
     /**
      * Handles Profile events emitted from the UI.
+     *
      * @param event The ProfileEvent to be processed.
      */
     fun onEvent(event: OnBoardingEvent) {
@@ -38,6 +45,9 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Saves the user's profile information.
+     */
     private fun saveProfile() {
         viewModelScope.launch(Dispatchers.Default) {
             if (onBoardingState.value.usernameError == null &&
@@ -54,6 +64,11 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the user's weight input.
+     *
+     * @param weight The user's weight input.
+     */
     private fun validateWeight(weight: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateWeightUseCase(weight)
@@ -64,6 +79,11 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the user's username input.
+     *
+     * @param username The user's username input.
+     */
     private fun validateUsername(username: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateUsernameUseCase(username)
@@ -74,6 +94,11 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the user's target input.
+     *
+     * @param target The user's target input.
+     */
     private fun validateTarget(target: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateTargetUseCase(target)
@@ -84,6 +109,11 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validates the user's height input.
+     *
+     * @param height The user's height input.
+     */
     private fun validateHeight(height: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateHeightUseCase(height)

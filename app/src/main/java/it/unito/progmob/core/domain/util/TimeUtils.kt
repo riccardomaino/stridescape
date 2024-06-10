@@ -14,6 +14,9 @@ import kotlin.time.toDuration
 
 object TimeUtils {
 
+    /**
+     * The default formatter for displaying time in the format "HH:mm:ss".
+     */
     private val defaultFormatter: DateTimeFormat<LocalTime> = LocalTime.Format {
         hour()
         char(':')
@@ -22,6 +25,13 @@ object TimeUtils {
         second()
     }
 
+    /**
+     * Formats the given [LocalTime] using the provided [formatter].
+     *
+     * @param time The [LocalTime] to format.
+     * @param formatter The [DateTimeFormat] to use for formatting. Defaults to [defaultFormatter].
+     * @return The formatted time string.
+     */
     private fun formatTime(
         time: LocalTime,
         formatter: DateTimeFormat<LocalTime> = defaultFormatter
@@ -52,11 +62,6 @@ object TimeUtils {
      * @return a human readable string
      */
     fun formatMillisTime(timeInMillis: Long): String {
-//        val instant = Instant.fromEpochMilliseconds(timeInMillis)
-//        val localTime = instant.toLocalDateTime(TimeZone.currentSystemDefault()).time
-//        return formatter?.let {
-//            formatTime(localTime, formatter)
-//        } ?: formatTime(localTime)
         val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
         return duration.toComponents { hours, minutes, seconds, _ ->
             "%02d:%02d:%02d".format(hours, minutes, seconds)
@@ -72,9 +77,9 @@ object TimeUtils {
      */
     fun convertMillisToMinutes(timeInMillis: Long): Int {
         val duration: Duration = timeInMillis.toDuration(DurationUnit.MILLISECONDS)
-        val mins = duration.inWholeMinutes.toInt()
-        val secs = duration.minus(mins.toDuration(DurationUnit.MINUTES)).inWholeSeconds
-        return mins + if (secs >= 30) 1 else 0
+        val minutes = duration.inWholeMinutes.toInt()
+        val secs = duration.minus(minutes.toDuration(DurationUnit.MINUTES)).inWholeSeconds
+        return minutes + if (secs >= 30) 1 else 0
     }
 
     /**

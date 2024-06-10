@@ -9,6 +9,13 @@ import it.unito.progmob.tracking.domain.model.PathPoint
 class GetWalksWithPathPointsUseCase(
     private val walksRepository: WalkRepository
 ) {
+    /**
+     * Retrieves walks with their path points within the given date range.
+     *
+     * @param startDate The start date of the range (in milliseconds since epoch).
+     * @param endDate The end date of the range (in milliseconds since epoch).
+     * @return A list of [AllWalksPerDate] objects, each representing walks associated with a specific date.
+     */
     operator fun invoke(
         startDate: Long,
         endDate: Long

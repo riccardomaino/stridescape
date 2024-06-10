@@ -7,6 +7,11 @@ import it.unito.progmob.home.domain.model.StepsTarget
 class AddTargetUseCase(
     private val targetRepository: TargetRepository
 ) {
+    /**
+     * Adds a new daily step target to the repository.
+     *
+     * @param newTarget The new step target to add.
+     */
     suspend operator fun invoke(newTarget: StepsTarget) {
         val targetEntity = TargetEntity(
             stepsTarget = newTarget.stepsTarget,
