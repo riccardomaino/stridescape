@@ -18,7 +18,7 @@ import it.unito.progmob.core.domain.model.tuples.MonthTimeTuple
 import kotlinx.coroutines.flow.Flow
 
 interface WalkRepository {
-    fun findWalksWithPathPoints(): List<WalkWithPathPointsEntity>
+    fun findWalksWithPathPoints(startDate: String, endDate: String): List<WalkWithPathPointsEntity>?
     fun findStepsByDate(date: String): Flow<Int>
     fun findCaloriesByDate(date: String): Flow<Int>
     fun findDistanceByDate(date: String): Flow<Int>

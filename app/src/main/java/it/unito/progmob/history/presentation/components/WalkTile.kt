@@ -21,17 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import it.unito.progmob.R
 import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
 @Composable
-fun SingleWalkStat(
+fun WalkTile(
     modifier: Modifier = Modifier,
-    singleWalk: WalkWithPathPoints,
-    onClick: () -> Unit = {},
-    showPopUp: Boolean
+    walk: WalkWithPathPoints,
+    onClick: () -> Unit = {}
 ) {
     val color = MaterialTheme.colorScheme.surface
     Box(
@@ -43,20 +45,6 @@ fun SingleWalkStat(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) { onClick() }
-//            .then(
-//            if (!showPopUp) {
-//                modifier
-//                    .padding(vertical = small)
-//                    .clip(RoundedCornerShape(medium))
-//                    .background(color)
-//                    .clickable(onClick = onClick)
-//            } else {
-//                modifier
-//                    .padding(vertical = small)
-//                    .clip(RoundedCornerShape(medium))
-//                    .background(color)
-//            }
-//        )
     ) {
         Row(
             modifier = Modifier
@@ -65,32 +53,32 @@ fun SingleWalkStat(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            SingleStatBlock(
+            WalkTileItem(
                 icon = Icons.AutoMirrored.Filled.DirectionsWalk,
                 iconColor = MaterialTheme.colorScheme.primary,
-                value = singleWalk.steps.toString(),
-                contentDescription = "Total steps of the walk",
+                value = walk.steps.toString(),
+                contentDescription = stringResource(R.string.tracking_steps_walking_stat_icon_desc),
                 modifier = Modifier
             )
-            SingleStatBlock(
+            WalkTileItem(
                 icon = Icons.Outlined.LocalFireDepartment,
                 iconColor = Color.Red,
-                value = singleWalk.calories.toString(),
-                contentDescription = "Total calories of the walk",
+                value = walk.calories.toString(),
+                contentDescription = stringResource(R.string.tracking_calories_walking_stat_icon_desc),
                 modifier = Modifier
             )
-            SingleStatBlock(
+            WalkTileItem(
                 icon = Icons.Outlined.Map,
                 iconColor = Color(0xFF0C9B12),
-                value = singleWalk.distance.toString(),
-                contentDescription = "Total kilometers of the walk",
+                value = WalkUtils.formatDistanceToKm(walk.distance),
+                contentDescription = stringResource(R.string.tracking_distance_walking_stat_icon_desc),
                 modifier = Modifier
             )
-            SingleStatBlock(
+            WalkTileItem(
                 icon = Icons.Outlined.Timer,
                 iconColor = Color(0xFFFF9800),
-                value = TimeUtils.formatMillisTimeHoursMinutes(singleWalk.time),
-                contentDescription = "Total duration of the walk",
+                value = TimeUtils.formatMillisTimeHoursMinutes(walk.time),
+                contentDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
                 modifier = Modifier
             )
         }

@@ -15,13 +15,18 @@ import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
 @Composable
-fun WalkDate(modifier: Modifier = Modifier, date: String) {
+fun WalkDate(modifier: Modifier = Modifier, dateFormatted: String) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(vertical = small),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = small),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = date, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold))
+        Text(
+            text = dateFormatted,
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+        )
         HorizontalDivider(modifier = modifier.fillMaxWidth().padding(start = medium))
     }
 }

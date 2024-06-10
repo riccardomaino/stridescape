@@ -1,5 +1,8 @@
 package it.unito.progmob.core.domain.util
 
+import android.content.Context
+import it.unito.progmob.core.domain.ext.monthFullNames
+import it.unito.progmob.core.domain.ext.weekDaysNames
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -86,6 +89,19 @@ object DateUtils {
         } ?: formatDate(localDate)
     }
 
+    fun formatDateForHistory(
+        date: String,
+        context: Context,
+        parseFormatter: DateTimeFormat<LocalDate>? = null
+    ): String {
+        val localDate = LocalDate.parse(date, format = parseFormatter ?: defaultFormatter)
+        val dayOfWeekStr = context.weekDaysNames[localDate.dayOfWeek.value - 1].lowercase().replaceFirstChar{ it.uppercase() }
+        val monthStr = context.monthFullNames[localDate.monthNumber - 1].lowercase().replaceFirstChar{ it.uppercase() }
+        val dayStr = localDate.dayOfMonth
+        val yearStr = localDate.year
+        return "$dayOfWeekStr,  $monthStr $dayStr $yearStr"
+    }
+
     /**
      * Get the current date formatted based on the formatter provided or the default one if it is not provided
      *
@@ -96,9 +112,7 @@ object DateUtils {
         formatter: DateTimeFormat<LocalDate>? = null
     ): String {
         val localDate = getCurrentLocalDateTime().date
-        return formatter?.let {
-            formatDate(localDate, formatter)
-        } ?: formatDate(localDate)
+        return formatDate(localDate, formatter ?: defaultFormatter)
     }
 
 

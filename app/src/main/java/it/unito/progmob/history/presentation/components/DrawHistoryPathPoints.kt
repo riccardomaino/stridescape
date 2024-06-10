@@ -22,16 +22,6 @@ import it.unito.progmob.tracking.domain.model.PathPoint
 fun DrawHistoryPathPoints(
     pathPoints: List<PathPoint>,
 ) {
-//    val infiniteTransition = rememberInfiniteTransition(label = "Infinite transition animation")
-//    val alphaPositionMarker by infiniteTransition.animateFloat(
-//        initialValue = 0.7f,
-//        targetValue = 1f,
-//        animationSpec = infiniteRepeatable(
-//            tween(1000),
-//            repeatMode = RepeatMode.Reverse
-//        ), label = "Alpha animation"
-//    )
-
     val lastMarkerState = rememberMarkerState()
     val lastLocationPoint = pathPoints.lastLocationPoint()
     lastLocationPoint?.let { lastMarkerState.position = LatLng(it.lat, it.lng) }

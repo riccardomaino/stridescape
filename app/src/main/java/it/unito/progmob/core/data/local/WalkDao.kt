@@ -26,8 +26,8 @@ import kotlinx.coroutines.flow.Flow
 interface WalkDao {
 
     @Transaction
-    @Query("SELECT * FROM walks")
-    fun findWalksWithPathPoints(): List<WalkWithPathPointsEntity>
+    @Query("SELECT * FROM walks WHERE date >= :startDate AND date <= :endDate ORDER BY date DESC")
+    fun findWalksWithPathPoints(startDate: String, endDate: String): List<WalkWithPathPointsEntity>?
 
     @Query("SELECT SUM(steps) FROM walks WHERE date = :date")
     fun findStepsByDate(date: String): Flow<Int>

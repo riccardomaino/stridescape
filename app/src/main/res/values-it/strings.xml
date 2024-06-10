@@ -114,5 +114,8 @@
     <string name="navigationbar_history_icon_content_desc">Icona utilizzata per aprire la pagina della cronologia</string>
     <string name="stopwalkdialog_cancel_btn">Annulla</string>
     <string name="tracking_resume_icon_content_desc">Icona del bottone utilizzato per riprendere  il tracciamento</string>
+    <string name="history_calendar_icon_content_desc">Icona del bottone utilizzato per selezionare un intervallo di date</string>
+    <string name="history_no_walks_text">La cronologia delle tue passeggiate è vuota per le date scelte. Amplia l\'intervallo di date o monitora alcune passeggiate per vedere i tuoi progressi.</string>
+    <string name="history_date_range_btn">Scegli Date</string>
     <string name="profile_save_icon_content_desc">Icona del pulsante utilizzato per salvare le modifiche nel profilo</string>
 </resources>

@@ -51,7 +51,7 @@ fun StopWalkDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.stopwalkdialog_cancel_btn),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }

@@ -125,4 +125,7 @@
     <string name="stopwalkdialog_cancel_btn">Cancel</string>
     <string name="tracking_resume_icon_content_desc">Icon of the button used to resume the tracking</string>
     <string name="profile_save_icon_content_desc">Icon for the button used to save the changes in the profile</string>
+    <string name="history_calendar_icon_content_desc">Icon for the button used to select a date range</string>
+    <string name="history_date_range_btn">Choose Dates</string>
+    <string name="history_no_walks_text">Your walking history is empty for the chosen dates. Widen the date range or track some walks to see your progress.</string>
 </resources>

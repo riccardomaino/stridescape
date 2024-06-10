@@ -156,18 +156,19 @@ fun NavGraph(
 
                 }
 
-                composable(
-                    route = Route.HistoryScreenRoute.route
-                ) {
-                    val historyViewModel = hiltViewModel<HistoryViewModel>()
-                    val allWalks = historyViewModel.allWalks
-                    val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
+            composable(
+                route = Route.HistoryScreenRoute.route
+            ) {
+                val historyViewModel = hiltViewModel<HistoryViewModel>()
+                val allGroupedWalks by historyViewModel.allGroupedWalks.collectAsState()
+                val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
 
-                    HistoryScreen(
-                        allWalksList = allWalks,
-                        isDataLoaded = isDataLoaded
-                    )
-                }
+                HistoryScreen(
+                    historyEvent = historyViewModel::onEvent,
+                    allGroupedWalks = allGroupedWalks,
+                    isDataLoaded = isDataLoaded
+                )
+            }
 
                 composable(
                     route = Route.ProfileScreenRoute.route,

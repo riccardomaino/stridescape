@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.Flow
 class WalkRepositoryImpl(
     private val walkDao: WalkDao
 ): WalkRepository {
-    override fun findWalksWithPathPoints(): List<WalkWithPathPointsEntity> {
-        return walkDao.findWalksWithPathPoints()
+    override fun findWalksWithPathPoints(startDate: String, endDate: String): List<WalkWithPathPointsEntity>? {
+        return walkDao.findWalksWithPathPoints(startDate, endDate)
     }
 
     override fun findStepsByDate(date: String): Flow<Int> {

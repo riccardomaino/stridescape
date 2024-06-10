@@ -54,7 +54,7 @@ object WalkUtils {
      * @param distanceInMeters the distance covered by the user in meters
      */
     fun getCaloriesBurnt(weightInKg: Float, distanceInMeters: Int): Int =
-        ((0.75f * weightInKg) * (distanceInMeters / 1000f)).toBigDecimal()
+        ((0.5f * weightInKg) * (distanceInMeters / 1000f)).toBigDecimal()
             .setScale(2, RoundingMode.HALF_UP).toInt()
 
     /**

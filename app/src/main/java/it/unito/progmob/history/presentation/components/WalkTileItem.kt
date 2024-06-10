@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import it.unito.progmob.ui.theme.small
 
 @Composable
-fun SingleStatBlock(
+fun WalkTileItem(
     modifier: Modifier,
     icon: ImageVector,
     iconColor: Color,
@@ -26,7 +26,11 @@ fun SingleStatBlock(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = contentDescription, tint = iconColor)
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            tint = iconColor
+        )
         Spacer(modifier = modifier.width(small))
         Text(
             text = value,

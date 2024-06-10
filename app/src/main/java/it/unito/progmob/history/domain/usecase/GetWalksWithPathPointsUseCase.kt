@@ -1,9 +1,8 @@
 package it.unito.progmob.history.domain.usecase
 
 import it.unito.progmob.core.domain.repository.WalkRepository
+import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.history.domain.model.AllWalksPerDate
-import it.unito.progmob.history.domain.model.WalkOrder
-import it.unito.progmob.history.domain.model.WalkOrderType
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
 import it.unito.progmob.tracking.domain.model.PathPoint
 
@@ -11,60 +10,52 @@ class GetWalksWithPathPointsUseCase(
     private val walksRepository: WalkRepository
 ) {
     operator fun invoke(
-        walkOrder: WalkOrder = WalkOrder.Date(WalkOrderType.Descending)
-    ): MutableList<AllWalksPerDate> {
-        val allWalksGrouped = mutableListOf<AllWalksPerDate>()
+        startDate: Long,
+        endDate: Long
+    ): List<AllWalksPerDate> {
+
+        val formattedStartDate = DateUtils.formatDateFromEpochMillis(startDate)
+        val formattedEndDate = DateUtils.formatDateFromEpochMillis(endDate)
+
+        val groupedWalks = mutableListOf<AllWalksPerDate>()
         var prevWalk: WalkWithPathPoints? = null
         var newWalks: AllWalksPerDate? = null
-        var allWalks = walksRepository.findWalksWithPathPoints().map {
-            WalkWithPathPoints(
-                weekDay = it.walk.weekDay,
-                month = it.walk.month,
-                date = it.walk.date,
-                distance = it.walk.distance,
-                time = it.walk.time,
-                steps = it.walk.steps,
-                calories = it.walk.calories,
-                averageSpeed = it.walk.averageSpeed,
-                walkId = it.walk.id!!,
-                pathPoints = it.pathPoints.map { pathPointEntity ->
-                    if(pathPointEntity.pathPoint is PathPoint.LocationPoint) {
-                        PathPoint.LocationPoint(
-                            lat = pathPointEntity.pathPoint.lat,
-                            lng = pathPointEntity.pathPoint.lng,
-                            speed = pathPointEntity.pathPoint.speed
-                        )
-                    } else {
-                        PathPoint.EmptyPoint
+
+        val allWalks = walksRepository.findWalksWithPathPoints(
+            startDate = formattedStartDate,
+            endDate = formattedEndDate
+        )?.let {
+            it.map { walkWithPathPointsEntity ->
+                WalkWithPathPoints(
+                    weekDay = walkWithPathPointsEntity.walk.weekDay,
+                    month = walkWithPathPointsEntity.walk.month,
+                    date = walkWithPathPointsEntity.walk.date,
+                    distance = walkWithPathPointsEntity.walk.distance,
+                    time = walkWithPathPointsEntity.walk.time,
+                    steps = walkWithPathPointsEntity.walk.steps,
+                    calories = walkWithPathPointsEntity.walk.calories,
+                    averageSpeed = walkWithPathPointsEntity.walk.averageSpeed,
+                    walkId = walkWithPathPointsEntity.walk.id!!,
+                    pathPoints = walkWithPathPointsEntity.pathPoints.map { pathPointEntity ->
+                        if (pathPointEntity.pathPoint is PathPoint.LocationPoint) {
+                            PathPoint.LocationPoint(
+                                lat = pathPointEntity.pathPoint.lat,
+                                lng = pathPointEntity.pathPoint.lng,
+                                speed = pathPointEntity.pathPoint.speed
+                            )
+                        } else {
+                            PathPoint.EmptyPoint
+                        }
                     }
-                }
-            )
-        }
-
-        when (walkOrder.orderType) {
-            is WalkOrderType.Ascending -> {
-                allWalks = when (walkOrder) {
-                    is WalkOrder.Date -> allWalks.sortedBy { it.date }
-                    is WalkOrder.Distance -> allWalks.sortedBy { it.distance }
-                    is WalkOrder.Time -> allWalks.sortedBy { it.time }
-                    is WalkOrder.Steps -> allWalks.sortedBy { it.steps }
-                }
+                )
             }
+        } ?: emptyList()
 
-            is WalkOrderType.Descending -> {
-                allWalks = when (walkOrder) {
-                    is WalkOrder.Date -> allWalks.sortedByDescending { it.date }
-                    is WalkOrder.Distance -> allWalks.sortedByDescending { it.distance }
-                    is WalkOrder.Time -> allWalks.sortedByDescending { it.time }
-                    is WalkOrder.Steps -> allWalks.sortedByDescending { it.steps }
-                }
-            }
-        }
 
         allWalks.forEach { walk ->
             prevWalk?.let {
                 if (prevWalk?.date != walk.date) {
-                    allWalksGrouped.add(newWalks!!)
+                    groupedWalks.add(newWalks!!)
                     newWalks = AllWalksPerDate(walk.date, mutableListOf())
                 }
                 newWalks?.walks?.add(walk)
@@ -75,8 +66,8 @@ class GetWalksWithPathPointsUseCase(
             prevWalk = walk
         }
         newWalks?.let {
-            allWalksGrouped.add(it)
+            groupedWalks.add(it)
         }
-        return allWalksGrouped
+        return groupedWalks
     }
 }
