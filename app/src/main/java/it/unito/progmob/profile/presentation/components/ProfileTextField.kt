@@ -91,12 +91,6 @@ fun ProfileTextField(
 
                 )
         )
-//        Text (
-//            text = if (isError) errorText!!.asString() else "",
-//            color = MaterialTheme.colorScheme.error,
-//            style = MaterialTheme.typography.bodyMedium,
-//            modifier = modifier
-//        )
     }
 }
 

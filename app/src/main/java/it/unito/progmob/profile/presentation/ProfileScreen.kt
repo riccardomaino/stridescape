@@ -1,12 +1,8 @@
 package it.unito.progmob.profile.presentation
 
 import ProfileDialog
-import android.util.Log
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,23 +47,23 @@ import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
 
-
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     profileEvent: (ProfileEvent) -> Unit,
     profileState: UiProfileState,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope
 ) {
     var isSaveButtonEnabled by remember { mutableStateOf(false) }
     val userCircleColor = MaterialTheme.colorScheme.onPrimary
     val iconSize = LocalConfiguration.current.screenWidthDp.dp * 0.25f
     val changeUserName = remember { mutableStateOf(false) }
     val openAlertDialog = remember { mutableStateOf(false) }
-    var backupUsername by remember { mutableStateOf(profileState.username) }
-    Log.d("ProfileScreen", "Username: ${backupUsername}")
+    var backupUsername by remember { mutableStateOf("") }
+
+    LaunchedEffect(true) {
+        backupUsername = profileState.username
+    }
+
     Column(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surfaceVariant)
@@ -80,7 +77,7 @@ fun ProfileScreen(
                 .fillMaxSize(0.2f)
                 .padding(horizontal = medium),
             horizontalArrangement = Arrangement.spacedBy(medium, Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             Box(
                 contentAlignment = Alignment.Center
@@ -95,7 +92,7 @@ fun ProfileScreen(
                 }
                 Icon(
                     Icons.Default.Person,
-                    contentDescription = "Profile",
+                    contentDescription = stringResource(R.string.profile_user_icon_desription),
                     modifier = Modifier
                         .size(iconSize)
                         .padding(bottom = small)
@@ -107,7 +104,7 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    "Ciao,",
+                    stringResource(R.string.profile_title),
                     style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold)
                 )
                 AnimatedVisibility(visible = changeUserName.value) {
@@ -120,11 +117,8 @@ fun ProfileScreen(
                         isError = profileState.usernameError != null,
                         errorText = profileState.usernameError,
                         iconButtonClick = {
-                            if (profileState.usernameError == null) {
-                                changeUserName.value = false
-                                Log.d("ProfileScreen", "Username changed to $backupUsername")
-                                profileState.username = backupUsername
-                            }
+                            changeUserName.value = false
+                            profileState.username = backupUsername
                         }
                     )
                 }
@@ -144,7 +138,7 @@ fun ProfileScreen(
                         IconButton(onClick = { changeUserName.value = true }) {
                             Icon(
                                 imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit Profile"
+                                contentDescription = stringResource(R.string.profile_modify_icon_description)
                             )
                         }
                     }
@@ -205,7 +199,7 @@ fun ProfileScreen(
                 errorText = profileState.targetError
             )
             ProfileButton(
-                text = "Save Changes",
+                text = stringResource(R.string.profile_save_changes_btn),
                 onClick = {
                     profileEvent(ProfileEvent.SaveProfile)
                     isSaveButtonEnabled = false
@@ -220,8 +214,8 @@ fun ProfileScreen(
     if (openAlertDialog.value) {
         ProfileDialog(
             onConfirmation = { openAlertDialog.value = false },
-            dialogTitle = "Username Changed",
-            dialogText = "Your personal information has been successfully updated!",
+            dialogTitle = stringResource(R.string.profiledialog_title),
+            dialogText = stringResource(R.string.profiledialog_text),
             icon = Icons.Default.CheckCircle,
             onDismiss = { openAlertDialog.value = false }
         )

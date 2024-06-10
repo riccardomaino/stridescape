@@ -119,6 +119,14 @@
     <string name="history_no_walks_title">La cronologia delle tue passeggiate è vuota per le date scelte.</string>
     <string name="history_date_range_btn">Scegli Date</string>
     <string name="profile_save_icon_content_desc">Icona del pulsante utilizzato per salvare le modifiche nel profilo</string>
+    <string name="textfield_username_title">Nome</string>
+    <string name="history_no_walks_text">La cronologia delle tue passeggiate è vuota per le date scelte. Amplia l\'intervallo di date o monitora alcune passeggiate per vedere i tuoi progressi.</string>
+    <string name="profile_user_icon_desription">Icona che rappresenta la pagina  con le informazioni dell\'utente</string>
+    <string name="profile_title">Ciao</string>
+    <string name="profile_modify_icon_description">Icona del pulsante utilizzato per abilitare il odificatore del nome utente</string>
+    <string name="profile_save_changes_btn">Salva Modifiche</string>
+    <string name="profiledialog_title">Informatzioni Personali Aggiornate</string>
+    <string name="profiledialog_text">Le tue informazioni personali sono state aggiornate con successo!</string>
     <string name="history_start_date_text_first">Data</string>
     <string name="history_end_date_text_first">Data</string>
     <string name="history_start_date_text_second">Inizio</string>

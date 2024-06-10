@@ -1,5 +1,6 @@
 package it.unito.progmob.home.presentation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import it.unito.progmob.home.presentation.components.WeeklyStats
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,

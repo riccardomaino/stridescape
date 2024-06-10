@@ -43,7 +43,7 @@ import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
 import it.unito.progmob.onboarding.domain.usecase.SaveOnboardingEntryUseCase
 import it.unito.progmob.profile.domain.usecase.GetTargetUseCase
 import it.unito.progmob.profile.domain.usecase.ProfileUseCases
-import it.unito.progmob.profile.domain.usecase.UpdateTargetUseCase
+import it.unito.progmob.core.domain.usecase.UpdateTargetUseCase
 import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthCaloriesStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthDistanceStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthSpeedStatUseCase
@@ -136,12 +136,18 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOnBoardingUseCases(
-        dataStoreManager: DataStoreManager
+        dataStoreManager: DataStoreManager,
+        targetRepository: TargetRepository
     ) = OnBoardingUseCases(
         SaveOnboardingEntryUseCase(dataStoreManager),
         SaveUsernameEntryUseCase(dataStoreManager),
         SaveUserWeightEntryUseCase(dataStoreManager),
-        SaveUserHeightEntryUseCase(dataStoreManager)
+        SaveUserHeightEntryUseCase(dataStoreManager),
+        UpdateTargetUseCase(targetRepository),
+        ValidateHeightUseCase(),
+        ValidateTargetUseCase(),
+        ValidateUsernameUseCase(),
+        ValidateWeightUseCase()
     )
 
     @Provides

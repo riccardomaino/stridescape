@@ -85,7 +85,7 @@ fun TrackingScreen(
     lastKnownLocation: LatLng? = null,
     lastKnownLocationUpdatesCounter: Long,
     showStopWalkDialog: Boolean,
-    isLocationEnabled: Boolean
+    isLocationEnabled: Boolean,
 ) {
     val context = LocalContext.current
     val hapticFeedback = LocalView.current

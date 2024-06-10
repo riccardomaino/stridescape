@@ -3,7 +3,6 @@ package it.unito.progmob.profile.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,7 +39,6 @@ fun ProfileUserTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.padding(top = small),
             singleLine = true,
             textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Start),
             shape = RoundedCornerShape(small),

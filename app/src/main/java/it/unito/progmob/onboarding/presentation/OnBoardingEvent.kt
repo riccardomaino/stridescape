@@ -5,5 +5,9 @@ package it.unito.progmob.onboarding.presentation
  * feature.
  */
 sealed class OnBoardingEvent {
-    data object SaveEntries: OnBoardingEvent()
+    data object SaveProfile: OnBoardingEvent()
+    data class HeightChanged(val height: String) : OnBoardingEvent()
+    data class WeightChanged(val weight: String) : OnBoardingEvent()
+    data class TargetChanged(val target: String) : OnBoardingEvent()
+    data class UsernameChanged(val username: String) : OnBoardingEvent()
 }

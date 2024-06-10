@@ -17,10 +17,12 @@ import it.unito.progmob.ui.theme.extralargeRadius
 @Composable
 fun OnBoardingButton(
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isEnabled: Boolean
 ) {
     Button(
         modifier = Modifier.width(150.dp).height(45.dp),
+        enabled = isEnabled,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,

@@ -1,5 +1,6 @@
 package it.unito.progmob.onboarding.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,8 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.onboarding.presentation.components.OnBoardingButton
 import it.unito.progmob.onboarding.presentation.components.OnBoardingProfileTop
 import it.unito.progmob.onboarding.presentation.components.OnBoardingTextButton
+import it.unito.progmob.onboarding.presentation.state.UiOnBoardingState
 import it.unito.progmob.ui.theme.large
 import kotlinx.coroutines.launch
 
@@ -26,15 +28,18 @@ import kotlinx.coroutines.launch
 fun OnBoardingProfileScreen(
     modifier: Modifier = Modifier,
     onBoardingEvent: (OnBoardingEvent) -> Unit,
+    onBoardingState: UiOnBoardingState,
     navController: NavController,
-    userWeight: MutableState<String>,
-    userHeight: MutableState<String>,
-    userName: MutableState<String>
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    Column {
-        OnBoardingProfileTop(userName = userName, userHeight = userHeight, userWeight = userWeight)
+    Column(
+        modifier = modifier.background(color = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        OnBoardingProfileTop(
+            onBoardingEvent = onBoardingEvent,
+            onBoardingState = onBoardingState
+        )
         Spacer(modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier
@@ -59,8 +64,16 @@ fun OnBoardingProfileScreen(
                             popUpTo(Route.HomeScreenRoute.route) { inclusive = true }
                         }
                     }
-                    onBoardingEvent(OnBoardingEvent.SaveEntries)
-                }
+                    onBoardingEvent(OnBoardingEvent.SaveProfile)
+                },
+                isEnabled = onBoardingState.usernameError == null &&
+                        onBoardingState.heightError == null &&
+                        onBoardingState.weightError == null &&
+                        onBoardingState.targetError == null &&
+                        onBoardingState.username.isNotBlank() &&
+                        onBoardingState.height.isNotBlank() &&
+                        onBoardingState.weight.isNotBlank() &&
+                        onBoardingState.target.isNotBlank()
             )
         }
     }

@@ -90,7 +90,9 @@ fun OnBoardingScreen(
                             pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                         }
                     }
-                })
+                },
+                    isEnabled = true
+                )
             }
         }
     }

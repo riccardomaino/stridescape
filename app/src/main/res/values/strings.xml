@@ -38,7 +38,7 @@
     <string name="week_saturday">Sat</string>
     <string name="week_sunday">Sun</string>
     <string name="onboparding_page4_title">Personal Information</string>
-    <string name="onboarding_page4_description">Enter your personal information so we can provide you with more precise data</string>
+    <string name="onboarding_page4_description">Please enter your personal information so we can provide you with more precise data</string>
     <string name="tracking_play_icon_content_desc">Icon of the button used to start the tracking</string>
     <string name="tracking_pause_icon_content_desc">Icon of the button used to pause the tracking</string>
     <string name="tracking_steps_walking_stat_icon_desc">Icon for the amount of steps perfomed</string>
@@ -125,6 +125,7 @@
     <string name="stopwalkdialog_cancel_btn">Cancel</string>
     <string name="tracking_resume_icon_content_desc">Icon of the button used to resume the tracking</string>
     <string name="profile_save_icon_content_desc">Icon for the button used to save the changes in the profile</string>
+    <string name="textfield_username_title">Username</string>
     <string name="history_calendar_icon_content_desc">Icon for the button used to select a date range</string>
     <string name="history_date_range_btn">Choose Dates</string>
     <string name="history_no_walks_title">Your walking history is empty for the chosen dates.</string>
@@ -134,4 +135,11 @@
     <string name="history_start_date_text_second">Date</string>
     <string name="history_end_date_text_second">Date</string>
     <string name="history_empty_search_image_content_desc">Image used when there aren\'t walks for a selected date range</string>
+    <string name="history_no_walks_text">Your walking history is empty for the chosen dates. Widen the date range or track some walks to see your progress.</string>
+    <string name="profile_user_icon_desription">Icon representing the page with user information</string>
+    <string name="profile_title">Hi</string>
+    <string name="profile_modify_icon_description">Icon for the button used to enable the username modifier</string>
+    <string name="profile_save_changes_btn">Save Changes</string>
+    <string name="profiledialog_title">Personal Information Updated</string>
+    <string name="profiledialog_text">Your personal information has been successfully updated!</string>
 </resources>

@@ -6,6 +6,7 @@ import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUsernameEntryUseCase
+import it.unito.progmob.core.domain.usecase.UpdateTargetUseCase
 import it.unito.progmob.core.domain.usecase.ValidateHeightUseCase
 import it.unito.progmob.core.domain.usecase.ValidateTargetUseCase
 import it.unito.progmob.core.domain.usecase.ValidateUsernameUseCase
