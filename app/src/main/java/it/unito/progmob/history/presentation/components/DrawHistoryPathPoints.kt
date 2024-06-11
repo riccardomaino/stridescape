@@ -33,23 +33,22 @@ fun DrawHistoryPathPoints(
     val latLngList = mutableListOf<LatLng>()
 
     var emptyPointFounded = false
-    pathPoints.forEach { pathPoint ->
+    pathPoints.forEachIndexed { index, pathPoint  ->
         if (pathPoint is PathPoint.EmptyPoint) {
             emptyPointFounded = true
-            lastLocationPoint?.let {
-                Marker(
-                    title = stringResource(R.string.pathpoint_marker_title_end_point),
-                    icon = vectorToBitmap(
-                        context = LocalContext.current,
-                        parameters = BitmapParameters(
-                            id = R.drawable.initial_and_final_position_marker
-                        )
-                    ),
-                    state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
-                    anchor = Offset(0.5f, 0.95f),
-                    visible = true
-                )
-            }
+            val prevLocationPoint = pathPoints[index - 1] as PathPoint.LocationPoint
+            Marker(
+                title = stringResource(R.string.pathpoint_marker_title_end_point),
+                icon = vectorToBitmap(
+                    context = LocalContext.current,
+                    parameters = BitmapParameters(
+                        id = R.drawable.initial_and_final_position_marker
+                    )
+                ),
+                state = rememberMarkerState(position = LatLng(prevLocationPoint.lat, prevLocationPoint.lng)),
+                anchor = Offset(0.5f, 0.95f),
+                visible = true
+            )
             Polyline(
                 points = latLngList.toList(),
                 color = MaterialTheme.colorScheme.primary,
@@ -77,6 +76,19 @@ fun DrawHistoryPathPoints(
 
     // Add the last path points
     if (latLngList.isNotEmpty()) {
+        lastLocationPoint?.let {
+            Marker(
+                icon = vectorToBitmap(
+                    context = LocalContext.current,
+                    parameters = BitmapParameters(
+                        id = R.drawable.initial_and_final_position_marker
+                    )
+                ),
+                state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
+                anchor = Offset(0.5f, 0.85f),
+                visible = true
+            )
+        }
         Polyline(
             points = latLngList.toList(),
             color = MaterialTheme.colorScheme.primary,

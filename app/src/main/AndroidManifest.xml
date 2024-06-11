@@ -42,8 +42,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="progmob.unito.com"
-                    android:scheme="https" />
+                    android:scheme="stridescape"
+                    android:host="tracking_screen" />
             </intent-filter>
         </activity>
 

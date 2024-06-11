@@ -90,6 +90,15 @@ object WalkUtils {
         return null
     }
 
+    fun List<PathPoint>.lastEmptyPointIndex(): Int {
+        return indexOfLast { it is PathPoint.EmptyPoint }
+//        return if (index != -1) this[index] as PathPoint.EmptyPoint else null
+//        for (i in lastIndex downTo 0)
+//            if (get(i) is PathPoint.EmptyPoint)
+//                return get(i) as PathPoint.EmptyPoint
+//        return null
+    }
+
     fun List<PathPoint>.firstLocationPoint() =
         find { it is PathPoint.LocationPoint } as? PathPoint.LocationPoint
 }

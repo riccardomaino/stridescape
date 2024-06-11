@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat
 import it.unito.progmob.R
 
 /**
- * Returns an array of localized weekday names, starting from Monday.
+ * Returns an array of localized short weekday names (e.g., "Mon", "Tue").
  */
-val Context.weekDaysNames: Array<String>
+val Context.shortWeekDaysNames: Array<String>
     get() = arrayOf(
         this.resources.getString(R.string.week_monday),
         this.resources.getString(R.string.week_tuesday),
@@ -26,7 +26,7 @@ val Context.weekDaysNames: Array<String>
 /**
  * Returns an array of localized short month names (e.g., "Jan", "Feb").
  */
-val Context.monthsNames: Array<String>
+val Context.shortMonthsNames: Array<String>
     get() = arrayOf(
         this.resources.getString(R.string.month_january),
         this.resources.getString(R.string.month_february),
@@ -45,7 +45,7 @@ val Context.monthsNames: Array<String>
 /**
  * Returns an array of localized full month names (e.g., "January", "February").
  */
-val Context.monthFullNames: Array<String>
+val Context.fullMonthsNames: Array<String>
     get() = arrayOf(
         this.resources.getString(R.string.month_full_january),
         this.resources.getString(R.string.month_full_february),

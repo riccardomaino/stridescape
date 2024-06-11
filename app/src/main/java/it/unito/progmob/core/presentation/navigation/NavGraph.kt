@@ -1,6 +1,8 @@
 package it.unito.progmob.core.presentation.navigation
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -10,6 +12,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,6 +27,7 @@ import it.unito.progmob.history.presentation.HistoryScreen
 import it.unito.progmob.history.presentation.viewmodel.HistoryViewModel
 import it.unito.progmob.home.presentation.HomeScreen
 import it.unito.progmob.home.presentation.viewmodel.HomeViewModel
+import it.unito.progmob.main.presentation.MainEvent
 import it.unito.progmob.onboarding.presentation.OnBoardingProfileScreen
 import it.unito.progmob.onboarding.presentation.OnBoardingScreen
 import it.unito.progmob.onboarding.presentation.viewmodel.OnBoardingViewModel
@@ -30,6 +37,8 @@ import it.unito.progmob.stats.presentation.StatsScreen
 import it.unito.progmob.stats.presentation.viewmodel.StatsViewModel
 import it.unito.progmob.tracking.presentation.TrackingScreen
 import it.unito.progmob.tracking.presentation.viewmodel.TrackingViewModel
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.launch
 
 /**
  * Defines the navigation graph for the application.
@@ -40,21 +49,26 @@ import it.unito.progmob.tracking.presentation.viewmodel.TrackingViewModel
 @Composable
 fun NavGraph(
     startDestination: String,
-    navController: NavHostController
+    navController: NavHostController,
+    mainEvent: (MainEvent) -> Unit
 ) {
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    var backPressHandled by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
     ) {
-        // Onboarding navigation graph
+        // OnBoarding Navigation Graph
         navigation(
             route = Route.OnBoardingNavigationRoute.route,
             startDestination = Route.OnBoardingScreenRoute.route,
             exitTransition = { fadeOut(animationSpec = tween(200, delayMillis = 0)) }
         ) {
-            // Onboarding welcome screen
+            // OnBoarding Welcome Screen
             composable(
                 route = Route.OnBoardingScreenRoute.route,
             ) {
@@ -62,7 +76,7 @@ fun NavGraph(
                     navController = navController
                 )
             }
-            // Onboarding profile screen
+            // OnBoarding Profile Screen
             composable(
                 route = Route.OnBoardingProfileScreenRoute.route,
                 enterTransition = { fadeIn(animationSpec = tween(200, delayMillis = 0)) },
@@ -78,18 +92,31 @@ fun NavGraph(
             }
         }
 
-        // Main navigation graph
+        // Main Navigation Graph
         navigation(
             route = Route.MainNavigationRoute.route,
             startDestination = Route.HomeScreenRoute.route
         ) {
-            // Home screen
+            // Home Screen
             composable(
                 route = Route.HomeScreenRoute.route
             ) {
-                val homeViewModel = hiltViewModel<HomeViewModel>()
+                // Handle the back press to show the floating action button only on the Home screen
+                BackHandler(enabled = !backPressHandled) {
+                    when(navController.previousBackStackEntry?.destination?.route) {
+                        Route.HomeScreenRoute.route -> mainEvent(MainEvent.ShowFloatingActionButton(true))
+                        else -> mainEvent(MainEvent.ShowFloatingActionButton(false))
+                    }
+                    backPressHandled = true
+                    coroutineScope.launch {
+                        awaitFrame()
+                        onBackPressedDispatcher?.onBackPressed()
+                        backPressHandled = false
+                    }
+                }
 
-                // Collect state variables for the Home screen from the home screen viewmodel
+                // Get the ViewModel for the Home screen and collect the related state variables
+                val homeViewModel = hiltViewModel<HomeViewModel>()
                 val currentDayOfWeek by homeViewModel.currentDayOfWeek.collectAsState()
                 val stepsCurrentDay by homeViewModel.stepsCurrentDay.collectAsState()
                 val caloriesCurrentDay by homeViewModel.caloriesCurrentDay.collectAsState()
@@ -111,7 +138,7 @@ fun NavGraph(
                 )
             }
 
-            // Tracking screen
+            // Tracking Screen
             composable(
                 route = Route.TrackingScreenRoute.route,
                 deepLinks = listOf(navDeepLink {
@@ -132,9 +159,22 @@ fun NavGraph(
                     ) + fadeOut(animationSpec = tween(200, delayMillis = 90))
                 },
             ) {
-                val trackingViewModel = hiltViewModel<TrackingViewModel>()
+                // Handle the back press to show the floating action button only on the Home screen
+                BackHandler(enabled = !backPressHandled) {
+                    when(navController.previousBackStackEntry?.destination?.route) {
+                        Route.HomeScreenRoute.route -> mainEvent(MainEvent.ShowFloatingActionButton(true))
+                        else -> mainEvent(MainEvent.ShowFloatingActionButton(false))
+                    }
+                    backPressHandled = true
+                    coroutineScope.launch {
+                        awaitFrame()
+                        onBackPressedDispatcher?.onBackPressed()
+                        backPressHandled = false
+                    }
+                }
 
-                // Collect state variables for the Tracking screen from the tracking screen viewmodel
+                // Get the ViewModel for the Tracking screen and collect the related state variables
+                val trackingViewModel = hiltViewModel<TrackingViewModel>()
                 val uiTrackingState by trackingViewModel.uiTrackingState.collectAsState()
                 val lastKnownLocation by trackingViewModel.lastKnownLocation.collectAsState()
                 val lastKnownLocationUpdatesCounter by trackingViewModel.lastKnownLocationUpdatesCounter.collectAsState()
@@ -152,13 +192,26 @@ fun NavGraph(
                 )
             }
 
-            // Stats screen
+            // Stats Screen
             composable(
                 route = Route.StatsScreenRoute.route
             ) {
-                val statsViewModel = hiltViewModel<StatsViewModel>()
+                // Handle the back press to show the floating action button only on the Home screen
+                BackHandler(enabled = !backPressHandled) {
+                    when(navController.previousBackStackEntry?.destination?.route) {
+                        Route.HomeScreenRoute.route -> mainEvent(MainEvent.ShowFloatingActionButton(true))
+                        else -> mainEvent(MainEvent.ShowFloatingActionButton(false))
+                    }
+                    backPressHandled = true
+                    coroutineScope.launch {
+                        awaitFrame()
+                        onBackPressedDispatcher?.onBackPressed()
+                        backPressHandled = false
+                    }
+                }
 
-                // Collect state variables for the Stats screen from the stats screen viewmodel
+                // Get the ViewModel for the Stats screen and collect the related state variables
+                val statsViewModel = hiltViewModel<StatsViewModel>()
                 val uiStatsState by statsViewModel.uiStatsState.collectAsState()
                 val isDataLoaded by statsViewModel.isDataLoaded.collectAsState()
 
@@ -170,13 +223,26 @@ fun NavGraph(
 
             }
 
-            // History screen
+            // History Screen
             composable(
                 route = Route.HistoryScreenRoute.route
             ) {
-                val historyViewModel = hiltViewModel<HistoryViewModel>()
+                // Handle the back press to show the floating action button only on the Home screen
+                BackHandler(enabled = !backPressHandled) {
+                    when(navController.previousBackStackEntry?.destination?.route) {
+                        Route.HomeScreenRoute.route -> mainEvent(MainEvent.ShowFloatingActionButton(true))
+                        else -> mainEvent(MainEvent.ShowFloatingActionButton(false))
+                    }
+                    backPressHandled = true
+                    coroutineScope.launch {
+                        awaitFrame()
+                        onBackPressedDispatcher?.onBackPressed()
+                        backPressHandled = false
+                    }
+                }
 
-                // Collect state variables for the History screen from the history screen viewmodel
+                // Get the ViewModel for the History screen and collect the related state variables
+                val historyViewModel = hiltViewModel<HistoryViewModel>()
                 val allGroupedWalks by historyViewModel.allGroupedWalks.collectAsState()
                 val isDataLoaded by historyViewModel.isDataLoaded.collectAsState()
 
@@ -187,12 +253,26 @@ fun NavGraph(
                 )
             }
 
-            // Profile screen
+            // Profile Screen
             composable(
                 route = Route.ProfileScreenRoute.route,
                 enterTransition = { fadeIn(animationSpec = tween(150, delayMillis = 0)) },
                 exitTransition = { fadeOut(animationSpec = tween(150, delayMillis = 0)) }
             ) {
+                // Handle the back press to show the floating action button only on the Home screen
+                BackHandler(enabled = !backPressHandled) {
+                    when(navController.previousBackStackEntry?.destination?.route) {
+                        Route.HomeScreenRoute.route -> mainEvent(MainEvent.ShowFloatingActionButton(true))
+                        else -> mainEvent(MainEvent.ShowFloatingActionButton(false))
+                    }
+                    backPressHandled = true
+                    coroutineScope.launch {
+                        awaitFrame()
+                        onBackPressedDispatcher?.onBackPressed()
+                        backPressHandled = false
+                    }
+                }
+                // Get the ViewModel for the Profile screen and collect the related state variables
                 val profileViewModel = hiltViewModel<ProfileViewModel>()
                 val profileState by profileViewModel.profileState
                 ProfileScreen(

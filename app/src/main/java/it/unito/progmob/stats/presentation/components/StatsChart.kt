@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -63,8 +64,8 @@ import it.unito.progmob.core.domain.Constants.CHART_LABEL_BACKGROUND_SHADOW_RADI
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_HORIZONTAL_PADDING
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_MIN_WIDTH
 import it.unito.progmob.core.domain.Constants.CHART_LABEL_VERTICAL_PADDING
-import it.unito.progmob.core.domain.ext.monthsNames
-import it.unito.progmob.core.domain.ext.weekDaysNames
+import it.unito.progmob.core.domain.ext.shortMonthsNames
+import it.unito.progmob.core.domain.ext.shortWeekDaysNames
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
@@ -81,8 +82,8 @@ fun StatsChart(
     uiStatsState: UiStatsState
 ) {
     val context = LocalContext.current
-    val weekDaysNames = remember { context.weekDaysNames }
-    val monthsNames = remember { context.monthsNames }
+    val weekDaysNames = rememberSaveable { context.shortWeekDaysNames }
+    val monthsNames = rememberSaveable { context.shortMonthsNames }
     val typeface = remember {
         ResourcesCompat.getFont(context, R.font.nunito_bold)?.let {
             Typeface.create(it, Typeface.BOLD)

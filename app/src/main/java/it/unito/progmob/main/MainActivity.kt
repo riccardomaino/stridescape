@@ -1,6 +1,8 @@
 package it.unito.progmob.main
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -36,11 +38,11 @@ import it.unito.progmob.R
 import it.unito.progmob.core.domain.ext.allPermissions
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.ext.openAppSettings
-import it.unito.progmob.core.presentation.components.AccessFineLocationPermissionTextProvider
-import it.unito.progmob.core.presentation.components.ActivityRecognitionPermissionTextProvider
+import it.unito.progmob.main.presentation.components.AccessFineLocationPermissionTextProvider
+import it.unito.progmob.main.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.core.presentation.components.NavigationBar
-import it.unito.progmob.core.presentation.components.PermissionDialog
-import it.unito.progmob.core.presentation.components.PostNotificationsPermissionTextProvider
+import it.unito.progmob.main.presentation.components.PermissionDialog
+import it.unito.progmob.main.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.main.presentation.MainEvent
@@ -49,9 +51,12 @@ import it.unito.progmob.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SourceLockedOrientationActivity")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         val mainViewModel by viewModels<MainViewModel>()
         installSplashScreen().apply {
             // Check if the boolean is true at every frame, it shows the splash screen until
@@ -83,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 )
+
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -168,8 +174,6 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-
-
                     },
                     bottomBar = {
                         when (currentBackStackEntry?.destination?.route) {
@@ -205,7 +209,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavGraph(
                             startDestination = startDestination,
-                            navController = navController
+                            navController = navController,
+                            mainEvent = mainViewModel::onEvent
                         )
                     }
                 }

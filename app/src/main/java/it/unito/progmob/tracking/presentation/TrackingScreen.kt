@@ -3,6 +3,7 @@ package it.unito.progmob.tracking.presentation
 import android.app.Activity
 import android.content.IntentFilter
 import android.location.LocationManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -49,6 +50,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
+import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -124,6 +127,17 @@ fun TrackingScreen(
         )
     }
 
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LifecycleStartEffect(key1 = true, lifecycleOwner = lifecycleOwner){
+        Log.d("DrawPathPoints", "onStart")
+        trackingEvent(TrackingEvent.StartCollectingState)
+
+        onStopOrDispose {
+            Log.d("DrawPathPoints", "onStopOrDispose")
+            trackingEvent(TrackingEvent.StopCollectingState)
+        }
+    }
+
     DisposableEffect(key1 = true) {
         val locationSettingsListener = object : LocationSettingsListener {
             override fun onEnabled() {
@@ -135,8 +149,7 @@ fun TrackingScreen(
             }
         }
 
-        val locationBroadcastReceiver =
-            LocationBroadcastReceiver(locationSettingsListener = locationSettingsListener)
+        val locationBroadcastReceiver = LocationBroadcastReceiver(locationSettingsListener = locationSettingsListener)
 
         context.registerReceiver(
             locationBroadcastReceiver,
@@ -338,22 +351,23 @@ fun TrackingScreen(
                 }
             }
         }
-        StopWalkDialog(
-            shouldShowDialog = showStopWalkDialog,
-            onConfirm = {
-                trackingEvent(TrackingEvent.StopTrackingService)
-                trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
-                navController.navigate(Route.HomeScreenRoute.route) {
-                    popUpTo(Route.HomeScreenRoute.route) {
-                        inclusive = true
-                    }
-                }
-            },
-            onDismiss = {
-                trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
-            }
-        )
     }
+
+    StopWalkDialog(
+        shouldShowDialog = showStopWalkDialog,
+        onConfirm = {
+            trackingEvent(TrackingEvent.StopTrackingService)
+            trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
+            navController.navigate(Route.HomeScreenRoute.route) {
+                popUpTo(Route.HomeScreenRoute.route) {
+                    inclusive = true
+                }
+            }
+        },
+        onDismiss = {
+            trackingEvent(TrackingEvent.ShowStopWalkDialog(false))
+        }
+    )
 }
 
 @Composable

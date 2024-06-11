@@ -1,4 +1,4 @@
-package it.unito.progmob.core.presentation.components
+package it.unito.progmob.main.presentation.components
 
 import android.content.Context
 import androidx.compose.material3.AlertDialog

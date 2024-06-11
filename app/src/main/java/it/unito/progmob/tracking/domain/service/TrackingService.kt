@@ -19,6 +19,7 @@ import it.unito.progmob.R
 import it.unito.progmob.core.domain.Constants.TRACKING_DEEP_LINK
 import it.unito.progmob.core.domain.Constants.LOCATION_TRACKING_INTERVAL
 import it.unito.progmob.core.domain.ext.hasAllPermissions
+import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
 import it.unito.progmob.core.domain.util.TimeUtils
@@ -165,19 +166,15 @@ class TrackingService : Service() {
             accelerometerSensor
         }
 
-
-        pendingIntent = getPendingIntent()
         // Update the walk state isTracking field to true
         if(!hasBeenResumed){
+            pendingIntent = getPendingIntent()
             walkHandler.updateWalkIsTrackingStarted(true)
         }
         walkHandler.updateWalkIsTracking(true)
 
         // Get the NotificationManager used to notify the notification
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        // Create the PendingIntent used to open the app when the notification is clicked
-        val pendingIntent = getPendingIntent()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // Create the NotificationCompat.Builder used to build all the notifications
         val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
@@ -214,6 +211,7 @@ class TrackingService : Service() {
         trackingServiceScope.launch {
             stepCounterSensor.startListening()
             stepCounterSensor.setOnSensorValueChangedListener { sensorData ->
+                Log.d("TrackingService", "Listening in Thread: ${Thread.currentThread().name}")
                 val newSteps = sensorData[0].toInt()
                 // Update the walk state with the new steps
                 walkHandler.updateWalkSteps(newSteps)
@@ -287,15 +285,14 @@ class TrackingService : Service() {
      * @return a PendingIntent object
      */
     private fun getPendingIntent(): PendingIntent {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            TRACKING_DEEP_LINK.toUri(),
+            applicationContext,
+            MainActivity::class.java
+        )
         return TaskStackBuilder.create(applicationContext).run {
-            addNextIntentWithParentStack(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    TRACKING_DEEP_LINK.toUri(),
-                    applicationContext,
-                    MainActivity::class.java
-                )
-            )
+            addNextIntentWithParentStack(intent)
             getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
     }

@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import it.unito.progmob.R
-import it.unito.progmob.core.domain.ext.weekDaysNames
+import it.unito.progmob.core.domain.ext.shortWeekDaysNames
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
 import it.unito.progmob.ui.theme.small
@@ -38,7 +38,7 @@ fun WeeklyStats(
 ) {
     val context = LocalContext.current
     val weekDaysNames = remember {
-        context.weekDaysNames
+        context.shortWeekDaysNames
     }
 
     Box(

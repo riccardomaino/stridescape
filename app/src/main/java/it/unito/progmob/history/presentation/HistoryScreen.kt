@@ -50,6 +50,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.ext.fullMonthsNames
+import it.unito.progmob.core.domain.ext.shortMonthsNames
+import it.unito.progmob.core.domain.ext.shortWeekDaysNames
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.history.domain.model.AllWalksPerDate
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
@@ -72,6 +75,10 @@ fun HistoryScreen(
     isDataLoaded: Boolean
 ) {
     val context = LocalContext.current
+    val shortWeekDaysNames = rememberSaveable { context.shortWeekDaysNames }
+    val shortMonthsNames = rememberSaveable { context.shortMonthsNames }
+    val fullMonthsNames = rememberSaveable { context.fullMonthsNames }
+
     var walkToShow by remember { mutableStateOf<WalkWithPathPoints?>(null) }
     var showDateRangePicker by rememberSaveable { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState(
@@ -88,16 +95,16 @@ fun HistoryScreen(
     val startDateComponents by remember {
         derivedStateOf {
             DateUtils.extractDateComponentsFromEpochMillis(
-                dateRangePickerState.selectedStartDateMillis,
-                context
+                epochMillis = dateRangePickerState.selectedStartDateMillis,
+                monthsNames = shortMonthsNames
             )
         }
     }
     val endDateComponents by remember {
         derivedStateOf {
             DateUtils.extractDateComponentsFromEpochMillis(
-                dateRangePickerState.selectedEndDateMillis,
-                context
+                epochMillis = dateRangePickerState.selectedEndDateMillis,
+                monthsNames = shortMonthsNames
             )
         }
     }
@@ -168,9 +175,10 @@ fun HistoryScreen(
                                     WalkDate(dateFormatted = stringResource(R.string.history_today_text))
                                 } else {
                                     WalkDate(
-                                        dateFormatted = DateUtils.formatDateForHistory(
+                                        dateFormatted = DateUtils.formatDateFromStringExpanded(
                                             date = walksPerDate.date,
-                                            context = context
+                                            weekDaysNames = shortWeekDaysNames,
+                                            monthsNames = fullMonthsNames
                                         )
                                     )
                                 }

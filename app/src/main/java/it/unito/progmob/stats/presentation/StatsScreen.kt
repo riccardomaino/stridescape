@@ -22,6 +22,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.R
-import it.unito.progmob.core.domain.ext.monthFullNames
+import it.unito.progmob.core.domain.ext.fullMonthsNames
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
@@ -52,6 +53,8 @@ fun StatsScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val fullMonthsNames = rememberSaveable { context.fullMonthsNames }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -101,7 +104,7 @@ fun StatsScreen(
                     Text(
                         text = when (uiStatsState.rangeSelected) {
                             RangeType.WEEK -> "${DateUtils.formattedFirstDateOfWeek()} - ${DateUtils.formattedLastDateOfWeek()}"
-                            RangeType.MONTH -> context.monthFullNames[DateUtils.getCurrentMonth() - 1]
+                            RangeType.MONTH -> fullMonthsNames[DateUtils.getCurrentMonth() - 1].uppercase()
                             RangeType.YEAR -> DateUtils.getCurrentYear().toString()
                         },
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),

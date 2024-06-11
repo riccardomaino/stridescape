@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(
 
     // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to
     // request again if the the user has refused them
-    private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
+    private val _visiblePermissionDialogQueue = MutableStateFlow(mutableListOf<String>())
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
 
     // Compose state of String used to store the start destination of the app
@@ -86,9 +86,7 @@ class MainViewModel @Inject constructor(
     private fun dismissPermissionDialog() {
         viewModelScope.launch(Dispatchers.Default) {
             _visiblePermissionDialogQueue.update {
-                it.toMutableList().apply {
-                    removeFirst()
-                }
+                it.apply { removeFirst() }
             }
         }
     }
@@ -108,9 +106,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Default) {
             if(!isGranted && !_visiblePermissionDialogQueue.value.contains(permission)) {
                 _visiblePermissionDialogQueue.update {
-                    it.toMutableList().apply {
-                        add(permission)
-                    }
+                    it.apply { add(permission) }
                 }
             }
         }

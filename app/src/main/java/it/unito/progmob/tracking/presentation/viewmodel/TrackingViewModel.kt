@@ -15,6 +15,7 @@ import it.unito.progmob.tracking.domain.usecase.TrackingUseCases
 import it.unito.progmob.tracking.presentation.TrackingEvent
 import it.unito.progmob.tracking.presentation.state.UiTrackingState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,10 +28,6 @@ import javax.inject.Inject
 
 /**
  * ViewModel class tha handles the tracking feature.
- *
- * This ViewModel manages the state of the walk, handles tracking events,
- * and interacts with use cases to start/stop tracking, store walk data,
- * and retrieve user information.
  *
  * @param trackingUseCases The use cases related to the tracking feature.
  * @param walkHandler The handler for managing the state of the walk.
@@ -71,6 +68,9 @@ class TrackingViewModel @Inject constructor(
     private val _lastKnownLocationUpdatesCounter = MutableStateFlow<Long>(0)
     val lastKnownLocationUpdatesCounter = _lastKnownLocationUpdatesCounter.asStateFlow()
 
+    // The job used to collect the walk state
+    private var job: Job? = null
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
@@ -92,24 +92,6 @@ class TrackingViewModel @Inject constructor(
         viewModelScope.launch {
             trackSingleLocation()
         }
-
-        walk.onEach { walkState ->
-            _uiTrackingState.update {
-                it.copy(
-                    isTrackingStarted = walkState.isTrackingStarted,
-                    isTracking = walkState.isTracking,
-                    distanceInMeters = walkState.distanceInMeters,
-                    timeInMillis = walkState.timeInMillis,
-                    speedInKMH = walkState.speedInKMH,
-                    pathPoints = walkState.pathPoints,
-                    steps = walkState.steps,
-                    caloriesBurnt = WalkUtils.getCaloriesBurnt(
-                        userWeight,
-                        walkState.distanceInMeters
-                    )
-                )
-            }
-        }.launchIn(viewModelScope)
     }
 
     /**
@@ -126,9 +108,54 @@ class TrackingViewModel @Inject constructor(
             is TrackingEvent.ShowStopWalkDialog -> showStopWalkDialog(event.showDialog)
             is TrackingEvent.CheckLocationSettings -> checkLocationSettings(event.onEnabled, event.onDisabled)
             is TrackingEvent.UpdateIsLocationEnabledStatus -> updateIsLocationEnabledStatus(event.status)
+            is TrackingEvent.StartCollectingState -> startCollectingState()
+            is TrackingEvent.StopCollectingState -> stopCollectingState()
         }
     }
 
+    /**
+     * Starts collecting the walk state.
+     */
+    private fun startCollectingState() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (job == null) {
+                job = walk.onEach { walkState ->
+                    _uiTrackingState.update {
+                        it.copy(
+                            isTrackingStarted = walkState.isTrackingStarted,
+                            isTracking = walkState.isTracking,
+                            distanceInMeters = walkState.distanceInMeters,
+                            timeInMillis = walkState.timeInMillis,
+                            speedInKMH = walkState.speedInKMH,
+                            pathPoints = walkState.pathPoints,
+                            steps = walkState.steps,
+                            caloriesBurnt = WalkUtils.getCaloriesBurnt(
+                                userWeight,
+                                walkState.distanceInMeters
+                            )
+                        )
+                    }
+                }.launchIn(viewModelScope)
+            }
+        }
+    }
+
+    /**
+     * Stops collecting the walk state.
+     */
+    private fun stopCollectingState() {
+        viewModelScope.launch {
+            job?.cancel()
+            job = null
+        }
+    }
+
+    /**
+     * Checks the location settings and invokes the appropriate callback based on the result.
+     *
+     * @param onEnabled Callback to be invoked if location settings are enabled.
+     * @param onDisabled Callback to be invoked if location settings are disabled.
+     */
     private fun checkLocationSettings(
         onEnabled: (LocationSettingsResponse) -> Unit,
         onDisabled: (IntentSenderRequest) -> Unit
@@ -141,18 +168,35 @@ class TrackingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Updates the flow used to handle the boolean value of the stop walk dialog based on the
+     * parameter passed
+     *
+     * @param showDialog Whether to show the dialog or not.
+     */
     private fun showStopWalkDialog(showDialog: Boolean) {
         viewModelScope.launch {
             _showStopWalkDialog.update { showDialog }
         }
     }
 
+    /**
+     * Updates the flow used to handle the boolean value of the location provider status based on the
+     * parameter passed
+     *
+     * @param status The status of the location provider.
+     */
     private fun updateIsLocationEnabledStatus(status: Boolean){
         viewModelScope.launch {
             _isLocationEnabled.update { status }
         }
     }
 
+    /**
+     * Tracks the last known location of the user. If the tracking is not started, the last known
+     * location have to be retrieved from the location provider, otherwise the last known location
+     * is the last one recorded.
+     */
     private fun trackSingleLocation() {
         viewModelScope.launch(Dispatchers.IO) {
             if (_uiTrackingState.value.isTracking) {
@@ -172,24 +216,36 @@ class TrackingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Starts the tracking service.
+     */
     private fun startTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.startTrackingUseCase()
         }
     }
 
+    /**
+     * Resumes the tracking service.
+     */
     private fun resumeTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.resumeTrackingUseCase()
         }
     }
 
+    /**
+     * Pauses the tracking service.
+     */
     private fun pauseTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.pauseTrackingUseCase()
         }
     }
 
+    /**
+     * Stops the tracking service and saves the walk in the database.
+     */
     private fun stopTrackingService() {
         viewModelScope.launch(Dispatchers.IO) {
             trackingUseCases.stopTrackingUseCase()

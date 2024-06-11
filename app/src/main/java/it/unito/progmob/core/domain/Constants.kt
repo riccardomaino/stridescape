@@ -10,7 +10,7 @@ object Constants {
 
     // Tracking Service
     const val LOCATION_TRACKING_INTERVAL = 5000L
-    const val TRACKING_DEEP_LINK = "https://progmob.unito.it/stridescape/main/tracking"
+    const val TRACKING_DEEP_LINK = "stridescape://tracking_screen"
 
     // Target
     const val DEFAULT_STEPS_TARGET = 5000
