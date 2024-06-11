@@ -103,15 +103,19 @@ fun StatsChart(
         withContext(Dispatchers.Default) {
             val chartData: MutableMap<LocalDate, Float> = mutableMapOf()
             var meanValue = 0f
+            var counter = 0
+            val currentLocalDate = DateUtils.getCurrentLocalDateTime().date
             when (uiStatsState.statsSelected) {
                 StatsType.DISTANCE -> {
                     uiStatsState.distanceChartValues.forEach {
                         chartData[it.first] = it.second
-                        meanValue += it.second
+                        if(it.first <= currentLocalDate){
+                            meanValue += it.second
+                            counter += 1
+                        }
                     }
                     if (meanValue > 0) {
-                        meanValue =
-                            (meanValue / uiStatsState.distanceChartValues.size).toBigDecimal()
+                        meanValue = (meanValue / counter).toBigDecimal()
                                 .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
@@ -119,10 +123,13 @@ fun StatsChart(
                 StatsType.TIME -> {
                     uiStatsState.timeChartValues.forEach {
                         chartData[it.first] = it.second.toFloat()
-                        meanValue += it.second
+                        if(it.first <= currentLocalDate){
+                            meanValue += it.second
+                            counter += 1
+                        }
                     }
                     if (meanValue > 0) {
-                        meanValue = (meanValue / uiStatsState.timeChartValues.size).toBigDecimal()
+                        meanValue = (meanValue / counter).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
@@ -130,11 +137,14 @@ fun StatsChart(
                 StatsType.CALORIES -> {
                     uiStatsState.caloriesChartValues.forEach {
                         chartData[it.first] = it.second.toFloat()
-                        meanValue += it.second
+                        if(it.first <= currentLocalDate){
+                            meanValue += it.second
+                            counter += 1
+                        }
                     }
                     if (meanValue > 0) {
                         meanValue =
-                            (meanValue / uiStatsState.caloriesChartValues.size).toBigDecimal()
+                            (meanValue / counter).toBigDecimal()
                                 .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
@@ -142,10 +152,13 @@ fun StatsChart(
                 StatsType.STEPS -> {
                     uiStatsState.stepsChartValues.forEach {
                         chartData[it.first] = it.second.toFloat()
-                        meanValue += it.second
+                        if(it.first <= currentLocalDate){
+                            meanValue += it.second
+                            counter += 1
+                        }
                     }
                     if (meanValue > 0) {
-                        meanValue = (meanValue / uiStatsState.stepsChartValues.size).toBigDecimal()
+                        meanValue = (meanValue / counter).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }
@@ -153,10 +166,13 @@ fun StatsChart(
                 StatsType.SPEED -> {
                     uiStatsState.speedChartValues.forEach {
                         chartData[it.first] = it.second
-                        meanValue += it.second
+                        if(it.first <= currentLocalDate){
+                            meanValue += it.second
+                            counter += 1
+                        }
                     }
                     if (meanValue > 0) {
-                        meanValue = (meanValue / uiStatsState.speedChartValues.size).toBigDecimal()
+                        meanValue = (meanValue / counter).toBigDecimal()
                             .setScale(1, RoundingMode.HALF_UP).toFloat()
                     }
                 }

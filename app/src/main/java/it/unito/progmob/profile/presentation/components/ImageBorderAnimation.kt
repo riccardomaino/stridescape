@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,6 +26,7 @@ fun ImageBorderAnimation(
     painter: Painter,
     contentDescription: String,
     gradientColors: List<Color>,
+    borderPadding: Dp = 0.dp,
     borderWidth: Float = 10f
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "Infinite transition animation")
@@ -39,7 +41,6 @@ fun ImageBorderAnimation(
     )
     val colorBrush = Brush.linearGradient(colors = gradientColors)
 
-
     Image(
         painter = painter,
         contentDescription = contentDescription,
@@ -52,8 +53,7 @@ fun ImageBorderAnimation(
                     )
                 }
             }
-            .padding(borderWidth.dp)
+            .padding(borderPadding)
             .clip(CircleShape)
     )
-
 }

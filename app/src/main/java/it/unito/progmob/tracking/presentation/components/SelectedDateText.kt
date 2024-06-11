@@ -23,10 +23,10 @@ fun SelectedDateText(
             val dayStr = it[1]
             val yearStr = it[2]
             withStyle(style = spanStyleBold.copy(color = MaterialTheme.colorScheme.primary)){
-                append("$monthStr, ")
+                append(monthStr)
             }
             withStyle(style = spanStyleExtraLight.copy(color = MaterialTheme.colorScheme.primary)){
-                append("$dayStr ")
+                append(", $dayStr ")
                 append(yearStr)
             }
         } ?: run {
@@ -54,10 +54,10 @@ fun SelectedDateText(
             val dayStr = it[1]
             val yearStr = it[2]
             withStyle(style = spanStyleBold.copy(color = MaterialTheme.colorScheme.primary)){
-                append("$monthStr, ")
+                append(monthStr)
             }
             withStyle(style = spanStyleExtraLight.copy(color = MaterialTheme.colorScheme.primary)){
-                append("$dayStr ")
+                append(", $dayStr ")
                 append(yearStr)
             }
         } ?: run {

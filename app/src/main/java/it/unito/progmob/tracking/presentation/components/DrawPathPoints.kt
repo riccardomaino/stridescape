@@ -1,10 +1,8 @@
 package it.unito.progmob.tracking.presentation.components
 
-import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -27,39 +25,18 @@ fun DrawPathPoints(
     pathPoints: List<PathPoint>,
     isTracking: Boolean,
 ) {
-//    val infiniteTransition = rememberInfiniteTransition(label = "Infinite transition animation")
-//    val alphaPositionMarker by infiniteTransition.animateFloat(
-//        initialValue = 0.5f,
-//        targetValue = 1f,
-//        animationSpec = infiniteRepeatable(
-//            tween(1000),
-//            repeatMode = RepeatMode.Reverse
-//        ), label = "Alpha animation"
-//    )
-
     // Current Position handler variables
     val currentPositionMarkerState = rememberMarkerState()
     val lastLocationPoint = pathPoints.lastLocationPoint()
     lastLocationPoint?.let { currentPositionMarkerState.position = LatLng(it.lat, it.lng) }
 
     // Start Point handler variables
-    var startPointDrawn = rememberSaveable { false }
     val startLocationPoint = pathPoints.firstLocationPoint()
     val startPoint = remember(key1 = startLocationPoint) { startLocationPoint }
 
     // LatLng list used to draw the path points
     val latLngList =  mutableListOf<LatLng>()
 
-//    val startEndMarkerList = remember { mutableListOf<MarkerState>() }
-//
-//    LaunchedEffect(key1 = pathPoints) {
-//        pathPoints.lastEmptyPointIndex().also  { lastEmptyPointIndex ->
-//            if (lastEmptyPointIndex == -1) return@LaunchedEffect
-//
-//            val prevLocationPoint = pathPoints[lastEmptyPointIndex - 1] as PathPoint.LocationPoint
-//            startEndMarkerList.add(MarkerState(position = LatLng(prevLocationPoint.lat, prevLocationPoint.lng)))
-//        }
-//    }
 
     var emptyPointFounded = false
     pathPoints.forEachIndexed { index, pathPoint ->
@@ -124,21 +101,17 @@ fun DrawPathPoints(
         visible = isTracking
     )
 
-    if(!startPointDrawn){
-        startPoint?.let {
-            Log.d("DrawPathPoints", "START POINT Drawn")
-            startPointDrawn = true
-            Marker(
-                title = stringResource(R.string.pathpoint_marker_title_start_point),
-                icon = vectorToBitmap(
-                    context = LocalContext.current,
-                    parameters = BitmapParameters(
-                        id = R.drawable.initial_and_final_position_marker
-                    )
-                ),
-                state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
-                anchor = Offset(0.5f, 0.95f)
-            )
-        }
+    startPoint?.let {
+        Marker(
+            title = stringResource(R.string.pathpoint_marker_title_start_point),
+            icon = vectorToBitmap(
+                context = LocalContext.current,
+                parameters = BitmapParameters(
+                    id = R.drawable.initial_and_final_position_marker
+                )
+            ),
+            state = MarkerState(position = LatLng(it.lat, it.lng)),
+            anchor = Offset(0.5f, 0.95f)
+        )
     }
 }

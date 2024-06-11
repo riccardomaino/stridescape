@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.home.domain.usecase.HomeUseCases
-import it.unito.progmob.home.presentation.HomeEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,13 +41,4 @@ class HomeViewModel @Inject constructor(
 
     val weeklyTarget = homeUseCases.getWeeklyTargetUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf(1, 1, 1, 1, 1, 1, 1))
-
-
-    /**
-     * Handles Home events emitted from the UI.
-     * @param event The HomeEvent to be processed.
-     */
-    fun onEvent(event: HomeEvent) {
-
-    }
 }

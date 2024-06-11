@@ -33,7 +33,7 @@ object Constants {
     const val CHART_LABEL_MIN_WIDTH = 40
     const val CHART_INDICATOR_PADDING = 10
     const val CHART_INDICATOR_FRONT_PADDING = 5
-    const val CHART_INDICATOR_SIZE = 36f
+    const val CHART_INDICATOR_SIZE = 45f
     const val CHART_CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER = 1.4f
 
 }

@@ -38,14 +38,14 @@ import it.unito.progmob.R
 import it.unito.progmob.core.domain.ext.allPermissions
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.ext.openAppSettings
-import it.unito.progmob.main.presentation.components.AccessFineLocationPermissionTextProvider
-import it.unito.progmob.main.presentation.components.ActivityRecognitionPermissionTextProvider
 import it.unito.progmob.core.presentation.components.NavigationBar
-import it.unito.progmob.main.presentation.components.PermissionDialog
-import it.unito.progmob.main.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.core.presentation.navigation.NavGraph
 import it.unito.progmob.core.presentation.navigation.Route
 import it.unito.progmob.main.presentation.MainEvent
+import it.unito.progmob.main.presentation.components.AccessFineLocationPermissionTextProvider
+import it.unito.progmob.main.presentation.components.ActivityRecognitionPermissionTextProvider
+import it.unito.progmob.main.presentation.components.PermissionDialog
+import it.unito.progmob.main.presentation.components.PostNotificationsPermissionTextProvider
 import it.unito.progmob.main.presentation.viewmodel.MainViewModel
 import it.unito.progmob.ui.theme.MyApplicationTheme
 
@@ -186,12 +186,7 @@ class MainActivity : ComponentActivity() {
                                         if (context.hasAllPermissions()) {
                                             navController.navigate(Route.TrackingScreenRoute.route)
                                         } else {
-                                            multiplePermissionResultLauncher.launch(
-                                                context.allPermissions
-                                            )
-                                            if (context.hasAllPermissions()) {
-                                                navController.navigate(Route.TrackingScreenRoute.route)
-                                            }
+                                            multiplePermissionResultLauncher.launch(context.allPermissions)
                                         }
                                     },
                                     currentBackStackEntry = currentBackStackEntry,
@@ -215,7 +210,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-
                 visiblePermissionDialogQueue.reversed().forEach { permission ->
                     PermissionDialog(
                         permissionTextProvider = when (permission) {
@@ -224,10 +218,7 @@ class MainActivity : ComponentActivity() {
                             Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionTextProvider()
                             else -> return@forEach
                         },
-                        isPermanentlyDeclined = !ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            permission
-                        ),
+                        isPermanentlyDeclined = !ActivityCompat.shouldShowRequestPermissionRationale(this, permission),
                         onDismiss = {
                             mainViewModel.onEvent(MainEvent.DismissPermissionDialog)
                         },

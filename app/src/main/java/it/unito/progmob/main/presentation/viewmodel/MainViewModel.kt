@@ -1,5 +1,6 @@
 package it.unito.progmob.main.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,6 +21,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * MainViewModel is the ViewModel used to manage the UI logic of the Main feature.
+ *
+ * @param mainUseCases the MainUseCases to interact with the domain layer.
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val mainUseCases: MainUseCases,
@@ -27,16 +33,16 @@ class MainViewModel @Inject constructor(
 
     // MutableStateFlow of List<String> managed like a queue used to contain a list of permission to
     // request again if the the user has refused them
-    private val _visiblePermissionDialogQueue = MutableStateFlow(mutableListOf<String>())
+    private val _visiblePermissionDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visiblePermissionDialogQueue = _visiblePermissionDialogQueue.asStateFlow()
 
     // Compose state of String used to store the start destination of the app
     var startDestination by mutableStateOf(Route.OnBoardingNavigationRoute.route)
         private set
 
+    // MutableStateFlow of Boolean used to store the state of the floating action button
     var isActionButtonShown = MutableStateFlow(true)
         private set
-
 
     // MutableStateFlow of Boolean used for the splash screen to know when the app is ready
     private val _isReady = MutableStateFlow(false)
@@ -73,6 +79,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /**
+     * It updates the state of the floating action button. This method launch a coroutine, using
+     * Dispatchers.Default, to perform the operation
+     *
+     * @param isShown A boolean value used to evaluate if the floating action button should be shown
+     */
     private fun showFloatingActionButton(isShown: Boolean) {
         viewModelScope.launch(Dispatchers.Default) {
             isActionButtonShown.update { isShown }
@@ -84,9 +96,10 @@ class MainViewModel @Inject constructor(
      * Dispatchers.Default, to perform the operation
      */
     private fun dismissPermissionDialog() {
+        Log.d("MainViewModel", "dismissPermissionDialog: removing ${visiblePermissionDialogQueue.value.firstOrNull()}")
         viewModelScope.launch(Dispatchers.Default) {
             _visiblePermissionDialogQueue.update {
-                it.apply { removeFirst() }
+                it.toMutableList().apply { removeFirst() }
             }
         }
     }
@@ -104,9 +117,10 @@ class MainViewModel @Inject constructor(
         isGranted: Boolean
     ) {
         viewModelScope.launch(Dispatchers.Default) {
+            Log.d("MainViewModel", "permissionResult: $permission, $isGranted")
             if(!isGranted && !_visiblePermissionDialogQueue.value.contains(permission)) {
                 _visiblePermissionDialogQueue.update {
-                    it.apply { add(permission) }
+                    it.toMutableList().apply { add(permission) }
                 }
             }
         }

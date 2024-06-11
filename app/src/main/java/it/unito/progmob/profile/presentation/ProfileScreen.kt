@@ -3,10 +3,8 @@ package it.unito.progmob.profile.presentation
 import ProfileDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,11 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,20 +27,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.R
+import it.unito.progmob.profile.presentation.components.ImageBorderAnimation
 import it.unito.progmob.profile.presentation.components.ProfileButton
 import it.unito.progmob.profile.presentation.components.ProfileTextField
 import it.unito.progmob.profile.presentation.components.ProfileUserTextField
 import it.unito.progmob.profile.presentation.state.UiProfileState
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
-import it.unito.progmob.ui.theme.small
 
 @Composable
 fun ProfileScreen(
@@ -53,8 +49,6 @@ fun ProfileScreen(
     profileState: UiProfileState,
 ) {
     var isSaveButtonEnabled by remember { mutableStateOf(false) }
-    val userCircleColor = MaterialTheme.colorScheme.onPrimary
-    val iconSize = LocalConfiguration.current.screenWidthDp.dp * 0.25f
     val changeUserName = remember { mutableStateOf(false) }
     val openAlertDialog = remember { mutableStateOf(false) }
     var backupUsername by remember { mutableStateOf("") }
@@ -78,25 +72,17 @@ fun ProfileScreen(
             horizontalArrangement = Arrangement.spacedBy(medium, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                Canvas(
-                    modifier = Modifier.size(large)
-                ) {
-                    drawCircle(
-                        color = userCircleColor,
-                        radius = iconSize.toPx() / 2,
-                    )
-                }
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = stringResource(R.string.profile_user_icon_desription),
-                    modifier = Modifier
-                        .size(iconSize)
-                        .padding(bottom = small)
-                )
-            }
+            ImageBorderAnimation(
+                painter = painterResource(id = R.drawable.user_profile),
+                contentDescription = stringResource(R.string.profile_user_icon_desription),
+                borderPadding = 5.dp,
+                borderWidth = 15f,
+                gradientColors = listOf(
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.colorScheme.tertiary
+                ),
+            )
             Column(
                 modifier = Modifier,
                 verticalArrangement = Arrangement.Center,

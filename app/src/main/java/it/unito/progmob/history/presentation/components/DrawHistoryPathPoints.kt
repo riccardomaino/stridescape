@@ -1,5 +1,6 @@
 package it.unito.progmob.history.presentation.components
 
+import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -23,10 +24,6 @@ import it.unito.progmob.tracking.domain.model.PathPoint
 fun DrawHistoryPathPoints(
     pathPoints: List<PathPoint>,
 ) {
-    val lastMarkerState = rememberMarkerState()
-    val lastLocationPoint = pathPoints.lastLocationPoint()
-    lastLocationPoint?.let { lastMarkerState.position = LatLng(it.lat, it.lng) }
-
     val startLocationPoint = pathPoints.firstLocationPoint()
     val startPoint = remember(key1 = startLocationPoint) { startLocationPoint }
 
@@ -76,7 +73,7 @@ fun DrawHistoryPathPoints(
 
     // Add the last path points
     if (latLngList.isNotEmpty()) {
-        lastLocationPoint?.let {
+        pathPoints.lastLocationPoint()?.let {
             Marker(
                 icon = vectorToBitmap(
                     context = LocalContext.current,
@@ -97,6 +94,7 @@ fun DrawHistoryPathPoints(
     }
 
     startPoint?.let {
+        Log.d("DrawHistoryPathPoints", "startPoint")
         Marker(
             title = stringResource(R.string.pathpoint_marker_title_start_point),
             icon = vectorToBitmap(

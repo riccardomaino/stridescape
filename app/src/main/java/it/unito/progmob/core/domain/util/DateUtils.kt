@@ -61,7 +61,7 @@ object DateUtils {
      *
      * @return the current date as a [LocalDateTime]
      */
-    private fun getCurrentLocalDateTime(): LocalDateTime {
+    fun getCurrentLocalDateTime(): LocalDateTime {
         val instant = Clock.System.now()
         return instant.toLocalDateTime(TimeZone.currentSystemDefault())
     }
