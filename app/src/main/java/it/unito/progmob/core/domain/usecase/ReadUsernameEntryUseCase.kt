@@ -13,6 +13,6 @@ class ReadUsernameEntryUseCase (
      * @return A Flow representing the current state of the user name in the DataStore
      */
     operator fun invoke(): Flow<String> {
-        return dataStoreManager.readUserNameEntry()
+        return dataStoreManager.readUsernameEntry()
     }
 }

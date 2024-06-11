@@ -58,5 +58,5 @@ interface DataStoreManager {
      *
      * @return A flow of strings.
      */
-    fun readUserNameEntry(): Flow<String>
+    fun readUsernameEntry(): Flow<String>
 }

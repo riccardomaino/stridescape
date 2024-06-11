@@ -1,25 +1,23 @@
 package it.unito.progmob.core.data.local
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import it.unito.progmob.core.domain.model.PathPointEntity
+import it.unito.progmob.core.domain.model.WalkEntity
+import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
 import it.unito.progmob.core.domain.model.tuples.DateCaloriesTuple
 import it.unito.progmob.core.domain.model.tuples.DateDistanceTuple
 import it.unito.progmob.core.domain.model.tuples.DateSpeedTuple
 import it.unito.progmob.core.domain.model.tuples.DateStepsTuple
 import it.unito.progmob.core.domain.model.tuples.DateTimeTuple
-import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
-import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
-import it.unito.progmob.core.domain.model.PathPointEntity
-import it.unito.progmob.core.domain.model.WalkEntity
-import it.unito.progmob.core.domain.model.WalkWithPathPointsEntity
-import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import it.unito.progmob.core.domain.model.tuples.MonthCaloriesTuple
+import it.unito.progmob.core.domain.model.tuples.MonthDistanceTuple
 import it.unito.progmob.core.domain.model.tuples.MonthSpeedTuple
 import it.unito.progmob.core.domain.model.tuples.MonthStepsTuple
 import it.unito.progmob.core.domain.model.tuples.MonthTimeTuple
+import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -37,6 +35,24 @@ interface WalkDao {
     @Transaction
     @Query("SELECT * FROM walks WHERE date >= :startDate AND date <= :endDate ORDER BY date DESC")
     fun findWalksWithPathPoints(startDate: String, endDate: String): List<WalkWithPathPointsEntity>?
+
+    /**
+     * Retrieves a walk from the database by its ID.
+     *
+     * @param id The ID of the walk to retrieve.
+     * @return The WalkEntity object representing the walk with the given ID, or null if no such walk exists.
+     */
+    @Query("SELECT * FROM walks WHERE id = :id")
+    fun findWalkById(id: Long): WalkEntity?
+
+    /**
+     * Retrieves a path point from the database by its ID.
+     *
+     * @param id The ID of the path point to retrieve.
+     * @return The PathPointEntity object representing the path point with the given ID, or null if no such path point exists.
+     */
+    @Query("SELECT * FROM path_points WHERE id = :id")
+    fun findPathPointById(id: Long): PathPointEntity?
 
     /**
      * Retrieves the total number of steps taken for a given date.
@@ -83,16 +99,6 @@ interface WalkDao {
      */
     @Query("SELECT weekDay, SUM(steps) AS steps FROM walks WHERE date >= :startDate AND date <= :endDate GROUP BY weekDay")
     fun findStepsBetweenDates(startDate: String, endDate: String): Flow<List<WeekDayStepsTuple>?>
-
-    /**
-     * Retrieves the daily step targets for each day within a given date range.
-     *
-     * @param startDate The start date of the range.
-     * @param endDate The end date of the range.
-     * @return A flow emitting a list of DateTargetTuple objects representing the daily step targets.
-     */
-    @Query("SELECT date, stepsTarget FROM targets WHERE date >= :startDate AND date <= :endDate")
-    fun findTargetBetweenDates(startDate: String, endDate: String): Flow<List<DateTargetTuple>?>
 
     /**
      * Retrieves the total distance walked for each day within a given date range.
@@ -143,7 +149,6 @@ interface WalkDao {
      */
     @Query("SELECT date, AVG(averageSpeed) AS averageSpeed FROM walks WHERE date >= :startDate AND date <= :endDate GROUP BY date ORDER BY date ASC")
     fun findSpeedForDateRange(startDate: String, endDate: String): List<DateSpeedTuple>?
-
 
     /**
      * Retrieves the total distance walked for each month of a given year.
@@ -206,28 +211,4 @@ interface WalkDao {
      */
     @Upsert
     suspend fun upsertNewPathPoint(newPathPointEntity: PathPointEntity)
-
-    /**
-     * Deletes a walk from the database.
-     *
-     * @param walkEntity The walk entity to delete.
-     */
-    @Delete
-    suspend fun deleteWalk(walkEntity: WalkEntity)
-
-    /**
-     * Deletes a single path point from the database.
-     *
-     * @param pathPointEntity The path point entity to delete.
-     */
-    @Delete
-    suspend fun deleteSinglePathPoint(pathPointEntity: PathPointEntity)
-
-    /**
-     * Deletes all path points associated with a given walk.
-     *
-     * @param walkId The ID of the walk for which to delete the path points.
-     */
-    @Query("DELETE FROM path_points WHERE walkId = :walkId")
-    suspend fun deleteAllPathPointsOfWalk(walkId: Int)
 }

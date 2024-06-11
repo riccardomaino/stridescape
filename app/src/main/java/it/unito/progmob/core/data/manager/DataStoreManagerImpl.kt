@@ -98,7 +98,7 @@ class DataStoreManagerImpl @Inject constructor(
      *
      * @return A Flow of booleans representing the user name.
      */
-    override fun readUserNameEntry(): Flow<String> {
+    override fun readUsernameEntry(): Flow<String> {
         return context.datastore.data.map { preferences ->
             preferences[PreferencesKeys.USER_NAME_ENTRY] ?: ""
         }

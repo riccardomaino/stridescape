@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import it.unito.progmob.core.domain.model.TargetEntity
+import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -28,6 +29,16 @@ interface TargetDao {
      */
     @Query("SELECT stepsTarget FROM targets ORDER BY date DESC LIMIT 1")
     fun findLastTarget(): Flow<Int>
+
+    /**
+     * Retrieves the daily step targets for each day within a given date range.
+     *
+     * @param startDate The start date of the range.
+     * @param endDate The end date of the range.
+     * @return A flow emitting a list of DateTargetTuple objects representing the daily step targets.
+     */
+    @Query("SELECT date, stepsTarget FROM targets WHERE date >= :startDate AND date <= :endDate")
+    fun findTargetBetweenDates(startDate: String, endDate: String): Flow<List<DateTargetTuple>?>
 
     /**
      * Inserts or updates a new step target in the database for the current day.

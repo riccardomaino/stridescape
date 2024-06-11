@@ -163,7 +163,7 @@ object TestAppModule {
         AddTargetUseCase(targetRepository),
         GetDateTargetUseCase(targetRepository),
         GetWeeklyStepsUseCase(walkRepository),
-        GetWeeklyTargetUseCase(walkRepository)
+        GetWeeklyTargetUseCase(targetRepository)
     )
 
     @Provides
