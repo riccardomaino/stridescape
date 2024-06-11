@@ -55,7 +55,7 @@ fun WalkTile(
         ) {
             WalkTileItem(
                 icon = Icons.AutoMirrored.Filled.DirectionsWalk,
-                iconColor = MaterialTheme.colorScheme.primary,
+                iconColor = Color(0xFF2952BB),
                 value = walk.steps.toString(),
                 contentDescription = stringResource(R.string.tracking_steps_walking_stat_icon_desc),
                 modifier = Modifier
@@ -77,7 +77,7 @@ fun WalkTile(
             WalkTileItem(
                 icon = Icons.Outlined.Timer,
                 iconColor = Color(0xFFFF9800),
-                value = TimeUtils.formatMillisTimeHoursMinutes(walk.time),
+                value = TimeUtils.formatMillisTime(walk.time),
                 contentDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
                 modifier = Modifier
             )

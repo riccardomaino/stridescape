@@ -1,6 +1,5 @@
 package it.unito.progmob.tracking.presentation.components
 
-import android.util.Log
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -12,8 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.compose.ui.res.stringResource
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMapComposable
 import com.google.maps.android.compose.Marker
@@ -66,6 +64,7 @@ fun DrawPathPoints(
             emptyPointFounded = true
             lastLocationPoint?.let {
                 Marker(
+                    title = stringResource(R.string.pathpoint_marker_title_end_point),
                     icon = vectorToBitmap(
                         context = LocalContext.current,
                         parameters = BitmapParameters(
@@ -73,7 +72,7 @@ fun DrawPathPoints(
                         )
                     ),
                     state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
-                    anchor = Offset(0.5f, 0.85f),
+                    anchor = Offset(0.5f, 0.95f),
                     visible = true
                 )
             }
@@ -85,6 +84,7 @@ fun DrawPathPoints(
         } else if (pathPoint is PathPoint.LocationPoint) {
             if (emptyPointFounded) {
                 Marker(
+                    title = stringResource(R.string.pathpoint_marker_title_start_point),
                     icon = vectorToBitmap(
                         context = LocalContext.current,
                         parameters = BitmapParameters(
@@ -92,7 +92,7 @@ fun DrawPathPoints(
                         )
                     ),
                     state = rememberMarkerState(position = LatLng(pathPoint.lat, pathPoint.lng)),
-                    anchor = Offset(0.5f, 0.85f),
+                    anchor = Offset(0.5f, 0.95f),
                     visible = true
                 )
                 emptyPointFounded = false
@@ -136,6 +136,7 @@ fun DrawPathPoints(
 
     startPoint?.let {
         Marker(
+            title = stringResource(R.string.pathpoint_marker_title_start_point),
             icon = vectorToBitmap(
                 context = LocalContext.current,
                 parameters = BitmapParameters(
@@ -143,7 +144,7 @@ fun DrawPathPoints(
                 )
             ),
             state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
-            anchor = Offset(0.5f, 0.85f)
+            anchor = Offset(0.5f, 0.95f)
         )
     }
 }

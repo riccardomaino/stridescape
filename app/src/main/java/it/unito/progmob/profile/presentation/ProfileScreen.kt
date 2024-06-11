@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -77,7 +76,7 @@ fun ProfileScreen(
                 .fillMaxSize(0.2f)
                 .padding(horizontal = medium),
             horizontalArrangement = Arrangement.spacedBy(medium, Alignment.Start),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 contentAlignment = Alignment.Center
@@ -216,7 +215,6 @@ fun ProfileScreen(
             onConfirmation = { openAlertDialog.value = false },
             dialogTitle = stringResource(R.string.profiledialog_title),
             dialogText = stringResource(R.string.profiledialog_text),
-            icon = Icons.Default.CheckCircle,
             onDismiss = { openAlertDialog.value = false }
         )
     }

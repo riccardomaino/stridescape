@@ -1,5 +1,8 @@
 package it.unito.progmob.home.presentation.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +21,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.util.TimeUtils
+import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
@@ -35,10 +45,51 @@ import it.unito.progmob.ui.theme.small
 @Composable
 fun WalkingStats(
     modifier: Modifier = Modifier,
-    kcal: String,
-    km: String,
-    time: String
+    kcal: Int,
+    km: Int,
+    time: Long
 ) {
+    var kcalAnimationPlayed by remember {
+        mutableStateOf(false)
+    }
+    var kmAnimationPlayed by remember {
+        mutableStateOf(false)
+    }
+    var timeAnimationPlayed by remember {
+        mutableStateOf(false)
+    }
+
+
+    val kcalAnimation = animateIntAsState(
+        targetValue = if(kcalAnimationPlayed) kcal else 0,
+        animationSpec = tween(
+            durationMillis = 700,
+            delayMillis = 0
+        ), label = "kcal animation"
+    )
+
+    val kmAnimation = animateIntAsState(
+        targetValue = if(kmAnimationPlayed) km else 0,
+        animationSpec = tween(
+            durationMillis = 700,
+            delayMillis = 0
+        ), label = "km animation"
+    )
+
+    val timeAnimation = animateIntAsState(
+        targetValue = if(timeAnimationPlayed) time.toInt() else 0,
+        animationSpec = tween(
+            durationMillis = 700,
+            delayMillis = 0
+        ), label = "km animation"
+    )
+
+    LaunchedEffect(true) {
+        kcalAnimationPlayed = true
+        kmAnimationPlayed = true
+        timeAnimationPlayed = true
+    }
+
     Box(
         modifier = modifier
             .padding(small)
@@ -66,7 +117,7 @@ fun WalkingStats(
             ) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
                     WalkingStatComponent(
-                        value = kcal,
+                        value = kcalAnimation.value.toString(),
                         title = "Calories",
                         icon = Icons.Outlined.LocalFireDepartment,
                         iconDescription = "Localized description",
@@ -80,7 +131,7 @@ fun WalkingStats(
 
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
                     WalkingStatComponent(
-                        value = km,
+                        value = WalkUtils.formatDistanceToKm(kmAnimation.value),
                         title = "Km.",
                         icon = Icons.Outlined.Map,
                         iconDescription = "Localized description",
@@ -94,7 +145,7 @@ fun WalkingStats(
 
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
                     WalkingStatComponent(
-                        value = time,
+                        value = TimeUtils.formatMillisTimeHoursMinutes(timeAnimation.value.toLong()),
                         title = "Time",
                         icon = Icons.Outlined.Timer,
                         iconDescription = "Localized description",
@@ -111,5 +162,5 @@ fun WalkingStats(
 @Preview(showBackground = true)
 @Composable
 private fun WalkingStatsPreview() {
-    WalkingStats(kcal = 300.toString(), km = 10.0.toString(), time = "20:00")
+    //WalkingStats(kcal = 300, km = 10, time = "20:00")
 }

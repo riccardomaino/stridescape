@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMapComposable
 import com.google.maps.android.compose.Marker
@@ -29,7 +30,7 @@ fun DrawHistoryPathPoints(
     val startLocationPoint = pathPoints.firstLocationPoint()
     val startPoint = remember(key1 = startLocationPoint) { startLocationPoint }
 
-    val latLngList =  mutableListOf<LatLng>()
+    val latLngList = mutableListOf<LatLng>()
 
     var emptyPointFounded = false
     pathPoints.forEach { pathPoint ->
@@ -37,6 +38,7 @@ fun DrawHistoryPathPoints(
             emptyPointFounded = true
             lastLocationPoint?.let {
                 Marker(
+                    title = stringResource(R.string.pathpoint_marker_title_end_point),
                     icon = vectorToBitmap(
                         context = LocalContext.current,
                         parameters = BitmapParameters(
@@ -44,7 +46,7 @@ fun DrawHistoryPathPoints(
                         )
                     ),
                     state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
-                    anchor = Offset(0.5f, 0.85f),
+                    anchor = Offset(0.5f, 0.95f),
                     visible = true
                 )
             }
@@ -56,6 +58,7 @@ fun DrawHistoryPathPoints(
         } else if (pathPoint is PathPoint.LocationPoint) {
             if (emptyPointFounded) {
                 Marker(
+                    title =  stringResource(R.string.pathpoint_marker_title_start_point),
                     icon = vectorToBitmap(
                         context = LocalContext.current,
                         parameters = BitmapParameters(
@@ -63,7 +66,7 @@ fun DrawHistoryPathPoints(
                         )
                     ),
                     state = rememberMarkerState(position = LatLng(pathPoint.lat, pathPoint.lng)),
-                    anchor = Offset(0.5f, 0.85f),
+                    anchor = Offset(0.5f, 0.95f),
                     visible = true
                 )
                 emptyPointFounded = false
@@ -83,6 +86,7 @@ fun DrawHistoryPathPoints(
 
     startPoint?.let {
         Marker(
+            title = stringResource(R.string.pathpoint_marker_title_start_point),
             icon = vectorToBitmap(
                 context = LocalContext.current,
                 parameters = BitmapParameters(
@@ -90,7 +94,7 @@ fun DrawHistoryPathPoints(
                 )
             ),
             state = rememberMarkerState(position = LatLng(it.lat, it.lng)),
-            anchor = Offset(0.5f, 0.85f)
+            anchor = Offset(0.5f, 0.95f)
         )
     }
 }

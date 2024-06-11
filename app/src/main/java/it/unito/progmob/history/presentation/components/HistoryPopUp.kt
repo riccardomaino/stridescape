@@ -24,9 +24,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -92,6 +92,18 @@ fun SharedTransitionScope.HistoryPopUp(
         )
     }
 
+//    LaunchedEffect(true) {
+//        val latLngBound =  LatLngBounds.Builder()
+//        walkToShow?.pathPoints?.firstLocationPoint()?.let{
+//            walkToShow.pathPoints.forEach {
+//                if(it is PathPoint.LocationPoint) {
+//                    Log.d("HistoryPopUp", "zoomToCurrentPositionBounds: ${it.lat}, ${it.lng}")
+//                    latLngBound.include(LatLng(it.lat, it.lng))
+//                }
+//            }
+//        }
+//    }
+
     AnimatedContent(
         modifier = modifier,
         targetState = walkToShow,
@@ -114,26 +126,26 @@ fun SharedTransitionScope.HistoryPopUp(
                         .clickable(
                             interactionSource = interactionSource,
                             indication = null
-                        ){}
-                        .background(Color.Black.copy(alpha = 0.5f)),
+                        ) {}
+                        .background(Color.Transparent),
                 )
                 Column(
                     modifier = modifier
                         .padding(medium)
-                        .shadow(medium, shape = RoundedCornerShape(medium))
+                        .shadow(small, shape = RoundedCornerShape(medium))
                         .clickable { onClick() }
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clip(RoundedCornerShape(medium))
                         .sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "${targetState.walkId}-bounds"),
                             animatedVisibilityScope = this@AnimatedContent,
                             clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(medium))
                         )
-                        .background(MaterialTheme.colorScheme.surface)
-                        .clip(RoundedCornerShape(medium))
                 ) {
                     Box(
                         modifier = modifier
                             .fillMaxWidth()
-                            .fillMaxHeight(0.6f)
+                            .fillMaxHeight(0.65f)
                     ) {
                         ShowMapLoadingProgressBar(isMapLoaded)
                         GoogleMap(
@@ -155,6 +167,13 @@ fun SharedTransitionScope.HistoryPopUp(
                                         latLng = it
                                     )
                                 }
+//                                walkToShow?.pathPoints?.firstLocationPoint()?.let{
+//                                    zoomToCurrentPositionBounds(
+//                                        coroutineScope = coroutineScope,
+//                                        cameraPositionState = cameraPositionState,
+//                                        latLngBound = LatLngBounds.Builder()
+//                                    )
+//                                }
                             }
                         ) {
                             DrawHistoryPathPoints(
@@ -183,14 +202,14 @@ fun SharedTransitionScope.HistoryPopUp(
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                text = targetState.steps.toString(),
+                                text = TimeUtils.formatMillisTime(targetState.time),
                                 style = MaterialTheme.typography.displayMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                 ),
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Text(
-                                text = stringResource(R.string.tracking_steps_walking_stat_title),
+                                text = stringResource(R.string.tracking_time_walking_stat_title),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
@@ -201,9 +220,21 @@ fun SharedTransitionScope.HistoryPopUp(
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             modifier = modifier
                                 .fillMaxWidth()
-                                .padding(bottom = medium)
 
                         ) {
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                WalkingStatComponent(
+                                    value = targetState.steps.toString(),
+                                    title = stringResource(R.string.tracking_steps_walking_stat_title),
+                                    icon = Icons.AutoMirrored.Filled.DirectionsWalk,
+                                    iconDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
+                                    iconColor = Color(0xFF2952BB)
+                                )
+                            }
+                            VerticalDivider(modifier = modifier.height(doubleExtraLarge))
                             Box(
                                 modifier = Modifier.weight(1f),
                                 contentAlignment = Alignment.Center
@@ -229,19 +260,7 @@ fun SharedTransitionScope.HistoryPopUp(
                                     iconColor = Color(0xFF0C9B12)
                                 )
                             }
-                            VerticalDivider(modifier = modifier.height(doubleExtraLarge))
-                            Box(
-                                modifier = Modifier.weight(1f),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                WalkingStatComponent(
-                                    value = TimeUtils.formatMillisTimeHoursMinutes(targetState.time),
-                                    title = stringResource(R.string.tracking_time_walking_stat_title),
-                                    icon = Icons.Outlined.Timer,
-                                    iconDescription = stringResource(R.string.tracking_time_walking_stat_icon_desc),
-                                    iconColor = Color(0xFFFF9800)
-                                )
-                            }
+
                         }
                     }
                 }
@@ -286,3 +305,16 @@ private fun zoomToCurrentPosition(
         )
     }
 }
+
+//private fun zoomToCurrentPositionBounds(
+//    coroutineScope: CoroutineScope,
+//    cameraPositionState: CameraPositionState,
+//    latLngBound: LatLngBounds.Builder,
+//) {
+//    coroutineScope.launch {
+//        cameraPositionState.animate(
+//            update = CameraUpdateFactory.newLatLngBounds(latLngBound.build(), 100),
+//            durationMs = 500
+//        )
+//    }
+//}

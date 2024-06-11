@@ -125,11 +125,13 @@
     <string name="profile_title">Ciao</string>
     <string name="profile_modify_icon_description">Icona del pulsante utilizzato per abilitare il odificatore del nome utente</string>
     <string name="profile_save_changes_btn">Salva Modifiche</string>
-    <string name="profiledialog_title">Informatzioni Personali Aggiornate</string>
+    <string name="profiledialog_title">Informatzioni Aggiornate</string>
     <string name="profiledialog_text">Le tue informazioni personali sono state aggiornate con successo!</string>
     <string name="history_start_date_text_first">Data</string>
     <string name="history_end_date_text_first">Data</string>
     <string name="history_start_date_text_second">Inizio</string>
     <string name="history_end_date_text_second">Fine</string>
     <string name="history_empty_search_image_content_desc">Immagine utilizzata quando non vi sono camminate per un certo intervallo di date</string>
+    <string name="pathpoint_marker_title_start_point">Inizio</string>
+    <string name="pathpoint_marker_title_end_point">Fine</string>
 </resources>

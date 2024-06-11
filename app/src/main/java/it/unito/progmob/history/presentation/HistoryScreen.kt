@@ -103,7 +103,7 @@ fun HistoryScreen(
     }
 
 
-    SharedTransitionLayout(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant)) {
+    SharedTransitionLayout(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -132,8 +132,7 @@ fun HistoryScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(horizontal = large)
-                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                                .padding(horizontal = large),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
@@ -303,7 +302,7 @@ private fun BoxScope.ShowLoadingProgressIndicator(
         CircularProgressIndicator(
             strokeWidth = 10.dp,
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .wrapContentSize()
         )
     }

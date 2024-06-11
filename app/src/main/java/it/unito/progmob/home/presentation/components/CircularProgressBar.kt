@@ -1,6 +1,7 @@
 package it.unito.progmob.home.presentation.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -42,21 +43,33 @@ fun CircularProgressBar(
     showStepsInfo: Boolean = true,
     modifier: Modifier
 ) {
-    var animationPlayed by remember {
+    var stepBarAnimationPlayed by remember {
+        mutableStateOf(false)
+    }
+    var stepTargetAnimationPlayed by remember {
         mutableStateOf(false)
     }
 
-    val currentPercentage = animateFloatAsState(
-        targetValue = if (animationPlayed) ((steps * 100) / targetStepsGoal) / 100.toFloat() else 0f,
+    val stepCircularBarAnimation = animateFloatAsState(
+        targetValue = if (stepBarAnimationPlayed) (((steps * 100) / targetStepsGoal) / 100).toFloat() else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = animDelay
         ), label = "Steps counter animation"
     )
 
+    val stepTargetAnimation = animateIntAsState(
+        targetValue = if (stepTargetAnimationPlayed) targetStepsGoal else 0,
+        animationSpec = tween(
+            durationMillis = 700,
+            delayMillis = animDelay
+        ), label = "Steps target animation"
+    )
+
     // Runs the side effect in a lifecycle-aware manner which set that the animation has already benn played
     LaunchedEffect(key1 = true) {
-        animationPlayed = true
+        stepBarAnimationPlayed = true
+        stepTargetAnimationPlayed = true
     }
 
     Box(
@@ -78,7 +91,7 @@ fun CircularProgressBar(
             drawArc(
                 color = color,
                 startAngle = -90f,
-                sweepAngle = 360 * currentPercentage.value, // radius of the circle
+                sweepAngle = 360 * stepCircularBarAnimation.value, // radius of the circle
                 useCenter = false,
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
@@ -102,7 +115,7 @@ fun CircularProgressBar(
                     modifier = Modifier.height(70.dp)
                 )
                 Text(
-                    text = "$targetStepsGoal",
+                    text = "${(stepTargetAnimation.value)}",
                     color = MaterialTheme.colorScheme.outline,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Normal,

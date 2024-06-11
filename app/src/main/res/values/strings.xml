@@ -140,6 +140,8 @@
     <string name="profile_title">Hi</string>
     <string name="profile_modify_icon_description">Icon for the button used to enable the username modifier</string>
     <string name="profile_save_changes_btn">Save Changes</string>
-    <string name="profiledialog_title">Personal Information Updated</string>
+    <string name="profiledialog_title">Information Updated</string>
     <string name="profiledialog_text">Your personal information has been successfully updated!</string>
+    <string name="pathpoint_marker_title_start_point">Start Point</string>
+    <string name="pathpoint_marker_title_end_point">End Point</string>
 </resources>

@@ -117,7 +117,8 @@ fun NavGraph(
                 deepLinks = listOf(navDeepLink {
                     uriPattern = TRACKING_DEEP_LINK
                     action = Intent.ACTION_VIEW
-                }),
+                }
+                ),
                 enterTransition = {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Up,

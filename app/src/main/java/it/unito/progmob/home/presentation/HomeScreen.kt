@@ -1,15 +1,21 @@
 package it.unito.progmob.home.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,15 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
-import it.unito.progmob.core.domain.util.TimeUtils
-import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.home.presentation.components.CircularProgressBar
 import it.unito.progmob.home.presentation.components.WalkingStats
 import it.unito.progmob.home.presentation.components.WeeklyStats
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -64,9 +67,9 @@ fun HomeScreen(
         }
         Spacer(modifier = Modifier.height(small))
         WalkingStats(
-            kcal = caloriesCurrentDay.toString(),
-            km = WalkUtils.formatDistanceToKm(distanceCurrentDay),
-            time = TimeUtils.formatMillisTimeHoursMinutes(timeCurrentDay)
+            kcal = caloriesCurrentDay,
+            km = distanceCurrentDay,
+            time = timeCurrentDay
         )
         Spacer(modifier = Modifier.height(small))
         WeeklyStats(
@@ -76,6 +79,24 @@ fun HomeScreen(
             selectedDay = currentDayOfWeek
         )
     }
+}
 
-
+@Composable
+private fun BoxScope.ShowLoadingProgressIndicator(
+    isLoaded: Boolean
+) {
+    AnimatedVisibility(
+        modifier = Modifier
+            .matchParentSize(),
+        visible = !isLoaded,
+        enter = fadeIn(),
+        exit = fadeOut(),
+    ) {
+        CircularProgressIndicator(
+            strokeWidth = 10.dp,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .wrapContentSize()
+        )
+    }
 }

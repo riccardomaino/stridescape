@@ -3,9 +3,6 @@ agp = "8.4.1"
 kotlin = "2.0.0"
 ksp = "2.0.0-1.0.21"
 coreKtx = "1.13.1"
-junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 material3 = "1.2.1"
@@ -36,6 +33,23 @@ composeAnimation = "1.7.0-beta02"
 kotlinxDatetime = "0.6.0"
 composeFoundation = "1.7.0-beta02"
 
+junit = "4.13.2"
+truth = "1.4.2"
+testCore = "1.5.0"
+coreTesting = "2.2.0"
+mockk = "1.13.10"
+uiTestManifest = "1.6.7"
+
+extJunit = "1.1.5"
+testCoreKtx = "1.5.0"
+testRunner = "1.5.2"
+kotlinxCoroutinesTest = "1.8.1"
+espressoCore = "3.5.1"
+mockwebserver = "4.9.1"
+mockkAndroid = "1.13.10"
+hiltAndroidTesting = "2.51.1"
+
+
 [libraries]
 # Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,12 +59,23 @@ kotlinx-datetime = {group= "org.jetbrains.kotlinx", name = "kotlinx-datetime", v
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "composeAnimation" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeFoundation" }
 # Test & Debug
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+junit = { module = "junit:junit", version.ref = "junit" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+androidx-core = { module = "androidx.test:core", version.ref = "testCore" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "extJunit" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+core-ktx = { module = "androidx.test:core-ktx", version.ref = "testCoreKtx" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "testRunner" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 # Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
