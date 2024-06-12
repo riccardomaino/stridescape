@@ -2,8 +2,6 @@ package it.unito.progmob.core.domain.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import it.unito.progmob.core.data.repository.FakeTargetRepository
-import it.unito.progmob.core.domain.model.TargetEntity
-import it.unito.progmob.core.domain.util.DateUtils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -29,10 +27,8 @@ class GetTargetUseCaseTest {
 
     @Test
     fun `get the last target, should return 9000`() = runTest {
-        val currentDate = DateUtils.formattedCurrentDate()
-        val target = TargetEntity(currentDate, 9000)
-        fakeTargetRepository.addCurrentDayTarget(target)
+        val actualTarget = fakeTargetRepository.addCurrentDayTargetForTest()
         val result = getTargetUseCase().first()
-        assertEquals(9000, result)
+        assertEquals(result, actualTarget)
     }
 }

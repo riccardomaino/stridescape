@@ -1,16 +1,20 @@
 package it.unito.progmob.core.data.repository
 
+import it.unito.progmob.core.domain.ext.rangeTo
 import it.unito.progmob.core.domain.model.TargetEntity
 import it.unito.progmob.core.domain.model.tuples.DateTargetTuple
 import it.unito.progmob.core.domain.repository.TargetRepository
+import it.unito.progmob.core.domain.util.DateUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.format
 
 
 class FakeTargetRepository : TargetRepository {
 
     private var targetItems = mutableListOf<TargetEntity>()
 
+    // TEST FUNCTIONS
     fun shouldHaveFilledList(shouldHaveFilledList: Boolean) {
         targetItems = if (shouldHaveFilledList) {
             mutableListOf(
@@ -27,15 +31,32 @@ class FakeTargetRepository : TargetRepository {
         }
     }
 
-    fun addCurrentDayTarget(target: TargetEntity) {
-        targetItems.add(target)
+    fun addCurrentDayTargetForTest(): Int {
+        val formattedCurrentDate = DateUtils.formattedCurrentDate()
+        val targetEntity = TargetEntity(formattedCurrentDate, 9000)
+        targetItems.add(targetEntity)
+        return targetEntity.stepsTarget
     }
 
-    /**
-     * Retrieves the step target for a given date.
-     *
-     * @param date The date for which to retrieve the target.* @return A flow emitting the step target for the given date.
-     */
+    fun addWeeklyTargetForTest(): IntArray {
+        val startLocalDate = DateUtils.getFirstDateOfWeek()
+        val endLocalDate = DateUtils.getCurrentLocalDateTime().date
+        val addedValues = intArrayOf(1, 1, 1, 1, 1, 1, 1)
+        val newValues = intArrayOf(1000, 2000, 3000, 4000, 5000, 6000, 7000)
+        val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
+
+        dateRangeList.forEachIndexed { index, date ->
+            val dateStr = date.format(DateUtils.defaultFormatter)
+            addedValues[index] = newValues[index]
+            targetItems.add(TargetEntity(dateStr, newValues[index]))
+        }
+        return addedValues
+    }
+
+
+
+
+    // IMPLEMENTED INTERFACE FUNCTIONS
     override fun findTargetByDate(date: String): Flow<Int> {
         return flowOf(
             targetItems.first {
@@ -44,40 +65,23 @@ class FakeTargetRepository : TargetRepository {
         )
     }
 
-    /**
-     * Retrieves the most recently set step target.
-     *
-     * @return A flow emitting the most recently set step target.
-     */
     override fun findLastTarget(): Flow<Int> {
-        return flowOf(targetItems.last().stepsTarget)
+        val result = targetItems.lastOrNull()?.stepsTarget ?: 0
+        return flowOf(result)
     }
 
-    /**
-     * Retrieves the daily step targets for each day within a given date range.
-     *
-     * @param startDate The start date of the range.
-     * @param endDate The end date of the range.
-     * @return A flow emitting a list of DateTargetTuple objects representing the daily step targets.
-     */
     override fun findTargetBetweenDates(
         startDate: String,
         endDate: String
     ): Flow<List<DateTargetTuple>?> {
-        return flowOf(
-            targetItems.filter {
-                it.date in startDate..endDate
-            }.map {
-                DateTargetTuple(it.date, it.stepsTarget)
-            }
-        )
+        val filteredItems = targetItems.filter {it.date in startDate..endDate}
+        return if(filteredItems.isEmpty()) {
+            flowOf(null)
+        } else {
+            flowOf( filteredItems.map { DateTargetTuple(it.date, it.stepsTarget) })
+        }
     }
 
-    /**
-     * Inserts or updates a new step target in the database.
-     *
-     * @param newTargetEntity The step target entity to insert or update.
-     */
     override suspend fun upsertNewTarget(newTargetEntity: TargetEntity) {
         targetItems.removeAll { it.date == newTargetEntity.date}
         targetItems.add(newTargetEntity)

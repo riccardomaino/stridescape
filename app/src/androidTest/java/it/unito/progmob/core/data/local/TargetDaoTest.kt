@@ -10,7 +10,7 @@ import it.unito.progmob.di.AppModule
 import it.unito.progmob.di.RoomModule
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -44,17 +44,17 @@ class TargetDaoTest {
     @Test
     @Throws(Exception::class)
     fun insertAndGetTarget() = runTest {
-        val target = TargetEntity("2023-11-15", 10000)
+        val target = TargetEntity("2023/11/15", 10000)
         targetDao.upsertNewTarget(target)
-        val retrievedTarget = targetDao.findTargetByDate("2023-11-15").first()
+        val retrievedTarget = targetDao.findTargetByDate("2023/11/15").first()
         assertEquals(retrievedTarget, 10000)
     }
 
     @Test
     @Throws(Exception::class)
     fun getLastTarget() = runTest {
-        val target1 = TargetEntity("2023-11-14", 8000)
-        val target2 = TargetEntity("2023-11-15", 10000)
+        val target1 = TargetEntity("2023/11/14", 8000)
+        val target2 = TargetEntity("2023/11/15", 10000)
         targetDao.upsertNewTarget(target1)
         targetDao.upsertNewTarget(target2)
         val lastTarget = targetDao.findLastTarget().first()
@@ -64,26 +64,31 @@ class TargetDaoTest {
     @Test
     @Throws(Exception::class)
     fun upsertTarget() = runTest {
-        val target1 = TargetEntity("2023-11-15", 10000)
+        val target1 = TargetEntity("2023/11/15", 10000)
         targetDao.upsertNewTarget(target1)
-        val target2 = TargetEntity("2023-11-15", 12000)
+        val target2 = TargetEntity("2023/11/15", 12000)
         targetDao.upsertNewTarget(target2)
-        val retrievedTarget = targetDao.findTargetByDate("2023-11-15").first()
+        val retrievedTarget = targetDao.findTargetByDate("2023/11/15").first()
         assertEquals(retrievedTarget, 12000)
     }
 
     @Test
     @Throws(Exception::class)
     fun getTargetBetweenDates() = runTest {
-        val target1 = TargetEntity("2023-11-14", 8000)
-        val target2 = TargetEntity("2023-11-15", 10000)
-        val target3 = TargetEntity("2023-11-16", 12000)
+        val target1 = TargetEntity("2023/11/14", 8000)
+        val target2 = TargetEntity("2023/11/15", 10000)
+        val target3 = TargetEntity("2023/11/16", 12000)
         targetDao.upsertNewTarget(target1)
         targetDao.upsertNewTarget(target2)
         targetDao.upsertNewTarget(target3)
-        val firstTarget = targetDao.findTargetBetweenDates("2023-11-15", "2023-11-15").first()
-        val lastTarget = targetDao.findTargetBetweenDates("2023-11-14", "2023-11-16").last()
-        assertEquals(firstTarget, 8000)
-        assertEquals(lastTarget, 12000)
+        targetDao.findTargetBetweenDates("2023/11/14", "2023/11/16").take(1).collect {
+            it?.forEach { tuple ->
+                when (tuple.date) {
+                    "2023/11/14" -> assertEquals(tuple.stepsTarget, 8000)
+                    "2023/11/15" -> assertEquals(tuple.stepsTarget, 10000)
+                    "2023/11/16" -> assertEquals(tuple.stepsTarget, 12000)
+                }
+            }
+        }
     }
 }

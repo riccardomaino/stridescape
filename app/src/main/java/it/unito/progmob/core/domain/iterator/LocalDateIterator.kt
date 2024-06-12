@@ -1,4 +1,4 @@
-package it.unito.progmob.stats.domain.iterator
+package it.unito.progmob.core.domain.iterator
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
