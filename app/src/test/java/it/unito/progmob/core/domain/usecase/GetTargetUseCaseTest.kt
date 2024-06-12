@@ -1,4 +1,4 @@
-package it.unito.progmob.profile.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import it.unito.progmob.core.data.repository.FakeTargetRepository

@@ -1,4 +1,4 @@
-package it.unito.progmob.profile.domain.usecase
+package it.unito.progmob.core.domain.usecase
 
 import it.unito.progmob.core.domain.repository.TargetRepository
 import it.unito.progmob.core.domain.util.DateUtils

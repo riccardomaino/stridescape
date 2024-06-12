@@ -97,8 +97,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
-    testImplementation("junit:junit:4.12")
-    testImplementation("junit:junit:4.12")
     ksp(libs.androidx.room.compiler)
     // Dagger-Hilt
     implementation(libs.dagger.hilt)

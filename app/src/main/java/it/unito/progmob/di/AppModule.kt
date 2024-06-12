@@ -15,19 +15,20 @@ import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
+import it.unito.progmob.core.domain.usecase.GetTargetUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUsernameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserHeightEntryUseCase
-import it.unito.progmob.core.domain.usecase.SaveUsernameEntryUseCase
 import it.unito.progmob.core.domain.usecase.SaveUserWeightEntryUseCase
+import it.unito.progmob.core.domain.usecase.SaveUsernameEntryUseCase
+import it.unito.progmob.core.domain.usecase.UpdateTargetUseCase
 import it.unito.progmob.core.domain.usecase.ValidateHeightUseCase
 import it.unito.progmob.core.domain.usecase.ValidateTargetUseCase
 import it.unito.progmob.core.domain.usecase.ValidateUsernameUseCase
 import it.unito.progmob.core.domain.usecase.ValidateWeightUseCase
 import it.unito.progmob.history.domain.usecase.GetWalksWithPathPointsUseCase
 import it.unito.progmob.history.domain.usecase.HistoryUseCases
-import it.unito.progmob.home.domain.usecase.GetDateTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
 import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
 import it.unito.progmob.home.domain.usecase.GetDayStepsUseCase
@@ -40,9 +41,7 @@ import it.unito.progmob.main.domain.usecase.MainUseCases
 import it.unito.progmob.main.domain.usecase.ReadOnboardingEntryUseCase
 import it.unito.progmob.onboarding.domain.usecase.OnBoardingUseCases
 import it.unito.progmob.onboarding.domain.usecase.SaveOnboardingEntryUseCase
-import it.unito.progmob.profile.domain.usecase.GetTargetUseCase
 import it.unito.progmob.profile.domain.usecase.ProfileUseCases
-import it.unito.progmob.core.domain.usecase.UpdateTargetUseCase
 import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthCaloriesStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthDistanceStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetWeekOrMonthSpeedStatUseCase
@@ -159,7 +158,7 @@ object AppModule {
         GetDayCaloriesUseCase(walkRepository),
         GetDayDistanceUseCase(walkRepository),
         GetDayTimeUseCase(walkRepository),
-        GetDateTargetUseCase(targetRepository),
+        GetTargetUseCase(targetRepository),
         GetWeeklyStepsUseCase(walkRepository),
         GetWeeklyTargetUseCase(targetRepository)
     )

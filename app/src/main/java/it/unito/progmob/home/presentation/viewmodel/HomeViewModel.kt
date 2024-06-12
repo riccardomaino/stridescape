@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
     val timeCurrentDay = homeUseCases.getDayTimeUseCase(currentDate)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0L)
 
-    val stepsTargetCurrentDay = homeUseCases.getDateTargetUseCase(currentDate)
+    val stepsTargetCurrentDay = homeUseCases.getTargetUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     val weeklySteps = homeUseCases.getWeeklyStepsUseCase()

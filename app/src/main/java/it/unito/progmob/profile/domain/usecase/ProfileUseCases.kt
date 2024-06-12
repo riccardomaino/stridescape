@@ -1,5 +1,6 @@
 package it.unito.progmob.profile.domain.usecase
 
+import it.unito.progmob.core.domain.usecase.GetTargetUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserHeightEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUsernameEntryUseCase
 import it.unito.progmob.core.domain.usecase.ReadUserWeightEntryUseCase
