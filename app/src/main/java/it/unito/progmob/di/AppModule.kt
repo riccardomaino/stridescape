@@ -27,7 +27,6 @@ import it.unito.progmob.core.domain.usecase.ValidateUsernameUseCase
 import it.unito.progmob.core.domain.usecase.ValidateWeightUseCase
 import it.unito.progmob.history.domain.usecase.GetWalksWithPathPointsUseCase
 import it.unito.progmob.history.domain.usecase.HistoryUseCases
-import it.unito.progmob.home.domain.usecase.AddTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDateTargetUseCase
 import it.unito.progmob.home.domain.usecase.GetDayCaloriesUseCase
 import it.unito.progmob.home.domain.usecase.GetDayDistanceUseCase
@@ -160,7 +159,6 @@ object AppModule {
         GetDayCaloriesUseCase(walkRepository),
         GetDayDistanceUseCase(walkRepository),
         GetDayTimeUseCase(walkRepository),
-        AddTargetUseCase(targetRepository),
         GetDateTargetUseCase(targetRepository),
         GetWeeklyStepsUseCase(walkRepository),
         GetWeeklyTargetUseCase(targetRepository)

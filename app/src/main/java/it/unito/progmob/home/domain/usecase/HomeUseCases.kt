@@ -8,7 +8,6 @@ data class HomeUseCases(
     val getDayCaloriesUseCase: GetDayCaloriesUseCase,
     val getDayDistanceUseCase: GetDayDistanceUseCase,
     val getDayTimeUseCase: GetDayTimeUseCase,
-    val addTargetUseCase: AddTargetUseCase,
     val getDateTargetUseCase: GetDateTargetUseCase,
     val getWeeklyStepsUseCase: GetWeeklyStepsUseCase,
     val getWeeklyTargetUseCase: GetWeeklyTargetUseCase

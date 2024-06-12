@@ -79,6 +79,7 @@ class FakeTargetRepository : TargetRepository {
      * @param newTargetEntity The step target entity to insert or update.
      */
     override suspend fun upsertNewTarget(newTargetEntity: TargetEntity) {
+        targetItems.removeAll { it.date == newTargetEntity.date}
         targetItems.add(newTargetEntity)
     }
 }

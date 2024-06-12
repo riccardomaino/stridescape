@@ -25,7 +25,7 @@ class ReadUserHeightEntryUseCaseTest {
     }
 
     @Test
-    fun `invoke should return the user height value`() = runTest {
+    fun `read user height entry, should return 180`() = runTest {
         val userHeight = "180"
         fakeDataStoreManager.saveUserHeightEntry(userHeight)
         val result = readUserHeightEntryUseCase().first()

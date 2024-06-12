@@ -25,7 +25,7 @@ class ReadUserWeightEntryUseCaseTest {
     }
 
     @Test
-    fun `invoke should return the user weight value`() = runTest {
+    fun `read user weight entry, should return 70`() = runTest {
         val userWeight = "70"
         fakeDataStoreManager.saveUserWeightEntry(userWeight)
         val result = readUserWeightEntryUseCase().first()
