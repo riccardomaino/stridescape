@@ -57,8 +57,15 @@ class FakeWalkRepository: WalkRepository {
     }
 
     override fun findWalksWithPathPoints(startDate: String, endDate: String): List<WalkWithPathPointsEntity> {
-        return walkItems.map {
-            WalkWithPathPointsEntity(it, mutableListOf())
+        return walkItems.filter {
+            it.date in startDate..endDate
+        }.map { walkEntity ->
+            WalkWithPathPointsEntity(
+                walk = walkEntity,
+                pathPoints = pathPointItems.filter {
+                    it.walkId.toInt() == walkEntity.id
+                }
+            )
         }
     }
 
