@@ -31,7 +31,7 @@ class SaveOnboardingEntryUseCaseTest {
 
     // Test that the use case saves the onboarding entry
     @Test
-    fun saveOnboardingEntry() = runTest {
+    fun `save onboarding entry, should return true`() = runTest {
         saveOnboardingEntryUseCase()
         val onboardingEntry = dataStoreManager.readOnboardingEntry().first()
         assertEquals(true, onboardingEntry)

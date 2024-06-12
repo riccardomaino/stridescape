@@ -13,6 +13,6 @@ class SaveUsernameEntryUseCase (
     suspend operator fun invoke(
         name: String
     ) {
-        dataStoreManager.saveUserNameEntry(name)
+        dataStoreManager.saveUsernameEntry(name)
     }
 }

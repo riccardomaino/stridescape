@@ -28,7 +28,7 @@ class ValidateTargetUseCase {
             )
         }
         // Check if the target is within the valid range (>0).
-        if(target.toInt() < 0){
+        if(target.toInt() < 1){
             return ValidationResult(
                 successful = false,
                 message = UiText.StringResource(resId = R.string.validation_error_invalid_range_target)

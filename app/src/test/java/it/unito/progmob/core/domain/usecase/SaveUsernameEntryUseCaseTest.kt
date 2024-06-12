@@ -15,25 +15,25 @@ class SaveUsernameEntryUseCaseTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var dataStoreManager: DataStoreManager
+    private lateinit var fakeDataStoreManager: DataStoreManager
     private lateinit var saveUsernameEntryUseCase: SaveUsernameEntryUseCase
 
     @Before
     fun setUp() {
-        dataStoreManager = FakeDataStoreManager()
-        saveUsernameEntryUseCase = SaveUsernameEntryUseCase(dataStoreManager)
+        fakeDataStoreManager = FakeDataStoreManager()
+        saveUsernameEntryUseCase = SaveUsernameEntryUseCase(fakeDataStoreManager)
     }
 
     @After
     fun tearDown() {
-        dataStoreManager = FakeDataStoreManager()
+        fakeDataStoreManager = FakeDataStoreManager()
     }
 
     // Test that the use case saves the onboarding entry
     @Test
-    fun saveUsernameEntry() = runTest {
+    fun `save user name entry, should return test`() = runTest {
         saveUsernameEntryUseCase("test")
-        val onboardingEntry = dataStoreManager.readUsernameEntry().first()
+        val onboardingEntry = fakeDataStoreManager.readUsernameEntry().first()
         assertEquals("test", onboardingEntry)
     }
 }

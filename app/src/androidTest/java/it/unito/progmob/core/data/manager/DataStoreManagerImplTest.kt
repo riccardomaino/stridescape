@@ -60,7 +60,7 @@ class DataStoreManagerImplTest {
     @Test
     fun saveAndReadUsernameEntry() = runTest {
         val testName = "John Doe"
-        dataStoreManager.saveUserNameEntry(testName)
+        dataStoreManager.saveUsernameEntry(testName)
         val result = dataStoreManager.readUsernameEntry().first()
         assertEquals(testName, result)
     }

@@ -41,7 +41,7 @@ class FakeDataStoreManager: DataStoreManager {
         return flowOf(dataStore[USER_HEIGHT_ENTRY]!!)
     }
 
-    override suspend fun saveUserNameEntry(name: String) {
+    override suspend fun saveUsernameEntry(name: String) {
         dataStore[USER_NAME_ENTRY] = name
     }
 

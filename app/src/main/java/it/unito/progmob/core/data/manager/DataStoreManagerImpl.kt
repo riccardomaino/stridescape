@@ -87,7 +87,7 @@ class DataStoreManagerImpl @Inject constructor(
     /**
      * Saves the user name to DataStore.
      */
-    override suspend fun saveUserNameEntry(name: String) {
+    override suspend fun saveUsernameEntry(name: String) {
         context.datastore.edit { preferences ->
             preferences[PreferencesKeys.USER_NAME_ENTRY] = name
         }

@@ -51,7 +51,7 @@ interface DataStoreManager {
      *
      * @param name The user's name as a string.
      */
-    suspend fun saveUserNameEntry(name: String)
+    suspend fun saveUsernameEntry(name: String)
 
     /**
      * Reads a flow of strings representing the user's name.

@@ -14,17 +14,21 @@ class FakeTargetRepository : TargetRepository {
     fun shouldHaveFilledList(shouldHaveFilledList: Boolean) {
         targetItems = if (shouldHaveFilledList) {
             mutableListOf(
-                TargetEntity("2024-01-01", 1000),
-                TargetEntity("2024-01-02", 2000),
-                TargetEntity("2024-01-03", 3000),
-                TargetEntity("2024-02-04", 4000),
-                TargetEntity("2024-02-05", 5000),
-                TargetEntity("2024-03-06", 6000),
-                TargetEntity("2024-03-07", 7000)
+                TargetEntity("2024/01/01", 1000),
+                TargetEntity("2024/01/02", 2000),
+                TargetEntity("2024/01/03", 3000),
+                TargetEntity("2024/02/04", 4000),
+                TargetEntity("2024/02/05", 5000),
+                TargetEntity("2024/03/06", 6000),
+                TargetEntity("2024/03/07", 7000)
             )
         } else {
             mutableListOf()
         }
+    }
+
+    fun addCurrentDayTarget(target: TargetEntity) {
+        targetItems.add(target)
     }
 
     /**
