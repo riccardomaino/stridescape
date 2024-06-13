@@ -17,9 +17,11 @@ import it.unito.progmob.core.domain.model.tuples.MonthTimeTuple
 import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
+import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.tracking.domain.model.PathPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 
 class FakeAndroidWalkRepository: WalkRepository {
@@ -60,20 +62,167 @@ class FakeAndroidWalkRepository: WalkRepository {
         }
     }
 
-    fun addWeeklyStepsForTest(): IntArray{
+    fun addWeekWalkEntitiesForTest(fill: Boolean, isInt: Boolean): WalkData {
+        val currentLocalDate = DateUtils.getCurrentLocalDateTime().date
         val startLocalDate = DateUtils.getFirstDateOfWeek()
-        val endLocalDate = DateUtils.getCurrentLocalDateTime().date
-        val addedValues = intArrayOf(0, 0, 0, 0, 0, 0, 0)
-        val newValues = intArrayOf(1000, 2000, 3000, 4000, 5000, 6000, 7000)
-        val dateRangeList = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
-        dateRangeList.forEachIndexed { index, date ->
-            val dayOfWeek = date.dayOfWeek.value - 1
-            val month = date.monthNumber
-            val dateStr = date.format(DateUtils.defaultFormatter)
-            addedValues[index] = newValues[index]
-            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], 1.8f))
+        val endLocalDate = DateUtils.getLastDateOfWeek()
+
+        val dateRangeToCurrent = startLocalDate.rangeTo(currentLocalDate).asIterable().toMutableList()
+        val dateRangeToEnd = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
+
+        val newValues = IntArray(dateRangeToEnd.size) { index -> index*1000 }
+
+        if(isInt) {
+            val intAddedValues = IntArray(dateRangeToEnd.size) { 0 }
+            if(fill){
+                dateRangeToCurrent.forEachIndexed { index, date ->
+                    val dayOfWeek = date.dayOfWeek.value - 1
+                    val month = date.monthNumber
+                    val dateStr = date.format(DateUtils.defaultFormatter)
+                    intAddedValues[index] = newValues[index]
+                    walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                }
+            }
+            return WalkData.IntWalkData(intAddedValues)
+        } else {
+            val floatAddedValues = FloatArray(dateRangeToEnd.size) { 0f }
+            if(fill){
+                dateRangeToCurrent.forEachIndexed { index, date ->
+                    val dayOfWeek = date.dayOfWeek.value - 1
+                    val month = date.monthNumber
+                    val dateStr = date.format(DateUtils.defaultFormatter)
+                    floatAddedValues[index] = newValues[index].toFloat()
+                    walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                }
+            }
+            return WalkData.FloatWalkData(floatAddedValues)
         }
-        return addedValues
+    }
+
+    sealed interface WalkData {
+        class IntWalkData(val values: IntArray) : WalkData
+        class FloatWalkData(val values: FloatArray) : WalkData
+    }
+
+
+    fun addWalkEntitiesForStatsTest(fill: Boolean, isInt: Boolean, rangeType: RangeType): StatPairData {
+        val currentLocalDate = DateUtils.getCurrentLocalDateTime().date
+        val currentMonth = DateUtils.getCurrentMonth()
+        val currentYear = DateUtils.getCurrentYear()
+
+        val startLocalDate = when(rangeType){
+            RangeType.WEEK -> DateUtils.getFirstDateOfWeek()
+            RangeType.MONTH -> DateUtils.getFirstDateOfMonth()
+            RangeType.YEAR -> LocalDate(currentYear, 1, 1)
+        }
+
+        val endLocalDate = when(rangeType){
+            RangeType.WEEK -> DateUtils.getLastDateOfWeek()
+            RangeType.MONTH -> DateUtils.getLastDateOfMonth()
+            RangeType.YEAR -> LocalDate(currentYear, 12, 31)
+        }
+
+        val dateRangeToCurrent = when(rangeType){
+            RangeType.YEAR -> emptyList()
+            else -> startLocalDate.rangeTo(currentLocalDate).asIterable().toMutableList()
+        }
+
+        val dateRangeToEnd = when(rangeType){
+            RangeType.YEAR -> emptyList()
+            else -> startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
+        }
+
+        val monthRangeToCurrent = when(rangeType){
+            RangeType.YEAR -> (1..currentMonth).toMutableList()
+            else -> emptyList()
+        }
+
+        val monthRangeToEnd = when(rangeType){
+            RangeType.YEAR -> (1..12).toMutableList()
+            else -> emptyList()
+        }
+
+        val newValues = when(rangeType){
+            RangeType.YEAR -> IntArray(monthRangeToEnd.size) { index -> index*1000 }
+            else -> IntArray(dateRangeToEnd.size) { index -> index*1000 }
+        }
+
+        if(isInt){ // Integer values
+            val intAddedValues = when(rangeType){
+                RangeType.YEAR -> IntArray(monthRangeToEnd.size) { 0 }
+                else -> IntArray(dateRangeToEnd.size) { 0 }
+            }
+
+            if(fill){
+                when(rangeType){
+                    RangeType.YEAR -> {
+                        monthRangeToCurrent.forEachIndexed { index, monthNr ->
+                            val date = LocalDate(currentYear, monthNr, 1)
+                            val dayOfWeek = date.dayOfWeek.value - 1
+                            val dateStr = date.format(DateUtils.defaultFormatter)
+                            intAddedValues[index] = newValues[index]
+                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, monthNr, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                        }
+                    }
+                    else -> {
+                        dateRangeToCurrent.forEachIndexed { index, date ->
+                            val dayOfWeek = date.dayOfWeek.value - 1
+                            val month = date.monthNumber
+                            val dateStr = date.format(DateUtils.defaultFormatter)
+                            intAddedValues[index] = newValues[index]
+                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                        }
+                    }
+                }
+            }
+
+            return when(rangeType){
+                RangeType.YEAR -> StatPairData.IntStatPairData(values = monthRangeToEnd.mapIndexed { index, monthNr ->
+                    Pair(LocalDate(currentYear, monthNr, 1), intAddedValues[index]) }.sortedBy { it.first }
+                )
+                else -> StatPairData.IntStatPairData(values = dateRangeToEnd.mapIndexed { index, date -> Pair(date, intAddedValues[index]) }.sortedBy { it.first })
+            }
+        } else { // Float values
+            val floatAddedValues = when(rangeType){
+                RangeType.YEAR -> FloatArray(monthRangeToEnd.size) { 0f }
+                else -> FloatArray(dateRangeToEnd.size) { 0f }
+            }
+
+            if(fill){
+                when(rangeType){
+                    RangeType.YEAR -> {
+                        monthRangeToCurrent.forEachIndexed { index, monthNr ->
+                            val date = LocalDate(currentYear, monthNr, 1)
+                            val dayOfWeek = date.dayOfWeek.value - 1
+                            val dateStr = date.format(DateUtils.defaultFormatter)
+                            floatAddedValues[index] = newValues[index].toFloat()
+                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, monthNr, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                        }
+                    }
+                    else -> {
+                        dateRangeToCurrent.forEachIndexed { index, date ->
+                            val dayOfWeek = date.dayOfWeek.value - 1
+                            val month = date.monthNumber
+                            val dateStr = date.format(DateUtils.defaultFormatter)
+                            floatAddedValues[index] = newValues[index].toFloat()
+                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                        }
+                    }
+                }
+            }
+
+            return when(rangeType){
+                RangeType.YEAR -> StatPairData.FloatStatPairData(values = monthRangeToEnd.mapIndexed { index, monthNr ->
+                    Pair(LocalDate(currentYear, monthNr, 1), floatAddedValues[index]) }.sortedBy { it.first }
+                )
+                else -> StatPairData.FloatStatPairData(values = dateRangeToEnd.mapIndexed { index, date -> Pair(date, floatAddedValues[index]) }.sortedBy { it.first })
+            }
+        }
+    }
+
+    sealed interface StatPairData {
+        class IntStatPairData(val values: List<Pair<LocalDate, Int>>) : StatPairData
+        class FloatStatPairData(val values: List<Pair<LocalDate, Float>>) : StatPairData
     }
 
 

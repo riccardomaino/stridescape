@@ -1,28 +1,29 @@
 package it.unito.progmob.stats.domain.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.common.truth.Truth.assertThat
 import it.unito.progmob.core.data.repository.FakeWalkRepository
 import it.unito.progmob.stats.domain.model.RangeType
-import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class GetWeekOrMonthCaloriesStatUseCaseTest {
+
+class GetWeekOrMonthStepsStatUseCaseTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var fakeWalkRepository: FakeWalkRepository
-    private lateinit var getWeekOrMonthCaloriesStatUseCase: GetWeekOrMonthCaloriesStatUseCase
+    private lateinit var getWeekOrMonthStepsStatUseCase: GetWeekOrMonthStepsStatUseCase 
 
     @Before
     fun setUp() {
         fakeWalkRepository = FakeWalkRepository()
-        getWeekOrMonthCaloriesStatUseCase = GetWeekOrMonthCaloriesStatUseCase(fakeWalkRepository)
+        getWeekOrMonthStepsStatUseCase = GetWeekOrMonthStepsStatUseCase(fakeWalkRepository)
     }
 
     @Test
-    fun `get week calories with week range, should return the expected list of pairs`() {
+    fun `get week steps with week range, should return the expected list of pairs`() {
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = true,
             isInt = true,
@@ -30,12 +31,12 @@ class GetWeekOrMonthCaloriesStatUseCaseTest {
         ) as FakeWalkRepository.StatPairData.IntStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.WEEK)
+        val result = getWeekOrMonthStepsStatUseCase(RangeType.WEEK)
         assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get week calories with empty database, should return a list of pairs with zeros as the second element`() {
+    fun `get week steps with empty database, should return a list of pairs with zeros as the second element`() {
         fakeWalkRepository.shouldHaveFilledWalkList(false)
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = false,
@@ -44,12 +45,12 @@ class GetWeekOrMonthCaloriesStatUseCaseTest {
         ) as FakeWalkRepository.StatPairData.IntStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.WEEK)
+        val result = getWeekOrMonthStepsStatUseCase(RangeType.WEEK)
         assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get month calories with month range, should return the expected list of pairs`() {
+    fun `get month steps with month range, should return the expected list of pairs`() {
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = true,
             isInt = true,
@@ -57,12 +58,12 @@ class GetWeekOrMonthCaloriesStatUseCaseTest {
         ) as FakeWalkRepository.StatPairData.IntStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.MONTH)
+        val result = getWeekOrMonthStepsStatUseCase(RangeType.MONTH)
         assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get month calories with empty database, should return a list of pairs with zeros as the second element`() {
+    fun `get month steps with empty database, should return a list of pairs with zeros as the second element`() {
         fakeWalkRepository.shouldHaveFilledWalkList(false)
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = false,
@@ -71,7 +72,7 @@ class GetWeekOrMonthCaloriesStatUseCaseTest {
         ) as FakeWalkRepository.StatPairData.IntStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.MONTH)
+        val result = getWeekOrMonthStepsStatUseCase(RangeType.MONTH)
         assertThat(result).isEqualTo(actual)
-    }
+    }    
 }

@@ -1,77 +1,77 @@
 package it.unito.progmob.stats.domain.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.common.truth.Truth.assertThat
 import it.unito.progmob.core.data.repository.FakeWalkRepository
 import it.unito.progmob.stats.domain.model.RangeType
-import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class GetWeekOrMonthCaloriesStatUseCaseTest {
+class GetWeekOrMonthSpeedStatUseCaseTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var fakeWalkRepository: FakeWalkRepository
-    private lateinit var getWeekOrMonthCaloriesStatUseCase: GetWeekOrMonthCaloriesStatUseCase
+    private lateinit var getWeekOrMonthSpeedStatUseCase: GetWeekOrMonthSpeedStatUseCase
 
     @Before
     fun setUp() {
         fakeWalkRepository = FakeWalkRepository()
-        getWeekOrMonthCaloriesStatUseCase = GetWeekOrMonthCaloriesStatUseCase(fakeWalkRepository)
+        getWeekOrMonthSpeedStatUseCase = GetWeekOrMonthSpeedStatUseCase(fakeWalkRepository)
     }
 
     @Test
-    fun `get week calories with week range, should return the expected list of pairs`() {
+    fun `get week speed with week range, should return the expected list of pairs`() {
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = true,
-            isInt = true,
+            isInt = false,
             rangeType = RangeType.WEEK
-        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        ) as FakeWalkRepository.StatPairData.FloatStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.WEEK)
+        val result = getWeekOrMonthSpeedStatUseCase(RangeType.WEEK)
         assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get week calories with empty database, should return a list of pairs with zeros as the second element`() {
+    fun `get week speed with empty database, should return a list of pairs with zeros as the second element`() {
         fakeWalkRepository.shouldHaveFilledWalkList(false)
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = false,
-            isInt = true,
+            isInt = false,
             rangeType = RangeType.WEEK
-        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        ) as FakeWalkRepository.StatPairData.FloatStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.WEEK)
+        val result = getWeekOrMonthSpeedStatUseCase(RangeType.WEEK)
         assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get month calories with month range, should return the expected list of pairs`() {
+    fun `get month speed with month range, should return the expected list of pairs`() {
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = true,
-            isInt = true,
+            isInt = false,
             rangeType = RangeType.MONTH
-        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        ) as FakeWalkRepository.StatPairData.FloatStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.MONTH)
+        val result = getWeekOrMonthSpeedStatUseCase(RangeType.MONTH)
         assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get month calories with empty database, should return a list of pairs with zeros as the second element`() {
+    fun `get month speed with empty database, should return a list of pairs with zeros as the second element`() {
         fakeWalkRepository.shouldHaveFilledWalkList(false)
         val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
             fill = false,
-            isInt = true,
+            isInt = false,
             rangeType = RangeType.MONTH
-        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        ) as FakeWalkRepository.StatPairData.FloatStatPairData
 
         val actual = data.values
-        val result = getWeekOrMonthCaloriesStatUseCase(RangeType.MONTH)
+        val result = getWeekOrMonthSpeedStatUseCase(RangeType.MONTH)
         assertThat(result).isEqualTo(actual)
     }
 }

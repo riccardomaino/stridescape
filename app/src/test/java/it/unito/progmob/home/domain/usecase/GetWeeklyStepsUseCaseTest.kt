@@ -24,18 +24,27 @@ class GetWeeklyStepsUseCaseTest {
     }
 
     @Test
-    fun `get weekly steps, returns the correct steps for each day of the week`() = runTest {
-        fakeWalkRepository.shouldHaveFilledWalkList(true)
-        val actualSteps = fakeWalkRepository.addWeeklyStepsForTest()
+    fun `get weekly steps, should return the correct steps for each day of the week`() = runTest {
+        val data = fakeWalkRepository.addWeekWalkEntitiesForTest(
+            fill = true,
+            isInt = true
+        ) as FakeWalkRepository.WalkData.IntWalkData
+
+        val actual = data.values
         val result = getWeeklyStepsUseCase().first()
-        assertThat(result).isEqualTo(actualSteps)
+        assertThat(result).isEqualTo(actual)
     }
 
     @Test
-    fun `get weekly steps with empty database, returns an array of zeros`() = runTest {
+    fun `get weekly steps with empty database, should return an integer array of zeros`() = runTest {
         fakeWalkRepository.shouldHaveFilledWalkList(false)
-        val actualSteps = intArrayOf(0, 0, 0, 0, 0, 0, 0)
+        val data = fakeWalkRepository.addWeekWalkEntitiesForTest(
+            fill = false,
+            isInt = true
+        ) as FakeWalkRepository.WalkData.IntWalkData
+
+        val actual =  data.values
         val result = getWeeklyStepsUseCase().first()
-        assertThat(result).isEqualTo(actualSteps)
+        assertThat(result).isEqualTo(actual)
     }
 }
