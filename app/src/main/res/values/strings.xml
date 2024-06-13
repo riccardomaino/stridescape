@@ -107,7 +107,7 @@
     <string name="validation_error_invalid_range_height">Please enter a valid number for the height (25..250).</string>
     <string name="validation_error_blank_weight">Please enter a value for the weight.</string>
     <string name="validation_error_invalid_number_weight">Please enter a valid integer number for the weight.</string>
-    <string name="validation_error_invalid_range_weight">Please enter a valid number for the height (15..300).</string>
+    <string name="validation_error_invalid_range_weight">Please enter a valid number for the weight (15..300).</string>
     <string name="validation_error_blank_target">Please enter a value for the steps target.</string>
     <string name="validation_error_invalid_number_target">Please enter a valid integer number for the steps target</string>
     <string name="validation_error_invalid_range_target">Please enter a positive number for the steps target.</string>

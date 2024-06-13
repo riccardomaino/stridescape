@@ -102,3 +102,33 @@ fun Modifier.rightFadingEdge(
     width: Dp = 16.dp,
     spec: AnimationSpec<Dp>? = null
 ) = fadingEdge(FadeSide.RIGHT, color = color, width = width, isVisible = isVisible, spec = spec)
+
+/**
+ * Applies a fading edge effect to the top side of the layout.
+ *
+ * @param color The color of the fading edge.
+ * @param isVisible Whether the fading edge is visible.
+ * @param width The width of the fading edge.
+ * @param spec An optional animation specification for the width of the fading edge.
+ */
+fun Modifier.topFadingEdge(
+    color: Color,
+    isVisible: Boolean = true,
+    width: Dp = 16.dp,
+    spec: AnimationSpec<Dp>? = null
+) = fadingEdge(FadeSide.TOP, color = color, width = width, isVisible = isVisible, spec = spec)
+
+/**
+ * Applies a fading edge effect to the bottom side of the layout.
+ *
+ * @param color The color of the fading edge.
+ * @param isVisible Whether the fading edge is visible.
+ * @param width The width of the fading edge.
+ * @param spec An optional animation specification for the width of the fading edge.
+ */
+fun Modifier.bottomFadingEdge(
+    color: Color,
+    isVisible: Boolean = true,
+    width: Dp = 16.dp,
+    spec: AnimationSpec<Dp>? = null
+) = fadingEdge(FadeSide.BOTTOM, color = color, width = width, isVisible = isVisible, spec = spec)

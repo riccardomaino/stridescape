@@ -1,59 +1,11 @@
 package it.unito.progmob.core.domain.util
 
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeFormat
-import kotlinx.datetime.format.char
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 object TimeUtils {
-
-    /**
-     * The default formatter for displaying time in the format "HH:mm:ss".
-     */
-    private val defaultFormatter: DateTimeFormat<LocalTime> = LocalTime.Format {
-        hour()
-        char(':')
-        minute()
-        char(':')
-        second()
-    }
-
-    /**
-     * Formats the given [LocalTime] using the provided [formatter].
-     *
-     * @param time The [LocalTime] to format.
-     * @param formatter The [DateTimeFormat] to use for formatting. Defaults to [defaultFormatter].
-     * @return The formatted time string.
-     */
-    private fun formatTime(
-        time: LocalTime,
-        formatter: DateTimeFormat<LocalTime> = defaultFormatter
-    ): String = time.format(formatter)
-
-    /**
-     * It turns the time in milliseconds since 1.1.1970 (epoch) into a
-     * human readable string
-     *
-     * @param epochSeconds
-     * @return a human readable string
-     */
-    fun formatTimeFromEpochSeconds(
-        epochSeconds: Long,
-        formatter: DateTimeFormat<LocalTime>? = null
-    ): String {
-        val instant = Instant.fromEpochSeconds(epochSeconds)
-        val localTime = instant.toLocalDateTime(TimeZone.currentSystemDefault()).time
-        return formatter?.let {
-            formatTime(localTime, formatter)
-        } ?: formatTime(localTime)
-    }
 
     /**
      * It turns the time in milliseconds into a human readable string (e.g. the HH:mm:ss format)

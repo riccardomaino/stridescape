@@ -50,9 +50,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import it.unito.progmob.R
+import it.unito.progmob.core.domain.ext.bottomFadingEdge
 import it.unito.progmob.core.domain.ext.fullMonthsNames
 import it.unito.progmob.core.domain.ext.shortMonthsNames
 import it.unito.progmob.core.domain.ext.shortWeekDaysNames
+import it.unito.progmob.core.domain.ext.topFadingEdge
 import it.unito.progmob.core.domain.util.DateUtils
 import it.unito.progmob.history.domain.model.AllWalksPerDate
 import it.unito.progmob.history.domain.model.WalkWithPathPoints
@@ -165,6 +167,16 @@ fun HistoryScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .topFadingEdge(
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    width = medium,
+                                    isVisible = true
+                                )
+                                .bottomFadingEdge(
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    width = medium,
+                                    isVisible = true
+                                )
                                 .padding(small),
                         ) {
                             items(

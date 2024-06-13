@@ -67,16 +67,6 @@ object DateUtils {
     }
 
     /**
-     * Get the [LocalDate] from the epoch milliseconds using the kotlin datetime API with the system default timezone
-     *
-     * @return the [LocalDate] from the epoch milliseconds
-     */
-    fun getLocalDateFromEpochMillis(dateInMillis: Long): LocalDate =
-        Instant.fromEpochMilliseconds(dateInMillis)
-            .toLocalDateTime(TimeZone.currentSystemDefault()).date
-
-
-    /**
      * It turns the date in milliseconds since 1.1.1970 (epoch) into a
      * human readable string based on the formatter provided or the default one if it is not provided
      *
@@ -137,7 +127,7 @@ object DateUtils {
         val monthStr = monthsNames[localDate.monthNumber - 1]
         val dayStr = localDate.dayOfMonth
         val yearStr = localDate.year
-        return "$dayOfWeekStr,  $monthStr $dayStr $yearStr"
+        return "$dayOfWeekStr, $monthStr $dayStr $yearStr"
     }
 
     /**
