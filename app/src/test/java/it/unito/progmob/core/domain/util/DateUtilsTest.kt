@@ -1,12 +1,10 @@
 package it.unito.progmob.core.domain.util
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import com.google.common.truth.Truth
+import org.junit.Assert.*
 import org.junit.Test
 
-class DateUtilsTest {
-
+class DateUtilsTest{
     @Test
     fun `get the current formatted with the default formatter, should match the regex`() {
         val formattedCurrentDate = DateUtils.formattedCurrentDate()
@@ -22,19 +20,19 @@ class DateUtilsTest {
     @Test
     fun `get the current day of the week, should be between 0 and 6`() {
         val currentDayOfWeek = DateUtils.getCurrentDayOfWeek()
-        assertThat(currentDayOfWeek in 1..7).isTrue()
+        Truth.assertThat(currentDayOfWeek in 1..7).isTrue()
     }
 
     @Test
     fun `get the current month, should be between 1 and 12`() {
         val currentMonth = DateUtils.getCurrentMonth()
-        assertThat(currentMonth in 1..12).isTrue()
+        Truth.assertThat(currentMonth in 1..12).isTrue()
     }
 
     @Test
     fun `get the current year, should be greater than 2020`() {
         val currentYear = DateUtils.getCurrentYear()
-        assertThat(currentYear > 2020).isTrue()
+        Truth.assertThat(currentYear > 2020).isTrue()
     }
 
     @Test
@@ -81,7 +79,7 @@ class DateUtilsTest {
     @Test
     fun `get the current day of week from string, should be between 0 and 6`() {
         val currentDayOfWeek = DateUtils.getCurrentDayOfWeekFromString("2024/06/12")
-        assertThat(currentDayOfWeek in 0..6).isTrue()
+        Truth.assertThat(currentDayOfWeek in 0..6).isTrue()
     }
 
     @Test
