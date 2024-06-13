@@ -13,21 +13,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-//private const val TEST_DATASTORE_NAME: String = "test_datastore"
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class DataStoreManagerImplTest {
 
     private val testContext: Context = ApplicationProvider.getApplicationContext()
     private val testCoroutineDispatcher = StandardTestDispatcher()
-//    private val testCoroutineScope = TestScope(testCoroutineDispatcher + Job())
-
-//    private val testDataStore: DataStore<Preferences> =
-//        PreferenceDataStoreFactory.create(
-//            scope = testCoroutineScope,
-//            produceFile = { testContext.preferencesDataStoreFile(TEST_DATASTORE_NAME) }
-//        )
-
     private val dataStoreManager: DataStoreManager = DataStoreManagerImpl(testContext)
 
     @Before

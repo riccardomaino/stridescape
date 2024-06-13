@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     val weeklySteps = homeUseCases.getWeeklyStepsUseCase()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf(0, 0, 0, 0, 0, 0, 0))
 
     val weeklyTarget = homeUseCases.getWeeklyTargetUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), intArrayOf(1, 1, 1, 1, 1, 1, 1))

@@ -59,9 +59,9 @@ class FakeTargetRepository : TargetRepository {
     // IMPLEMENTED INTERFACE FUNCTIONS
     override fun findTargetByDate(date: String): Flow<Int> {
         return flowOf(
-            targetItems.first {
+            targetItems.find {
                 it.date == date
-            }.stepsTarget
+            }?.stepsTarget ?: 0
         )
     }
 

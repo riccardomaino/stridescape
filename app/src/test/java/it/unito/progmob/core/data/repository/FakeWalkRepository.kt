@@ -148,7 +148,7 @@ class FakeWalkRepository: WalkRepository {
         }
 
         if(isInt){ // Integer values
-            val intAddedValues = when(rangeType){
+            val intAddedValues = when(rangeType) {
                 RangeType.YEAR -> IntArray(monthRangeToEnd.size) { 0 }
                 else -> IntArray(dateRangeToEnd.size) { 0 }
             }
@@ -224,7 +224,6 @@ class FakeWalkRepository: WalkRepository {
         class IntStatPairData(val values: List<Pair<LocalDate, Int>>) : StatPairData
         class FloatStatPairData(val values: List<Pair<LocalDate, Float>>) : StatPairData
     }
-
 
 
     // IMPLEMENTED INTERFACE FUNCTIONS
@@ -371,11 +370,14 @@ class FakeWalkRepository: WalkRepository {
     }
 
     override suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long {
-        walkItems.add(newWalkEntity)
-        return (walkItems.size-1).toLong()
+        val newWalkToAdd = newWalkEntity.copy(id = walkItems.size+1)
+        walkItems.add(newWalkToAdd)
+        return (newWalkToAdd.id)!!.toLong()
     }
 
     override suspend fun upsertNewPathPoint(newPathPointEntity: PathPointEntity) {
-        pathPointItems.add(newPathPointEntity)
+        val newPathPointToAdd = newPathPointEntity.copy(id = pathPointItems.size+1)
+        pathPointItems.add(newPathPointToAdd)
+
     }
 }

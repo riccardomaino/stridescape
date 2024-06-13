@@ -27,6 +27,7 @@ class ProfileViewModel @Inject constructor(
      */
     var profileState = mutableStateOf(UiProfileState())
         private set
+
     /**
     * The initial values for the profile fields.
     */
