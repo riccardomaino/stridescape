@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.flowOf
 class FakeDataStoreManager: DataStoreManager {
     private var dataStore: MutableMap<String, String> = mutableMapOf(
         ONBOARDING_ENTRY to "false",
-        USER_NAME_ENTRY  to "",
-        USER_WEIGHT_ENTRY to "",
-        USER_HEIGHT_ENTRY to ""
+        USER_NAME_ENTRY  to "Mario Rossi",
+        USER_WEIGHT_ENTRY to "70",
+        USER_HEIGHT_ENTRY to "170"
     )
 
     override suspend fun saveOnboardingEntry() {

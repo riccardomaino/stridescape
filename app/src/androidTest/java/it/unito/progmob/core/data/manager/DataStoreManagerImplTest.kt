@@ -2,6 +2,7 @@ package it.unito.progmob.core.data.manager
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.google.common.truth.Truth.assertThat
 import it.unito.progmob.core.domain.manager.DataStoreManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -9,7 +10,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -29,29 +29,30 @@ class DataStoreManagerImplTest {
     fun saveAndReadOnboardingEntry() = runTest {
         dataStoreManager.saveOnboardingEntry()
         val result = dataStoreManager.readOnboardingEntry().first()
-        assertEquals(true, result)
+        assertThat(result).isTrue()
     }
+
     @Test
     fun saveAndReadUserWeightEntry() = runTest {
-        val testWeight = "75"
-        dataStoreManager.saveUserWeightEntry(testWeight)
+        val actual = "75"
+        dataStoreManager.saveUserWeightEntry(actual)
         val result = dataStoreManager.readUserWeightEntry().first()
-        assertEquals(testWeight, result)
+        assertThat(result).isEqualTo(actual)
     }
 
     @Test
     fun saveAndReadUserHeightEntry() = runTest {
-        val testHeight = "180"
-        dataStoreManager.saveUserHeightEntry(testHeight)
+        val actual = "180"
+        dataStoreManager.saveUserHeightEntry(actual)
         val result = dataStoreManager.readUserHeightEntry().first()
-        assertEquals(testHeight, result)
+        assertThat(result).isEqualTo(actual)
     }
 
     @Test
     fun saveAndReadUsernameEntry() = runTest {
-        val testName = "John Doe"
-        dataStoreManager.saveUsernameEntry(testName)
+        val actual = "John Doe"
+        dataStoreManager.saveUsernameEntry(actual)
         val result = dataStoreManager.readUsernameEntry().first()
-        assertEquals(testName, result)
+        assertThat(result).isEqualTo(actual)
     }
 }

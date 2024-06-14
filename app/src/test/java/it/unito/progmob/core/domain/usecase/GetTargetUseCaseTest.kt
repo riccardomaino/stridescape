@@ -20,15 +20,14 @@ class GetTargetUseCaseTest {
     @Before
     fun setUp() {
         fakeTargetRepository = FakeTargetRepository()
-        getTargetUseCase = GetTargetUseCase(fakeTargetRepository)
-
         fakeTargetRepository.shouldHaveFilledList(true)
+        getTargetUseCase = GetTargetUseCase(fakeTargetRepository)
     }
 
     @Test
     fun `get the last target, should return 9000`() = runTest {
-        val actualTarget = fakeTargetRepository.addCurrentDayTargetForTest()
+        val actual = fakeTargetRepository.addCurrentDayTargetForTest(stepsTarget = 9000)
         val result = getTargetUseCase().first()
-        assertEquals(result, actualTarget)
+        assertEquals(result, actual)
     }
 }

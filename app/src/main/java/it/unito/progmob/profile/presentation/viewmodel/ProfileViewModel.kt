@@ -87,7 +87,7 @@ class ProfileViewModel @Inject constructor(
      * Saves the profile information.
      */
     private fun saveProfile() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             if (profileState.value.usernameError == null &&
                 profileState.value.heightError == null &&
                 profileState.value.weightError == null &&

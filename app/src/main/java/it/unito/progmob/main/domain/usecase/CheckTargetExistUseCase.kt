@@ -22,8 +22,7 @@ class CheckTargetExistUseCase @Inject constructor(
             if (target == 0) {
                 targetRepository.findLastTarget().take(1).collect { lastTarget ->
                     if (lastTarget == 0) {
-                        val targetEntity =
-                            TargetEntity(date = date, stepsTarget = Constants.DEFAULT_STEPS_TARGET)
+                        val targetEntity = TargetEntity(date = date, stepsTarget = Constants.DEFAULT_STEPS_TARGET)
                         targetRepository.upsertNewTarget(targetEntity)
                     } else {
                         val targetEntity = TargetEntity(date = date, stepsTarget = lastTarget)

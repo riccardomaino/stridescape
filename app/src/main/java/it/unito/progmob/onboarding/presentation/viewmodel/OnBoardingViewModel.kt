@@ -49,7 +49,7 @@ class OnBoardingViewModel @Inject constructor(
      * Saves the user's profile information.
      */
     private fun saveProfile() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             if (onBoardingState.value.usernameError == null &&
                 onBoardingState.value.heightError == null &&
                 onBoardingState.value.weightError == null &&
