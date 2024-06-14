@@ -45,7 +45,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test initialization, should initialize correctly the start destination and target`() = runTest {
+    fun `test initialization, should initialize correctly the start destination to onboarding navigation`() = runTest {
         val actualStartDestination = Route.OnBoardingNavigationRoute.route
 
         val isActionButtonShown = mainViewModel.isActionButtonShown.value
@@ -63,8 +63,8 @@ class MainViewModelTest {
         val actualVisiblePermissionDialogQueue = listOf(actualPermission)
 
         mainViewModel.onEvent(MainEvent.PermissionResult(actualPermission, false))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val resultVisiblePermissionDialogQueue = mainViewModel.visiblePermissionDialogQueue.value
         assertThat(resultVisiblePermissionDialogQueue).isEqualTo(actualVisiblePermissionDialogQueue)
     }
@@ -75,8 +75,8 @@ class MainViewModelTest {
         val actualVisiblePermissionDialogQueue = emptyList<String>()
 
         mainViewModel.onEvent(MainEvent.PermissionResult(actualPermission, true))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val resultVisiblePermissionDialogQueue = mainViewModel.visiblePermissionDialogQueue.value
         assertThat(resultVisiblePermissionDialogQueue).isEqualTo(actualVisiblePermissionDialogQueue)
     }
@@ -87,11 +87,10 @@ class MainViewModelTest {
         val actualVisiblePermissionDialogQueue = emptyList<String>()
 
         mainViewModel.onEvent(MainEvent.PermissionResult(actualPermission, false))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
-
+//        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         mainViewModel.onEvent(MainEvent.DismissPermissionDialog)
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val resultVisiblePermissionDialogQueue = mainViewModel.visiblePermissionDialogQueue.value
         assertThat(resultVisiblePermissionDialogQueue).isEqualTo(actualVisiblePermissionDialogQueue)
     }
@@ -101,8 +100,8 @@ class MainViewModelTest {
         val actual = true
 
         mainViewModel.onEvent(MainEvent.ShowFloatingActionButton(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val isActionButtonShown = mainViewModel.isActionButtonShown.value
         assertThat(isActionButtonShown).isEqualTo(actual)
     }
@@ -112,11 +111,10 @@ class MainViewModelTest {
         val actual = false
 
         mainViewModel.onEvent(MainEvent.ShowFloatingActionButton(true))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
-
+//        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         mainViewModel.onEvent(MainEvent.ShowFloatingActionButton(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val isActionButtonShown = mainViewModel.isActionButtonShown.value
         assertThat(isActionButtonShown).isEqualTo(actual)
     }

@@ -69,8 +69,8 @@ class ProfileViewModelTest{
         val actual = "180"
 
         profileViewModel.onEvent(ProfileEvent.HeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.height).isEqualTo(actual)
         assertThat(profileState.heightError).isNull()
@@ -81,8 +81,8 @@ class ProfileViewModelTest{
         val actual = "123abc"
 
         profileViewModel.onEvent(ProfileEvent.HeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.height).isEqualTo("123abc")
         assertThat(profileState.heightError).isNotNull()
@@ -93,8 +93,8 @@ class ProfileViewModelTest{
         val actual = "3000"
 
         profileViewModel.onEvent(ProfileEvent.TargetChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.target).isEqualTo(actual)
         assertThat(profileState.targetError).isNull()
@@ -105,8 +105,8 @@ class ProfileViewModelTest{
         val actual = "23.1"
 
         profileViewModel.onEvent(ProfileEvent.TargetChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.target).isEqualTo(actual)
         assertThat(profileState.targetError).isNotNull()
@@ -117,8 +117,8 @@ class ProfileViewModelTest{
         val actual = "Luigi Bianchi"
 
         profileViewModel.onEvent(ProfileEvent.UsernameChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.username).isEqualTo(actual)
         assertThat(profileState.usernameError).isNull()
@@ -129,8 +129,8 @@ class ProfileViewModelTest{
         val actual = ""
 
         profileViewModel.onEvent(ProfileEvent.UsernameChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.username).isEqualTo(actual)
         assertThat(profileState.usernameError).isNotNull()
@@ -141,8 +141,8 @@ class ProfileViewModelTest{
         val actual = "90"
 
         profileViewModel.onEvent(ProfileEvent.WeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.weight).isEqualTo(actual)
         assertThat(profileState.weightError).isNull()
@@ -153,8 +153,8 @@ class ProfileViewModelTest{
         val actual = "500"
 
         profileViewModel.onEvent(ProfileEvent.WeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
         assertThat(profileState.weight).isEqualTo(actual)
         assertThat(profileState.weightError).isNotNull()

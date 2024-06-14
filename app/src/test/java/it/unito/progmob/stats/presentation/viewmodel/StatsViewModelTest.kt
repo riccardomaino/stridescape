@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import it.unito.progmob.OthersDispatcherRule
 import it.unito.progmob.MainDispatcherRule
 import it.unito.progmob.core.data.repository.FakeWalkRepository
+import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.core.domain.util.WalkUtils
 import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.stats.domain.model.StatsType
@@ -38,29 +39,29 @@ class StatsViewModelTest {
 
     private lateinit var statsViewModel: StatsViewModel
     private lateinit var statsUseCases: StatsUseCases
-    private lateinit var fakeWalkRepository: FakeWalkRepository
+    private lateinit var walkRepository: FakeWalkRepository
 
     @Before
     fun setUp() {
-        fakeWalkRepository = FakeWalkRepository()
+        walkRepository = FakeWalkRepository()
         statsUseCases = StatsUseCases(
-            GetWeekOrMonthDistanceStatUseCase(fakeWalkRepository),
-            GetWeekOrMonthTimeStatUseCase(fakeWalkRepository),
-            GetWeekOrMonthCaloriesStatUseCase(fakeWalkRepository),
-            GetWeekOrMonthStepsStatUseCase(fakeWalkRepository),
-            GetWeekOrMonthSpeedStatUseCase(fakeWalkRepository),
-            GetYearDistanceStatUseCase(fakeWalkRepository),
-            GetYearTimeStatUseCase(fakeWalkRepository),
-            GetYearCaloriesStatUseCase(fakeWalkRepository),
-            GetYearStepsStatUseCase(fakeWalkRepository),
-            GetYearSpeedStatUseCase(fakeWalkRepository)
+            GetWeekOrMonthDistanceStatUseCase(walkRepository),
+            GetWeekOrMonthTimeStatUseCase(walkRepository),
+            GetWeekOrMonthCaloriesStatUseCase(walkRepository),
+            GetWeekOrMonthStepsStatUseCase(walkRepository),
+            GetWeekOrMonthSpeedStatUseCase(walkRepository),
+            GetYearDistanceStatUseCase(walkRepository),
+            GetYearTimeStatUseCase(walkRepository),
+            GetYearCaloriesStatUseCase(walkRepository),
+            GetYearStepsStatUseCase(walkRepository),
+            GetYearSpeedStatUseCase(walkRepository)
         )
         statsViewModel = StatsViewModel(statsUseCases)
     }
 
     @Test
-    fun `test event stats type selected with range week, should update the steps field of the ui stats state`() = runTest {
-        val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
+    fun `test initialization, should update the ui stats state`() = runTest {
+        val data = walkRepository.addWalkEntitiesForStatsTest(
             fill = true,
             isInt = true,
             rangeType = RangeType.WEEK
@@ -68,9 +69,28 @@ class StatsViewModelTest {
         val actualStatsSelected = StatsType.STEPS
         val actualStepsChartValues = data.values
 
-        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(StatsType.STEPS))
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        statsViewModel = StatsViewModel(statsUseCases)
 
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val statsSelected = statsViewModel.uiStatsState.value.statsSelected
+        val stepsChartValues = statsViewModel.uiStatsState.value.stepsChartValues
+        assertThat(statsSelected).isEqualTo(actualStatsSelected)
+        assertThat(stepsChartValues).isEqualTo(actualStepsChartValues)
+    }
+
+    @Test
+    fun `test event stats type selected with range week, should update the steps field of the ui stats state`() = runTest {
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = true,
+            rangeType = RangeType.WEEK
+        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        val actualStatsSelected = StatsType.STEPS
+        val actualStepsChartValues = data.values
+
+        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(actualStatsSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
         val statsSelected = statsViewModel.uiStatsState.value.statsSelected
         val stepsChartValues = statsViewModel.uiStatsState.value.stepsChartValues
         assertThat(statsSelected).isEqualTo(actualStatsSelected)
@@ -79,7 +99,7 @@ class StatsViewModelTest {
 
     @Test
     fun `test event stats type selected with range week, should update the distance field of the ui stats state`() {
-        val data = fakeWalkRepository.addWalkEntitiesForStatsTest(
+        val data = walkRepository.addWalkEntitiesForStatsTest(
             fill = true,
             isInt = false,
             rangeType = RangeType.WEEK
@@ -87,13 +107,127 @@ class StatsViewModelTest {
         val actualStatsSelected = StatsType.DISTANCE
         val actualDistanceChartValues = data.values.map { pair -> pair.first to WalkUtils.convertMetersToKm(pair.second.toInt()) }
 
-        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(StatsType.DISTANCE))
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(actualStatsSelected))
 
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
         val statsSelected = statsViewModel.uiStatsState.value.statsSelected
         val distanceChartValues = statsViewModel.uiStatsState.value.distanceChartValues
         assertThat(statsSelected).isEqualTo(actualStatsSelected)
         assertThat(distanceChartValues).isEqualTo(actualDistanceChartValues)
+    }
+
+    @Test
+    fun `test event stats type selected with range week, should update the calories field of the ui stats state`() {
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = true,
+            rangeType = RangeType.WEEK
+        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        val actualStatsSelected = StatsType.CALORIES
+        val actualCaloriesChartValues = data.values
+
+        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(actualStatsSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val statsSelected = statsViewModel.uiStatsState.value.statsSelected
+        val caloriesChartValues = statsViewModel.uiStatsState.value.caloriesChartValues
+        assertThat(statsSelected).isEqualTo(actualStatsSelected)
+        assertThat(caloriesChartValues).isEqualTo(actualCaloriesChartValues)
+    }
+
+    @Test
+    fun `test event stats type selected with range week, should update the time field of the ui stats state`() {
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = true,
+            rangeType = RangeType.WEEK
+        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        val actualStatsSelected = StatsType.TIME
+        val actualTimeChartValues = data.values.map { pair -> pair.first to TimeUtils.convertMillisToMinutes(pair.second.toLong()) }
+
+        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(actualStatsSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val statsSelected = statsViewModel.uiStatsState.value.statsSelected
+        val timeChartValues = statsViewModel.uiStatsState.value.timeChartValues
+        assertThat(statsSelected).isEqualTo(actualStatsSelected)
+        assertThat(timeChartValues).isEqualTo(actualTimeChartValues)
+    }
+
+    @Test
+    fun `test event stats type selected with range week, should update the speed field of the ui stats state`() {
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = false,
+            rangeType = RangeType.WEEK
+        ) as FakeWalkRepository.StatPairData.FloatStatPairData
+        val actualStatsSelected = StatsType.SPEED
+        val actualSpeedChartValues = data.values
+
+        statsViewModel.onEvent(StatsEvent.StatsTypeSelected(actualStatsSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val statsSelected = statsViewModel.uiStatsState.value.statsSelected
+        val speedChartValues = statsViewModel.uiStatsState.value.speedChartValues
+        assertThat(statsSelected).isEqualTo(actualStatsSelected)
+        assertThat(speedChartValues).isEqualTo(actualSpeedChartValues)
+    }
+
+    @Test
+    fun `test event range type selected, should update the steps field of the ui stats state considering the week range`() {
+        val actualRangeSelected = RangeType.WEEK
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = true,
+            rangeType = actualRangeSelected
+        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        val actualStepsChartValues = data.values
+
+        statsViewModel.onEvent(StatsEvent.RangeTypeSelected(actualRangeSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val rangeSelected = statsViewModel.uiStatsState.value.rangeSelected
+        val stepsChartValues = statsViewModel.uiStatsState.value.stepsChartValues
+        assertThat(rangeSelected).isEqualTo(actualRangeSelected)
+        assertThat(stepsChartValues).isEqualTo(actualStepsChartValues)
+    }
+
+    @Test
+    fun `test event range type selected, should update the steps field of the ui stats state considering the month range`() {
+        val actualRangeSelected = RangeType.MONTH
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = true,
+            rangeType = actualRangeSelected
+        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        val actualStepsChartValues = data.values
+
+        statsViewModel.onEvent(StatsEvent.RangeTypeSelected(actualRangeSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val rangeSelected = statsViewModel.uiStatsState.value.rangeSelected
+        val stepsChartValues = statsViewModel.uiStatsState.value.stepsChartValues
+        assertThat(rangeSelected).isEqualTo(actualRangeSelected)
+        assertThat(stepsChartValues).isEqualTo(actualStepsChartValues)
+    }
+
+    @Test
+    fun `test event range type selected, should update the steps field of the ui stats state considering the year range`() {
+        val actualRangeSelected = RangeType.YEAR
+        val data = walkRepository.addWalkEntitiesForStatsTest(
+            fill = true,
+            isInt = true,
+            rangeType = actualRangeSelected
+        ) as FakeWalkRepository.StatPairData.IntStatPairData
+        val actualStepsChartValues = data.values
+
+        statsViewModel.onEvent(StatsEvent.RangeTypeSelected(actualRangeSelected))
+
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+        val rangeSelected = statsViewModel.uiStatsState.value.rangeSelected
+        val stepsChartValues = statsViewModel.uiStatsState.value.stepsChartValues
+        assertThat(rangeSelected).isEqualTo(actualRangeSelected)
+        assertThat(stepsChartValues).isEqualTo(actualStepsChartValues)
     }
 
 }

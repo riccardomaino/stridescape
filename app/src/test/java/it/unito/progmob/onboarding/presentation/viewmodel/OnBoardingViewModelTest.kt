@@ -61,8 +61,8 @@ class OnBoardingViewModelTest {
         val actual = "180"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.HeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.height).isEqualTo(actual)
         assertThat(onBoardingState.heightError).isNull()
@@ -73,8 +73,8 @@ class OnBoardingViewModelTest {
         val actual = "123abc"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.HeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.height).isEqualTo("123abc")
         assertThat(onBoardingState.heightError).isNotNull()
@@ -85,8 +85,8 @@ class OnBoardingViewModelTest {
         val actual = "3000"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.TargetChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.target).isEqualTo(actual)
         assertThat(onBoardingState.targetError).isNull()
@@ -97,8 +97,8 @@ class OnBoardingViewModelTest {
         val actual = "23.1"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.TargetChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.target).isEqualTo(actual)
         assertThat(onBoardingState.targetError).isNotNull()
@@ -109,8 +109,8 @@ class OnBoardingViewModelTest {
         val actual = "Luigi Bianchi"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.UsernameChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.username).isEqualTo(actual)
         assertThat(onBoardingState.usernameError).isNull()
@@ -121,8 +121,8 @@ class OnBoardingViewModelTest {
         val actual = ""
 
         onBoardingViewModel.onEvent(OnBoardingEvent.UsernameChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.username).isEqualTo(actual)
         assertThat(onBoardingState.usernameError).isNotNull()
@@ -133,8 +133,8 @@ class OnBoardingViewModelTest {
         val actual = "90"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.WeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.weight).isEqualTo(actual)
         assertThat(onBoardingState.weightError).isNull()
@@ -145,8 +145,8 @@ class OnBoardingViewModelTest {
         val actual = "500"
 
         onBoardingViewModel.onEvent(OnBoardingEvent.WeightChanged(actual))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.weight).isEqualTo(actual)
         assertThat(onBoardingState.weightError).isNotNull()
@@ -163,11 +163,10 @@ class OnBoardingViewModelTest {
         onBoardingViewModel.onEvent(OnBoardingEvent.HeightChanged(actualHeight))
         onBoardingViewModel.onEvent(OnBoardingEvent.WeightChanged(actualWeight))
         onBoardingViewModel.onEvent(OnBoardingEvent.TargetChanged(actualTarget))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
-
         onBoardingViewModel.onEvent(OnBoardingEvent.SaveProfile)
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.username).isEqualTo(actualUsername)
         assertThat(onBoardingState.usernameError).isNull()
@@ -190,11 +189,10 @@ class OnBoardingViewModelTest {
         onBoardingViewModel.onEvent(OnBoardingEvent.HeightChanged(actualHeight))
         onBoardingViewModel.onEvent(OnBoardingEvent.WeightChanged(actualWeight))
         onBoardingViewModel.onEvent(OnBoardingEvent.TargetChanged(actualTarget))
-        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
-
         onBoardingViewModel.onEvent(OnBoardingEvent.SaveProfile)
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
 
+        othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
         val onBoardingState = onBoardingViewModel.onBoardingState.value
         assertThat(onBoardingState.username).isEqualTo(actualUsername)
         assertThat(onBoardingState.usernameError).isNotNull()
