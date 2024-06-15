@@ -28,12 +28,18 @@ class ValidateTargetUseCase {
             )
         }
         // Check if the target is within the valid range (>0).
-        if(target.toInt() < 1){
-            return ValidationResult(
-                successful = false,
-                message = UiText.StringResource(resId = R.string.validation_error_invalid_range_target)
-            )
-        }
+        val targetConverted = target.toIntOrNull()
+        targetConverted?.let {
+            if(it < 1){
+                return ValidationResult(
+                    successful = false,
+                    message = UiText.StringResource(resId = R.string.validation_error_invalid_range_target)
+                )
+            }
+        } ?: return ValidationResult(
+            successful = false,
+            message = UiText.StringResource(resId = R.string.validation_error_invalid_number_target)
+        )
 
         // If all checks pass, return a successful validation result.
         return ValidationResult(

@@ -28,12 +28,18 @@ class ValidateWeightUseCase {
             )
         }
         // Check if the weight is within the valid range (15-300).
-        if(weight.toInt() < 15 || weight.toInt() > 300){
-            return ValidationResult(
-                successful = false,
-                message = UiText.StringResource(resId = R.string.validation_error_invalid_range_weight)
-            )
-        }
+        val weightConverted = weight.toIntOrNull()
+        weightConverted?.let {
+            if(it < 15 || it > 300){
+                return ValidationResult(
+                    successful = false,
+                    message = UiText.StringResource(resId = R.string.validation_error_invalid_range_weight)
+                )
+            }
+        } ?: return ValidationResult(
+            successful = false,
+            message = UiText.StringResource(resId = R.string.validation_error_invalid_number_weight)
+        )
 
         // If all checks pass, return a successful validation result.
         return ValidationResult(

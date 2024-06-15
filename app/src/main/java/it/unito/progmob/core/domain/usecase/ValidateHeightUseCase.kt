@@ -31,12 +31,18 @@ class ValidateHeightUseCase {
             )
         }
         // Check if the height is within the valid range (25-250).
-        if(height.toInt() < 25 || height.toInt() > 250){
-            return ValidationResult(
-                successful = false,
-                message = UiText.StringResource(resId = R.string.validation_error_invalid_range_height)
-            )
-        }
+        val heightConverted = height.toIntOrNull()
+        heightConverted?.let {
+            if(it < 25 || it > 250){
+                return ValidationResult(
+                    successful = false,
+                    message = UiText.StringResource(resId = R.string.validation_error_invalid_range_height)
+                )
+            }
+        } ?: return ValidationResult(
+            successful = false,
+            message = UiText.StringResource(resId = R.string.validation_error_invalid_number_height)
+        )
 
         // If all checks pass, return a successful validation result.
         return ValidationResult(

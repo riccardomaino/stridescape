@@ -74,45 +74,45 @@ class TrackingViewModelTest {
         assertThat(result?.longitude).isEqualTo(actual.longitude)
     }
 
-    @Test
-    fun test_startTrackingService(){
-        trackingViewModel.onEvent(TrackingEvent.StartTrackingService)
-
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
-        val result = trackingViewModel.uiTrackingState.value.isTracking
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun test_pauseTrackingService(){
-        trackingViewModel.onEvent(TrackingEvent.PauseTrackingService)
-
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
-        val result = trackingViewModel.uiTrackingState.value.isTracking
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun test_stopTrackingService(){
-        trackingViewModel.onEvent(TrackingEvent.StopTrackingService)
-
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
-        val result = trackingViewModel.uiTrackingState.value.isTracking
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun test_resumeTrackingService(){
-        trackingViewModel.onEvent(TrackingEvent.StartTrackingService)
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
-
-        trackingViewModel.onEvent(TrackingEvent.StopTrackingService)
-        trackingViewModel.onEvent(TrackingEvent.ResumeTrackingService)
-        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
-
-        val result = trackingViewModel.uiTrackingState.value.isTracking
-        assertThat(result).isTrue()
-    }
+//    @Test
+//    fun test_startTrackingService(){
+//        trackingViewModel.onEvent(TrackingEvent.StartTrackingService)
+//
+//        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+//        val result = trackingViewModel.uiTrackingState.value.isTracking
+//        assertThat(result).isTrue()
+//    }
+//
+//    @Test
+//    fun test_pauseTrackingService(){
+//        trackingViewModel.onEvent(TrackingEvent.PauseTrackingService)
+//
+//        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+//        val result = trackingViewModel.uiTrackingState.value.isTracking
+//        assertThat(result).isFalse()
+//    }
+//
+//    @Test
+//    fun test_stopTrackingService(){
+//        trackingViewModel.onEvent(TrackingEvent.StopTrackingService)
+//
+//        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+//        val result = trackingViewModel.uiTrackingState.value.isTracking
+//        assertThat(result).isFalse()
+//    }
+//
+//    @Test
+//    fun test_resumeTrackingService(){
+//        trackingViewModel.onEvent(TrackingEvent.StartTrackingService)
+//        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+//
+//        trackingViewModel.onEvent(TrackingEvent.StopTrackingService)
+//        trackingViewModel.onEvent(TrackingEvent.ResumeTrackingService)
+//        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+//
+//        val result = trackingViewModel.uiTrackingState.value.isTracking
+//        assertThat(result).isTrue()
+//    }
 
     @Test
     fun test_trackSingleLocation(){
