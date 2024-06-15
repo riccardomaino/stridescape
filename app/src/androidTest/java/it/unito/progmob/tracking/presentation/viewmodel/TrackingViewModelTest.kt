@@ -2,6 +2,7 @@ package it.unito.progmob.tracking.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import androidx.test.rule.GrantPermissionRule
 import com.google.android.gms.maps.model.LatLng
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -26,6 +27,13 @@ class TrackingViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        android.Manifest.permission.ACCESS_FINE_LOCATION,
+        android.Manifest.permission.ACTIVITY_RECOGNITION,
+        android.Manifest.permission.POST_NOTIFICATIONS
+    )
 
     @get:Rule
     var mainDispatcherRule = MainDispatcherRule()
@@ -76,7 +84,7 @@ class TrackingViewModelTest {
     }
 
     @Test
-   fun test_pauseTrackingService(){
+    fun test_pauseTrackingService(){
         trackingViewModel.onEvent(TrackingEvent.PauseTrackingService)
 
         othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
@@ -95,9 +103,13 @@ class TrackingViewModelTest {
 
     @Test
     fun test_resumeTrackingService(){
-        trackingViewModel.onEvent(TrackingEvent.ResumeTrackingService)
-
+        trackingViewModel.onEvent(TrackingEvent.StartTrackingService)
         othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+
+        trackingViewModel.onEvent(TrackingEvent.StopTrackingService)
+        trackingViewModel.onEvent(TrackingEvent.ResumeTrackingService)
+        othersDispatcherRule.ioDispatcher.scheduler.advanceUntilIdle()
+
         val result = trackingViewModel.uiTrackingState.value.isTracking
         assertThat(result).isTrue()
     }
@@ -132,5 +144,4 @@ class TrackingViewModelTest {
         val result = trackingViewModel.showStopWalkDialog.value
         assertThat(result).isFalse()
     }
-
 }

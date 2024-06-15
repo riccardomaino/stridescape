@@ -150,6 +150,7 @@ class MainActivity : ComponentActivity() {
                                                 Icon(
                                                     Icons.Default.ArrowBackIosNew,
                                                     contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
+                                                    tint = MaterialTheme.colorScheme.onSurface
                                                 )
                                             }
                                         }
@@ -167,6 +168,7 @@ class MainActivity : ComponentActivity() {
                                                 Icon(
                                                     Icons.Default.Person,
                                                     contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
+                                                    tint = MaterialTheme.colorScheme.onSurface
                                                 )
                                             }
                                         }

@@ -4,10 +4,10 @@ kotlin = "2.0.0"
 ksp = "2.0.0-1.0.21"
 coreKtx = "1.13.1"
 activityCompose = "1.9.0"
-composeBom = "2024.05.00"
+composeBom = "2024.06.00"
 material3 = "1.2.1"
 kotlinBom = "1.9.24"
-materialIconsExtended = "1.6.7"
+materialIconsExtended = "1.6.8"
 navigationCompose = "2.7.7"
 lifecycleRuntimeKtx = "2.7.0"
 lifecycleViewmodelKtx = "2.7.0"
@@ -29,16 +29,15 @@ splashScreen = "1.0.1"
 kotlinxSerialization = "1.6.3"
 kotlinxSerializationPlugIn = "2.0.0"
 vico = "2.0.0-alpha.20"
-composeAnimation = "1.7.0-beta02"
+composeAnimation = "1.7.0-beta03"
 kotlinxDatetime = "0.6.0"
-composeFoundation = "1.7.0-beta02"
+composeFoundation = "1.7.0-beta03"
 
 junit = "4.13.2"
 truth = "1.4.2"
 testCore = "1.5.0"
 coreTesting = "2.2.0"
-mockk = "1.13.10"
-uiTestManifest = "1.6.7"
+mockk = "1.13.11"
 
 extJunit = "1.1.5"
 testCoreKtx = "1.5.0"
@@ -48,6 +47,7 @@ espressoCore = "3.5.1"
 mockwebserver = "4.9.1"
 mockkAndroid = "1.13.10"
 hiltAndroidTesting = "2.51.1"
+rules = "1.5.0"
 
 
 [libraries]
@@ -64,7 +64,7 @@ truth = { module = "com.google.truth:truth", version.ref = "truth" }
 androidx-core = { module = "androidx.test:core", version.ref = "testCore" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-
+androidx-rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "extJunit" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
