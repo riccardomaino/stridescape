@@ -5,10 +5,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import it.unito.progmob.core.data.manager.DataStoreManagerImpl
+import dagger.hilt.testing.TestInstallIn
+import it.unito.progmob.core.data.manager.FakeDataStoreManager
 import it.unito.progmob.core.domain.manager.DataStoreManager
 import it.unito.progmob.core.domain.repository.TargetRepository
 import it.unito.progmob.core.domain.repository.WalkRepository
@@ -53,7 +53,7 @@ import it.unito.progmob.stats.domain.usecase.GetYearSpeedStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetYearStepsStatUseCase
 import it.unito.progmob.stats.domain.usecase.GetYearTimeStatUseCase
 import it.unito.progmob.stats.domain.usecase.StatsUseCases
-import it.unito.progmob.tracking.data.manager.LocationTrackingManagerImpl
+import it.unito.progmob.tracking.data.manager.FakeLocationTrackingManager
 import it.unito.progmob.tracking.data.manager.TimeTrackingManagerImpl
 import it.unito.progmob.tracking.data.manager.TrackingServiceManagerImpl
 import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
@@ -72,13 +72,11 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class])
 object TestAppModule {
     @Provides
     @Singleton
-    fun provideDataStoreManager(
-        @ApplicationContext context: Context
-    ): DataStoreManager = DataStoreManagerImpl(context)
+    fun provideDataStoreManager(): DataStoreManager = FakeDataStoreManager()
 
     @Provides
     @Singleton
@@ -91,7 +89,7 @@ object TestAppModule {
     fun provideLocationTrackingManager(
         @ApplicationContext context: Context,
         fusedLocationProviderClient: FusedLocationProviderClient
-    ): LocationTrackingManager = LocationTrackingManagerImpl(context, fusedLocationProviderClient)
+    ): LocationTrackingManager = FakeLocationTrackingManager(context, fusedLocationProviderClient)
 
     @Provides
     @Singleton

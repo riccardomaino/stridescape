@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import it.unito.progmob.core.data.local.WalkDatabase
 import it.unito.progmob.core.data.repository.TargetRepositoryImpl
 import it.unito.progmob.core.data.repository.WalkRepositoryImpl
@@ -14,7 +14,7 @@ import it.unito.progmob.core.domain.repository.WalkRepository
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@TestInstallIn(components = [SingletonComponent::class], replaces = [RoomModule::class])
 object TestRoomModule {
     @Provides
     @Singleton

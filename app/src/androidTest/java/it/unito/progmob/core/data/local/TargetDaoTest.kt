@@ -4,10 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import it.unito.progmob.core.domain.model.TargetEntity
-import it.unito.progmob.di.AppModule
-import it.unito.progmob.di.RoomModule
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
@@ -20,7 +17,6 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @SmallTest
-@UninstallModules(RoomModule::class, AppModule::class)
 class TargetDaoTest {
     @get:Rule val hiltRule = HiltAndroidRule(this)
 
