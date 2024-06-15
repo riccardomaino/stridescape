@@ -17,6 +17,8 @@ import it.unito.progmob.core.domain.model.tuples.MonthTimeTuple
 import it.unito.progmob.core.domain.model.tuples.WeekDayStepsTuple
 import it.unito.progmob.core.domain.repository.WalkRepository
 import it.unito.progmob.core.domain.util.DateUtils
+import it.unito.progmob.history.domain.model.AllWalksPerDate
+import it.unito.progmob.history.domain.model.WalkWithPathPoints
 import it.unito.progmob.stats.domain.model.RangeType
 import it.unito.progmob.tracking.domain.model.PathPoint
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +26,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 
-class FakeAndroidWalkRepository: WalkRepository {
+class FakeAndroidWalkRepository : WalkRepository {
 
     private var walkItems = mutableListOf<WalkEntity>()
     private var pathPointItems = mutableListOf<PathPointEntity>()
@@ -67,32 +69,57 @@ class FakeAndroidWalkRepository: WalkRepository {
         val startLocalDate = DateUtils.getFirstDateOfWeek()
         val endLocalDate = DateUtils.getLastDateOfWeek()
 
-        val dateRangeToCurrent = startLocalDate.rangeTo(currentLocalDate).asIterable().toMutableList()
+        val dateRangeToCurrent =
+            startLocalDate.rangeTo(currentLocalDate).asIterable().toMutableList()
         val dateRangeToEnd = startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
 
-        val newValues = IntArray(dateRangeToEnd.size) { index -> index*1000 }
+        val newValues = IntArray(dateRangeToEnd.size) { index -> (index + 1) * 1000 }
 
-        if(isInt) {
+        if (isInt) {
             val intAddedValues = IntArray(dateRangeToEnd.size) { 0 }
-            if(fill){
+            if (fill) {
                 dateRangeToCurrent.forEachIndexed { index, date ->
                     val dayOfWeek = date.dayOfWeek.value - 1
                     val month = date.monthNumber
                     val dateStr = date.format(DateUtils.defaultFormatter)
                     intAddedValues[index] = newValues[index]
-                    walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                    walkItems.add(
+                        WalkEntity(
+                            index + 10,
+                            dayOfWeek,
+                            dateStr,
+                            month,
+                            newValues[index],
+                            newValues[index],
+                            newValues[index].toLong(),
+                            newValues[index],
+                            newValues[index].toFloat()
+                        )
+                    )
                 }
             }
             return WalkData.IntWalkData(intAddedValues)
         } else {
             val floatAddedValues = FloatArray(dateRangeToEnd.size) { 0f }
-            if(fill){
+            if (fill) {
                 dateRangeToCurrent.forEachIndexed { index, date ->
                     val dayOfWeek = date.dayOfWeek.value - 1
                     val month = date.monthNumber
                     val dateStr = date.format(DateUtils.defaultFormatter)
                     floatAddedValues[index] = newValues[index].toFloat()
-                    walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                    walkItems.add(
+                        WalkEntity(
+                            index + 10,
+                            dayOfWeek,
+                            dateStr,
+                            month,
+                            newValues[index],
+                            newValues[index],
+                            newValues[index].toLong(),
+                            newValues[index],
+                            newValues[index].toFloat()
+                        )
+                    )
                 }
             }
             return WalkData.FloatWalkData(floatAddedValues)
@@ -105,117 +132,205 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
 
-    fun addWalkEntitiesForStatsTest(fill: Boolean, isInt: Boolean, rangeType: RangeType): StatPairData {
+    fun addWalkEntitiesForStatsTest(
+        fill: Boolean,
+        isInt: Boolean,
+        rangeType: RangeType
+    ): StatPairData {
         val currentLocalDate = DateUtils.getCurrentLocalDateTime().date
         val currentMonth = DateUtils.getCurrentMonth()
         val currentYear = DateUtils.getCurrentYear()
 
-        val startLocalDate = when(rangeType){
+        val startLocalDate = when (rangeType) {
             RangeType.WEEK -> DateUtils.getFirstDateOfWeek()
             RangeType.MONTH -> DateUtils.getFirstDateOfMonth()
             RangeType.YEAR -> LocalDate(currentYear, 1, 1)
         }
 
-        val endLocalDate = when(rangeType){
+        val endLocalDate = when (rangeType) {
             RangeType.WEEK -> DateUtils.getLastDateOfWeek()
             RangeType.MONTH -> DateUtils.getLastDateOfMonth()
             RangeType.YEAR -> LocalDate(currentYear, 12, 31)
         }
 
-        val dateRangeToCurrent = when(rangeType){
+        val dateRangeToCurrent = when (rangeType) {
             RangeType.YEAR -> emptyList()
             else -> startLocalDate.rangeTo(currentLocalDate).asIterable().toMutableList()
         }
 
-        val dateRangeToEnd = when(rangeType){
+        val dateRangeToEnd = when (rangeType) {
             RangeType.YEAR -> emptyList()
             else -> startLocalDate.rangeTo(endLocalDate).asIterable().toMutableList()
         }
 
-        val monthRangeToCurrent = when(rangeType){
+        val monthRangeToCurrent = when (rangeType) {
             RangeType.YEAR -> (1..currentMonth).toMutableList()
             else -> emptyList()
         }
 
-        val monthRangeToEnd = when(rangeType){
+        val monthRangeToEnd = when (rangeType) {
             RangeType.YEAR -> (1..12).toMutableList()
             else -> emptyList()
         }
 
-        val newValues = when(rangeType){
-            RangeType.YEAR -> IntArray(monthRangeToEnd.size) { index -> index*1000 }
-            else -> IntArray(dateRangeToEnd.size) { index -> index*1000 }
+        val newValues = when (rangeType) {
+            RangeType.YEAR -> IntArray(monthRangeToEnd.size) { index -> index * 1000 }
+            else -> IntArray(dateRangeToEnd.size) { index -> index * 1000 }
         }
 
-        if(isInt){ // Integer values
-            val intAddedValues = when(rangeType){
+        if (isInt) { // Integer values
+            val intAddedValues = when (rangeType) {
                 RangeType.YEAR -> IntArray(monthRangeToEnd.size) { 0 }
                 else -> IntArray(dateRangeToEnd.size) { 0 }
             }
 
-            if(fill){
-                when(rangeType){
+            if (fill) {
+                when (rangeType) {
                     RangeType.YEAR -> {
                         monthRangeToCurrent.forEachIndexed { index, monthNr ->
                             val date = LocalDate(currentYear, monthNr, 1)
                             val dayOfWeek = date.dayOfWeek.value - 1
                             val dateStr = date.format(DateUtils.defaultFormatter)
                             intAddedValues[index] = newValues[index]
-                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, monthNr, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                            walkItems.add(
+                                WalkEntity(
+                                    index + 10,
+                                    dayOfWeek,
+                                    dateStr,
+                                    monthNr,
+                                    newValues[index],
+                                    newValues[index],
+                                    newValues[index].toLong(),
+                                    newValues[index],
+                                    newValues[index].toFloat()
+                                )
+                            )
                         }
                     }
+
                     else -> {
                         dateRangeToCurrent.forEachIndexed { index, date ->
                             val dayOfWeek = date.dayOfWeek.value - 1
                             val month = date.monthNumber
                             val dateStr = date.format(DateUtils.defaultFormatter)
                             intAddedValues[index] = newValues[index]
-                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                            walkItems.add(
+                                WalkEntity(
+                                    index + 10,
+                                    dayOfWeek,
+                                    dateStr,
+                                    month,
+                                    newValues[index],
+                                    newValues[index],
+                                    newValues[index].toLong(),
+                                    newValues[index],
+                                    newValues[index].toFloat()
+                                )
+                            )
                         }
                     }
                 }
             }
 
-            return when(rangeType){
+            return when (rangeType) {
                 RangeType.YEAR -> StatPairData.IntStatPairData(values = monthRangeToEnd.mapIndexed { index, monthNr ->
-                    Pair(LocalDate(currentYear, monthNr, 1), intAddedValues[index]) }.sortedBy { it.first }
+                    Pair(LocalDate(currentYear, monthNr, 1), intAddedValues[index])
+                }.sortedBy { it.first }
                 )
-                else -> StatPairData.IntStatPairData(values = dateRangeToEnd.mapIndexed { index, date -> Pair(date, intAddedValues[index]) }.sortedBy { it.first })
+
+                else -> StatPairData.IntStatPairData(values = dateRangeToEnd.mapIndexed { index, date ->
+                    Pair(
+                        date,
+                        intAddedValues[index]
+                    )
+                }.sortedBy { it.first })
             }
         } else { // Float values
-            val floatAddedValues = when(rangeType){
+            val floatAddedValues = when (rangeType) {
                 RangeType.YEAR -> FloatArray(monthRangeToEnd.size) { 0f }
                 else -> FloatArray(dateRangeToEnd.size) { 0f }
             }
 
-            if(fill){
-                when(rangeType){
+            if (fill) {
+                when (rangeType) {
                     RangeType.YEAR -> {
                         monthRangeToCurrent.forEachIndexed { index, monthNr ->
                             val date = LocalDate(currentYear, monthNr, 1)
                             val dayOfWeek = date.dayOfWeek.value - 1
                             val dateStr = date.format(DateUtils.defaultFormatter)
                             floatAddedValues[index] = newValues[index].toFloat()
-                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, monthNr, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                            walkItems.add(
+                                WalkEntity(
+                                    index + 10,
+                                    dayOfWeek,
+                                    dateStr,
+                                    monthNr,
+                                    newValues[index],
+                                    newValues[index],
+                                    newValues[index].toLong(),
+                                    newValues[index],
+                                    newValues[index].toFloat()
+                                )
+                            )
                         }
                     }
+
                     else -> {
                         dateRangeToCurrent.forEachIndexed { index, date ->
                             val dayOfWeek = date.dayOfWeek.value - 1
                             val month = date.monthNumber
                             val dateStr = date.format(DateUtils.defaultFormatter)
                             floatAddedValues[index] = newValues[index].toFloat()
-                            walkItems.add(WalkEntity(index+10, dayOfWeek, dateStr, month, newValues[index], newValues[index], newValues[index].toLong(), newValues[index], newValues[index].toFloat()))
+                            walkItems.add(
+                                WalkEntity(
+                                    index + 10,
+                                    dayOfWeek,
+                                    dateStr,
+                                    month,
+                                    newValues[index],
+                                    newValues[index],
+                                    newValues[index].toLong(),
+                                    newValues[index],
+                                    newValues[index].toFloat()
+                                )
+                            )
+                            for (i in 0..4) {
+                                pathPointItems.add(
+                                    PathPointEntity(
+                                        i + 10,
+                                        (index + 10).toLong(),
+                                        PathPoint.LocationPoint(
+                                            i.toDouble() + 1,
+                                            i.toDouble() + 1,
+                                            2f
+                                        )
+                                    )
+                                )
+                                if (i == 4) pathPointItems.add(
+                                    PathPointEntity(
+                                        i + 11,
+                                        (index + 10).toLong(),
+                                        PathPoint.EmptyPoint
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             }
 
-            return when(rangeType){
+            return when (rangeType) {
                 RangeType.YEAR -> StatPairData.FloatStatPairData(values = monthRangeToEnd.mapIndexed { index, monthNr ->
-                    Pair(LocalDate(currentYear, monthNr, 1), floatAddedValues[index]) }.sortedBy { it.first }
+                    Pair(LocalDate(currentYear, monthNr, 1), floatAddedValues[index])
+                }.sortedBy { it.first }
                 )
-                else -> StatPairData.FloatStatPairData(values = dateRangeToEnd.mapIndexed { index, date -> Pair(date, floatAddedValues[index]) }.sortedBy { it.first })
+
+                else -> StatPairData.FloatStatPairData(values = dateRangeToEnd.mapIndexed { index, date ->
+                    Pair(
+                        date,
+                        floatAddedValues[index]
+                    )
+                }.sortedBy { it.first })
             }
         }
     }
@@ -225,19 +340,82 @@ class FakeAndroidWalkRepository: WalkRepository {
         class FloatStatPairData(val values: List<Pair<LocalDate, Float>>) : StatPairData
     }
 
+    fun addWalkWithPathPointsForTest(): MutableList<AllWalksPerDate>{
+        val startLocalDate = DateUtils.formattedFirstDateOfWeek()
+        val endLocalDate = DateUtils.formattedLastDateOfWeek()
+        val groupedWalks = mutableListOf<AllWalksPerDate>()
+        var prevWalk: WalkWithPathPoints? = null
+        var newWalks: AllWalksPerDate? = null
 
+        addWeekWalkEntitiesForTest(fill = true, isInt = true)
+
+        val walkAdded = walkItems.filter { it.date in startLocalDate..endLocalDate }
+
+        val allWalks = walkAdded.map { walkEntity ->
+            WalkWithPathPointsEntity(
+                walk = walkEntity,
+                pathPoints = pathPointItems.filter { it.walkId.toInt() == walkEntity.id }
+            )
+        }.let {
+            it.map { walkWithPathPointsEntity ->
+                WalkWithPathPoints(
+                    weekDay = walkWithPathPointsEntity.walk.weekDay,
+                    month = walkWithPathPointsEntity.walk.month,
+                    date = walkWithPathPointsEntity.walk.date,
+                    distance = walkWithPathPointsEntity.walk.distance,
+                    time = walkWithPathPointsEntity.walk.time,
+                    steps = walkWithPathPointsEntity.walk.steps,
+                    calories = walkWithPathPointsEntity.walk.calories,
+                    averageSpeed = walkWithPathPointsEntity.walk.averageSpeed,
+                    walkId = walkWithPathPointsEntity.walk.id!!,
+                    pathPoints = walkWithPathPointsEntity.pathPoints.map { pathPointEntity ->
+                        if (pathPointEntity.pathPoint is PathPoint.LocationPoint) {
+                            PathPoint.LocationPoint(
+                                lat = (pathPointEntity.pathPoint as PathPoint.LocationPoint).lat,
+                                lng = (pathPointEntity.pathPoint as PathPoint.LocationPoint).lng,
+                                speed = (pathPointEntity.pathPoint as PathPoint.LocationPoint).speed
+                            )
+                        } else {
+                            PathPoint.EmptyPoint
+                        }
+                    }
+                )
+            }
+        }
+
+        allWalks.forEach { walk ->
+            prevWalk?.let {
+                if (prevWalk?.date != walk.date) {
+                    groupedWalks.add(newWalks!!)
+                    newWalks = AllWalksPerDate(walk.date, mutableListOf())
+                }
+                newWalks?.walks?.add(walk)
+            } ?: run {
+                newWalks = AllWalksPerDate(walk.date, mutableListOf())
+                newWalks?.walks?.add(walk)
+            }
+            prevWalk = walk
+        }
+        newWalks?.let {
+            groupedWalks.add(it)
+        }
+        return groupedWalks
+    }
 
 
     // IMPLEMENTED INTERFACE FUNCTIONS
-    override fun findWalksWithPathPoints(startDate: String, endDate: String): List<WalkWithPathPointsEntity>? {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+    override fun findWalksWithPathPoints(
+        startDate: String,
+        endDate: String
+    ): List<WalkWithPathPointsEntity>? {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { walkEntity ->
                 WalkWithPathPointsEntity(
                     walk = walkEntity,
-                    pathPoints = pathPointItems.filter { it.walkId.toInt() == walkEntity.id}
+                    pathPoints = pathPointItems.filter { it.walkId.toInt() == walkEntity.id }
                 )
             }
         }
@@ -271,18 +449,24 @@ class FakeAndroidWalkRepository: WalkRepository {
         return flowOf(result)
     }
 
-    override fun findStepsBetweenDates(startDate: String, endDate: String): Flow<List<WeekDayStepsTuple>?> {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+    override fun findStepsBetweenDates(
+        startDate: String,
+        endDate: String
+    ): Flow<List<WeekDayStepsTuple>?> {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             flowOf(null)
         } else {
             flowOf(filteredItems.map { WeekDayStepsTuple(it.weekDay, it.steps) })
         }
     }
 
-    override fun findDistanceForDateRange(startDate: String, endDate: String): List<DateDistanceTuple>? {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+    override fun findDistanceForDateRange(
+        startDate: String,
+        endDate: String
+    ): List<DateDistanceTuple>? {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { DateDistanceTuple(it.date, it.distance) }
@@ -290,17 +474,20 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findTimeForDateRange(startDate: String, endDate: String): List<DateTimeTuple>? {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { DateTimeTuple(it.date, it.time) }
         }
     }
 
-    override fun findCaloriesForDateRange(startDate: String, endDate: String): List<DateCaloriesTuple>? {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+    override fun findCaloriesForDateRange(
+        startDate: String,
+        endDate: String
+    ): List<DateCaloriesTuple>? {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { DateCaloriesTuple(it.date, it.calories) }
@@ -308,8 +495,8 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findStepsForDateRange(startDate: String, endDate: String): List<DateStepsTuple>? {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { DateStepsTuple(it.date, it.steps) }
@@ -317,8 +504,8 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findSpeedForDateRange(startDate: String, endDate: String): List<DateSpeedTuple>? {
-        val filteredItems = walkItems.filter {it.date in startDate..endDate}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date in startDate..endDate }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { DateSpeedTuple(it.date, it.averageSpeed) }
@@ -326,8 +513,8 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findDistanceForYear(year: String): List<MonthDistanceTuple>? {
-        val filteredItems = walkItems.filter {it.date.startsWith(year)}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date.startsWith(year) }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { MonthDistanceTuple(it.month, it.distance) }
@@ -335,8 +522,8 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findTimeForYear(year: String): List<MonthTimeTuple>? {
-        val filteredItems = walkItems.filter {it.date.startsWith(year)}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date.startsWith(year) }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { MonthTimeTuple(it.month, it.time) }
@@ -345,8 +532,8 @@ class FakeAndroidWalkRepository: WalkRepository {
 
 
     override fun findCaloriesForYear(year: String): List<MonthCaloriesTuple>? {
-        val filteredItems = walkItems.filter {it.date.startsWith(year)}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date.startsWith(year) }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { MonthCaloriesTuple(it.month, it.calories) }
@@ -354,8 +541,8 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findStepsForYear(year: String): List<MonthStepsTuple>? {
-        val filteredItems = walkItems.filter {it.date.startsWith(year)}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date.startsWith(year) }
+        return if (filteredItems.isEmpty()) {
             null
         } else {
             filteredItems.map { MonthStepsTuple(it.month, it.steps) }
@@ -363,8 +550,8 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override fun findSpeedForYear(year: String): List<MonthSpeedTuple> {
-        val filteredItems = walkItems.filter {it.date.startsWith(year)}
-        return if(filteredItems.isEmpty()) {
+        val filteredItems = walkItems.filter { it.date.startsWith(year) }
+        return if (filteredItems.isEmpty()) {
             emptyList()
         } else {
             filteredItems.map { MonthSpeedTuple(it.month, it.averageSpeed) }
@@ -372,11 +559,14 @@ class FakeAndroidWalkRepository: WalkRepository {
     }
 
     override suspend fun upsertNewWalk(newWalkEntity: WalkEntity): Long {
-        walkItems.add(newWalkEntity)
-        return (walkItems.size-1).toLong()
+        val newWalkToAdd = newWalkEntity.copy(id = walkItems.size + 1)
+        walkItems.add(newWalkToAdd)
+        return (newWalkToAdd.id)!!.toLong()
     }
 
     override suspend fun upsertNewPathPoint(newPathPointEntity: PathPointEntity) {
-        pathPointItems.add(newPathPointEntity)
+        val newPathPointToAdd = newPathPointEntity.copy(id = pathPointItems.size + 1)
+        pathPointItems.add(newPathPointToAdd)
+
     }
 }

@@ -42,7 +42,7 @@ class HomeViewModelTest {
             isInt = true
         ) as FakeWalkRepository.WalkData.IntWalkData
         targetRepository = FakeTargetRepository()
-        targetRepository.addCurrentDayTargetForTest(stepsTarget = 9000)
+        targetRepository.addWeeklyTargetForTest()
         homeUseCases = HomeUseCases(
             GetDayStepsUseCase(walkRepository),
             GetDayCaloriesUseCase(walkRepository),
@@ -53,6 +53,7 @@ class HomeViewModelTest {
             GetWeeklyTargetUseCase(targetRepository)
         )
         homeViewModel = HomeViewModel(homeUseCases)
+
     }
 
     @Test
@@ -121,5 +122,52 @@ class HomeViewModelTest {
         assertThat(results.size).isEqualTo(2)
         assertThat(results.first()).isEqualTo(0)
         assertThat(results.last()).isEqualTo(actualTimeCurrentDay)
+    }
+
+    @Test
+    fun `test current day step target initialization, should return the current day step target`() = runTest {
+        val actualStepTargetCurrentDay = data.values[DateUtils.getCurrentDayOfWeek()]
+        val results = mutableListOf<Int>()
+
+        backgroundScope.launch(mainDispatcherRule.dispatcher) {
+            homeViewModel.stepsTargetCurrentDay.toList(results)
+        }
+
+        mainDispatcherRule.dispatcher.scheduler.advanceUntilIdle()
+        assertThat(results.size).isEqualTo(2)
+        assertThat(results.first()).isEqualTo(1)
+        assertThat(results.last()).isEqualTo(actualStepTargetCurrentDay)
+    }
+
+    @Test
+    fun `test weekly steps initialization, should return the weekly steps`() = runTest {
+        val actualWeeklySteps = data.values
+        val results = mutableListOf<IntArray>()
+
+        backgroundScope.launch(mainDispatcherRule.dispatcher) {
+            homeViewModel.weeklySteps.toList(results)
+        }
+
+        mainDispatcherRule.dispatcher.scheduler.advanceUntilIdle()
+        assertThat(results.size).isEqualTo(2)
+        assertThat(results.first()).isEqualTo(intArrayOf(0, 0, 0, 0, 0, 0, 0))
+        assertThat(results.last()).isEqualTo(actualWeeklySteps)
+    }
+
+    @Test
+    fun `test weekly steps target initialization, should return the weekly steps target`() = runTest {
+        val actualWeeklyStepsTarget = data.values.map {
+            if(it == 0) 1 else it
+        }.toIntArray()
+        val results = mutableListOf<IntArray>()
+
+        backgroundScope.launch(mainDispatcherRule.dispatcher) {
+            homeViewModel.weeklyTarget.toList(results)
+        }
+
+        mainDispatcherRule.dispatcher.scheduler.advanceUntilIdle()
+        assertThat(results.size).isEqualTo(2)
+        assertThat(results.first()).isEqualTo(intArrayOf(1, 1, 1, 1, 1, 1, 1))
+        assertThat(results.last()).isEqualTo(actualWeeklyStepsTarget)
     }
 }

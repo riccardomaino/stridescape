@@ -31,9 +31,9 @@ class FakeAndroidTargetRepository : TargetRepository {
         }
     }
 
-    fun addCurrentDayTargetForTest(): Int {
+    fun addCurrentDayTargetForTest(stepsTarget: Int): Int {
         val formattedCurrentDate = DateUtils.formattedCurrentDate()
-        val targetEntity = TargetEntity(formattedCurrentDate, 9000)
+        val targetEntity = TargetEntity(formattedCurrentDate, stepsTarget)
         targetItems.add(targetEntity)
         return targetEntity.stepsTarget
     }
@@ -59,9 +59,9 @@ class FakeAndroidTargetRepository : TargetRepository {
     // IMPLEMENTED INTERFACE FUNCTIONS
     override fun findTargetByDate(date: String): Flow<Int> {
         return flowOf(
-            targetItems.first {
+            targetItems.find {
                 it.date == date
-            }.stepsTarget
+            }?.stepsTarget ?: 0
         )
     }
 

@@ -39,36 +39,51 @@ class TrackingViewModel @Inject constructor(
     private val walkHandler: WalkHandler,
     private val locationTrackingManager: LocationTrackingManager
 ) : ViewModel() {
-    // The StateFlow of the WalkState obtained through the WalkHandler
+    /**
+     * The StateFlow of the WalkState obtained through the WalkHandler
+     */
     private val walk: StateFlow<Walk> = walkHandler.walk
 
-    // The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
-    private val _uiTrackingState: MutableStateFlow<UiTrackingState> =
-        MutableStateFlow(UiTrackingState())
+    /**
+     * The tracking feature UI MutableStateFlow which is exposed as a StateFlow to the UI
+     */
+    private val _uiTrackingState: MutableStateFlow<UiTrackingState> = MutableStateFlow(UiTrackingState())
     val uiTrackingState = _uiTrackingState.asStateFlow()
 
-    // The MutableStateFlow used to track if the location provider is enabled. It is exposed as a StateFlow to the UI
+    /**
+     * The MutableStateFlow used to track if the location provider is enabled. It is exposed as a StateFlow to the UI
+     */
     private val _isLocationEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isLocationEnabled = _isLocationEnabled.asStateFlow()
 
     private val _showStopWalkDialog = MutableStateFlow(false)
     val showStopWalkDialog = _showStopWalkDialog.asStateFlow()
 
-    // The user weight used to calculate the calories burnt
+    /**
+     * The user weight used to calculate the calories burnt
+     */
     private var userWeight: Float = 0.0f
 
-    // The user height used to calculate the calories burnt
+    /**
+     * The user height used to calculate the calories burnt
+     */
     private var userHeight: Int = 0
 
-    // The last known location of the user used to open the map and to update the camera position when the user click on current location button
+    /**
+     * The last known location of the user used to open the map and to update the camera position when the user click on current location button
+     */
     private val _lastKnownLocation = MutableStateFlow<LatLng?>(null)
     val lastKnownLocation = _lastKnownLocation.asStateFlow()
 
-    // The counter of the last known location updates
+    /**
+     * The counter of the last known location updates
+     */
     private val _lastKnownLocationUpdatesCounter = MutableStateFlow<Long>(0)
     val lastKnownLocationUpdatesCounter = _lastKnownLocationUpdatesCounter.asStateFlow()
 
-    // The job used to collect the walk state
+    /**
+     * The job used to collect the walk state
+     */
     private var job: Job? = null
 
     init {
@@ -85,11 +100,11 @@ class TrackingViewModel @Inject constructor(
             }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             updateIsLocationEnabledStatus(locationTrackingManager.isConnected())
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             trackSingleLocation()
         }
     }

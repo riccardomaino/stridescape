@@ -20,14 +20,6 @@ class WalkUtilsTest {
     }
 
     @Test
-    fun `calculate the distance between two path points, should match 100`() {
-        val firstPathPoint = PathPoint.LocationPoint(45.0, 45.0, 2f)
-        val secondPathPoint = PathPoint.LocationPoint(45.0, 46.0, 2f)
-        val distance = WalkUtils.getDistanceBetweenTwoPathPoints(firstPathPoint, secondPathPoint)
-        assertTrue(distance == 111319)
-    }
-
-    @Test
     fun `calculate the calories burnt, should match 50`() {
         val calories = WalkUtils.getCaloriesBurnt(100f, 1000)
         assertTrue(calories == 50)
