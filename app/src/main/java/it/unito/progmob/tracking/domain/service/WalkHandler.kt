@@ -41,12 +41,14 @@ class WalkHandler {
      *
      * @param newPathPoint the new [PathPoint] used to update the [Walk]
      * @param time the new time in milliseconds used to update the [Walk]
-     * @param pointsAccuracy the accuracy in meters to consider two path points as different
+     * @param pointsAccuracyLowerBound the lower bound in meters to consider a new path point as valid
+     * @param pointsAccuracyUpperBound the upper bound in meters to consider a new path point as valid
      */
     fun updateWalkPathPointAndTime(
         newPathPoint: PathPoint.LocationPoint,
         time: Long,
-        pointsAccuracy: Int = 5
+        pointsAccuracyLowerBound: Int = 5,
+        pointsAccuracyUpperBound: Int = 100
     ) {
          // Update the milliseconds time in the walk state
         _walk.update {
@@ -60,7 +62,8 @@ class WalkHandler {
             if (prevPathPoint is PathPoint.LocationPoint) {
                 if(prevPathPoint != newPathPoint){
                     val distanceBetweenPathPoints = WalkUtils.getDistanceBetweenTwoPathPoints(prevPathPoint, newPathPoint)
-                    if (distanceBetweenPathPoints > pointsAccuracy) {
+                    if (distanceBetweenPathPoints > pointsAccuracyLowerBound &&
+                        pointsAccuracyUpperBound < distanceBetweenPathPoints) {
                         _walk.update { walkState ->
                             walkState.copy(
                                 distanceInMeters = walkState.distanceInMeters + distanceBetweenPathPoints,
