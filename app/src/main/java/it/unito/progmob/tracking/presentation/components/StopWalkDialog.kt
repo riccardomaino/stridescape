@@ -1,9 +1,13 @@
 package it.unito.progmob.tracking.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Beenhere
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,6 +27,13 @@ fun StopWalkDialog(
 ) {
     if (shouldShowDialog) {
         AlertDialog(
+            icon = {
+                Icon(
+                    Icons.Filled.Beenhere,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            },
             onDismissRequest = onDismiss,
             title = {
                 Text(text = stringResource(R.string.stopwalkdialog_title))

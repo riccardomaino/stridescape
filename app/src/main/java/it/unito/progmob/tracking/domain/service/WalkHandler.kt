@@ -62,8 +62,7 @@ class WalkHandler {
             if (prevPathPoint is PathPoint.LocationPoint) {
                 if(prevPathPoint != newPathPoint){
                     val distanceBetweenPathPoints = WalkUtils.getDistanceBetweenTwoPathPoints(prevPathPoint, newPathPoint)
-                    if (distanceBetweenPathPoints > pointsAccuracyLowerBound &&
-                        pointsAccuracyUpperBound < distanceBetweenPathPoints) {
+                    if (distanceBetweenPathPoints in pointsAccuracyLowerBound..pointsAccuracyUpperBound) {
                         _walk.update { walkState ->
                             walkState.copy(
                                 distanceInMeters = walkState.distanceInMeters + distanceBetweenPathPoints,

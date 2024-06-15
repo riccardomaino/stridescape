@@ -134,4 +134,5 @@
     <string name="history_empty_search_image_content_desc">Immagine utilizzata quando non vi sono camminate per un certo intervallo di date</string>
     <string name="pathpoint_marker_title_start_point">Inizio</string>
     <string name="pathpoint_marker_title_end_point">Fine</string>
+    <string name="history_select_date_range_title">Scegli intervallo date</string>
 </resources>

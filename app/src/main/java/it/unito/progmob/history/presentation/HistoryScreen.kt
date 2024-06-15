@@ -288,7 +288,7 @@ fun HistoryScreen(
                 title = {
                     Text(
                         modifier = modifier.padding(top = medium, start = medium, end = medium),
-                        text = "Select date range",
+                        text = stringResource(R.string.history_select_date_range_title),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },

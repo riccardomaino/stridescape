@@ -144,4 +144,5 @@
     <string name="profiledialog_text">Your personal information has been successfully updated!</string>
     <string name="pathpoint_marker_title_start_point">Start Point</string>
     <string name="pathpoint_marker_title_end_point">End Point</string>
+    <string name="history_select_date_range_title">Select date range</string>
 </resources>
