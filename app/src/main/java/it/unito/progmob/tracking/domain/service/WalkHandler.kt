@@ -18,7 +18,18 @@ class WalkHandler {
     private val _walk: MutableStateFlow<Walk> = MutableStateFlow(Walk())
     var walk = _walk.asStateFlow()
 
+    /**
+     * The initial number of steps measured by the step counter sensor at the start of the walk. It
+     * is used to calculate the number of steps taken during the walk if the step counter sensor is
+     * used.
+     */
     private var initialSteps: Int? = null
+
+    /**
+     * The previous number of steps measured by the step counter sensor. It is used to determine if
+     * the new location point should be added to the path points.
+     */
+    private var prevSensedSteps: Int = 0
 
     fun clearWalk(){
         _walk.update {
@@ -33,6 +44,7 @@ class WalkHandler {
             )
         }
         initialSteps = null
+        prevSensedSteps = 0
     }
 
     /**
@@ -62,7 +74,8 @@ class WalkHandler {
             if (prevPathPoint is PathPoint.LocationPoint) {
                 if(prevPathPoint != newPathPoint){
                     val distanceBetweenPathPoints = WalkUtils.getDistanceBetweenTwoPathPoints(prevPathPoint, newPathPoint)
-                    if (distanceBetweenPathPoints in pointsAccuracyLowerBound..pointsAccuracyUpperBound) {
+                    val currentSensedSteps = _walk.value.steps
+                    if (currentSensedSteps > prevSensedSteps && distanceBetweenPathPoints in pointsAccuracyLowerBound..pointsAccuracyUpperBound) {
                         _walk.update { walkState ->
                             walkState.copy(
                                 distanceInMeters = walkState.distanceInMeters + distanceBetweenPathPoints,
@@ -71,6 +84,7 @@ class WalkHandler {
                             )
                         }
                     }
+                    prevSensedSteps = currentSensedSteps
                 }
             } else  {
                 _walk.update { walkState ->

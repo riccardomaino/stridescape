@@ -298,6 +298,7 @@ class TrackingService : Service() {
     private fun pause() {
         trackingServiceScope.cancel()
         stepSensor.stopListening()
+        previousMagnitude = 0.0
         // Update the walk state isTracking field to false
         walkHandler.updateWalkIsTracking(false)
         // Update the walk state path adding an empty point
@@ -311,6 +312,8 @@ class TrackingService : Service() {
         trackingServiceScope.cancel()
         timeTrackingManager.stopTrackingTime()
         stepSensor.stopListening()
+        previousMagnitude = 0.0
+        accelerometerStepCounter = 0
         walkHandler.updateWalkIsTracking(false)
         walkHandler.updateWalkIsTrackingStarted(false)
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
