@@ -115,10 +115,12 @@ class ProfileViewModel @Inject constructor(
      * @param weight The weight input to validate.
      */
     private fun validateWeight(weight: String) {
+        profileState.value = profileState.value.copy(
+            weight = weight,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateWeightUseCase(weight)
             profileState.value = profileState.value.copy(
-                weight = weight,
                 weightError = validationResult.message
             )
         }
@@ -130,10 +132,12 @@ class ProfileViewModel @Inject constructor(
      * @param username The username input to validate.
      */
     private fun validateUsername(username: String) {
+        profileState.value = profileState.value.copy(
+            username = username,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateUsernameUseCase(username)
             profileState.value = profileState.value.copy(
-                username = username,
                 usernameError = validationResult.message
             )
         }
@@ -145,10 +149,12 @@ class ProfileViewModel @Inject constructor(
      * @param target The target input to validate.
      */
     private fun validateTarget(target: String) {
+        profileState.value = profileState.value.copy(
+            target = target,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateTargetUseCase(target)
             profileState.value = profileState.value.copy(
-                target = target,
                 targetError = validationResult.message
             )
         }
@@ -160,10 +166,12 @@ class ProfileViewModel @Inject constructor(
      * @param height The height input to validate.
      */
     private fun validateHeight(height: String) {
+        profileState.value = profileState.value.copy(
+            height = height,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = profileUseCases.validateHeightUseCase(height)
             profileState.value = profileState.value.copy(
-                height = height,
                 heightError = validationResult.message
             )
         }

@@ -92,18 +92,6 @@ fun SharedTransitionScope.HistoryPopUp(
         )
     }
 
-//    LaunchedEffect(true) {
-//        val latLngBound =  LatLngBounds.Builder()
-//        walkToShow?.pathPoints?.firstLocationPoint()?.let{
-//            walkToShow.pathPoints.forEach {
-//                if(it is PathPoint.LocationPoint) {
-//                    Log.d("HistoryPopUp", "zoomToCurrentPositionBounds: ${it.lat}, ${it.lng}")
-//                    latLngBound.include(LatLng(it.lat, it.lng))
-//                }
-//            }
-//        }
-//    }
-
     AnimatedContent(
         modifier = modifier,
         targetState = walkToShow,
@@ -145,7 +133,7 @@ fun SharedTransitionScope.HistoryPopUp(
                     Box(
                         modifier = modifier
                             .fillMaxWidth()
-                            .fillMaxHeight(0.65f)
+                            .fillMaxHeight(0.6f)
                     ) {
                         ShowMapLoadingProgressBar(isMapLoaded)
                         GoogleMap(
@@ -167,13 +155,6 @@ fun SharedTransitionScope.HistoryPopUp(
                                         latLng = it
                                     )
                                 }
-//                                walkToShow?.pathPoints?.firstLocationPoint()?.let{
-//                                    zoomToCurrentPositionBounds(
-//                                        coroutineScope = coroutineScope,
-//                                        cameraPositionState = cameraPositionState,
-//                                        latLngBound = LatLngBounds.Builder()
-//                                    )
-//                                }
                             }
                         ) {
                             DrawHistoryPathPoints(
@@ -203,7 +184,7 @@ fun SharedTransitionScope.HistoryPopUp(
                         ) {
                             Text(
                                 text = TimeUtils.formatMillisTime(targetState.time),
-                                style = MaterialTheme.typography.displayMedium.copy(
+                                style = MaterialTheme.typography.displaySmall.copy(
                                     fontWeight = FontWeight.Bold,
                                 ),
                                 color = MaterialTheme.colorScheme.primary
@@ -220,7 +201,6 @@ fun SharedTransitionScope.HistoryPopUp(
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             modifier = modifier
                                 .fillMaxWidth()
-
                         ) {
                             Box(
                                 modifier = Modifier.weight(1f),
@@ -260,7 +240,6 @@ fun SharedTransitionScope.HistoryPopUp(
                                     iconColor = Color(0xFF0C9B12)
                                 )
                             }
-
                         }
                     }
                 }
@@ -305,16 +284,3 @@ private fun zoomToCurrentPosition(
         )
     }
 }
-
-//private fun zoomToCurrentPositionBounds(
-//    coroutineScope: CoroutineScope,
-//    cameraPositionState: CameraPositionState,
-//    latLngBound: LatLngBounds.Builder,
-//) {
-//    coroutineScope.launch {
-//        cameraPositionState.animate(
-//            update = CameraUpdateFactory.newLatLngBounds(latLngBound.build(), 100),
-//            durationMs = 500
-//        )
-//    }
-//}

@@ -74,7 +74,7 @@ fun WeeklyStats(
                             showStepsInfo = false,
                             radius = medium,
                             strokeWidth = small,
-                            animDelay = 1000,
+                            animDelay = 600,
                             modifier = Modifier
                         )
                         Spacer(modifier = Modifier.height(small))

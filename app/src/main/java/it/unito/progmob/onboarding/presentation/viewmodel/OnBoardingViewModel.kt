@@ -70,10 +70,12 @@ class OnBoardingViewModel @Inject constructor(
      * @param weight The user's weight input.
      */
     private fun validateWeight(weight: String) {
+        onBoardingState.value = onBoardingState.value.copy(
+            weight = weight,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateWeightUseCase(weight)
             onBoardingState.value = onBoardingState.value.copy(
-                weight = weight,
                 weightError = validationResult.message
             )
         }
@@ -85,10 +87,12 @@ class OnBoardingViewModel @Inject constructor(
      * @param username The user's username input.
      */
     private fun validateUsername(username: String) {
+        onBoardingState.value = onBoardingState.value.copy(
+            username = username,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateUsernameUseCase(username)
             onBoardingState.value = onBoardingState.value.copy(
-                username = username,
                 usernameError = validationResult.message
             )
         }
@@ -100,10 +104,12 @@ class OnBoardingViewModel @Inject constructor(
      * @param target The user's target input.
      */
     private fun validateTarget(target: String) {
+        onBoardingState.value = onBoardingState.value.copy(
+            target = target,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateTargetUseCase(target)
             onBoardingState.value = onBoardingState.value.copy(
-                target = target,
                 targetError = validationResult.message
             )
         }
@@ -115,10 +121,12 @@ class OnBoardingViewModel @Inject constructor(
      * @param height The user's height input.
      */
     private fun validateHeight(height: String) {
+        onBoardingState.value = onBoardingState.value.copy(
+            height = height,
+        )
         viewModelScope.launch(Dispatchers.Default) {
             val validationResult = onBoardingUseCases.validateHeightUseCase(height)
             onBoardingState.value = onBoardingState.value.copy(
-                height = height,
                 heightError = validationResult.message
             )
         }

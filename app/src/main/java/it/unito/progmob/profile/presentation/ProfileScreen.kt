@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,13 +28,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import it.unito.progmob.R
 import it.unito.progmob.profile.presentation.components.ImageBorderAnimation
 import it.unito.progmob.profile.presentation.components.ProfileButton
@@ -42,6 +43,7 @@ import it.unito.progmob.profile.presentation.components.ProfileUserTextField
 import it.unito.progmob.profile.presentation.state.UiProfileState
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
+import it.unito.progmob.ui.theme.small
 
 @Composable
 fun ProfileScreen(
@@ -50,12 +52,22 @@ fun ProfileScreen(
     profileState: UiProfileState,
 ) {
     var isSaveButtonEnabled by remember { mutableStateOf(false) }
+    var isSomethingChanged by remember { mutableStateOf(false) }
     val changeUserName = remember { mutableStateOf(false) }
     val openAlertDialog = remember { mutableStateOf(false) }
     var backupUsername by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(true) {
+    LaunchedEffect(changeUserName) {
         backupUsername = profileState.username
+    }
+
+    LaunchedEffect(profileState) {
+        isSaveButtonEnabled = profileState.usernameError == null &&
+                profileState.heightError == null &&
+                profileState.weightError == null &&
+                profileState.targetError == null &&
+                isSomethingChanged
     }
 
     Column(
@@ -63,14 +75,14 @@ fun ProfileScreen(
             .background(color = MaterialTheme.colorScheme.surfaceVariant)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = medium),
-            horizontalArrangement = Arrangement.spacedBy(medium, Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxHeight(0.27f)
+                .padding(start = medium, end = medium, top = 5.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ImageBorderAnimation(
                 painter = painterResource(id = R.drawable.user_profile),
@@ -83,21 +95,18 @@ fun ProfileScreen(
                     MaterialTheme.colorScheme.tertiary
                 ),
             )
-            Column(
-                modifier = Modifier,
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
+            Spacer(modifier = Modifier.height(small))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    stringResource(R.string.profile_title),
-                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold, fontSize = 35.sp)
-                )
                 AnimatedVisibility(visible = changeUserName.value) {
                     ProfileUserTextField(
                         value = profileState.username,
                         onValueChange = {
                             profileEvent(ProfileEvent.UsernameChanged(it))
-                            isSaveButtonEnabled = true
+                            isSomethingChanged = true
                         },
                         isError = profileState.usernameError != null,
                         errorText = profileState.usernameError,
@@ -107,13 +116,14 @@ fun ProfileScreen(
                         }
                     )
                 }
+
                 AnimatedVisibility(
                     visible = !changeUserName.value,
                     exit = ExitTransition.None
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
+                        horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
@@ -147,7 +157,7 @@ fun ProfileScreen(
                 ),
                 onValueChange = {
                     profileEvent(ProfileEvent.HeightChanged(it))
-                    isSaveButtonEnabled = true
+                    isSomethingChanged = true
                 },
                 textAlign = TextAlign.Start,
                 isError = profileState.heightError != null,
@@ -162,7 +172,7 @@ fun ProfileScreen(
                 ),
                 onValueChange = {
                     profileEvent(ProfileEvent.WeightChanged(it))
-                    isSaveButtonEnabled = true
+                    isSomethingChanged = true
                 },
                 textAlign = TextAlign.Start,
                 isError = profileState.weightError != null,
@@ -177,7 +187,7 @@ fun ProfileScreen(
                 ),
                 onValueChange = {
                     profileEvent(ProfileEvent.TargetChanged(it))
-                    isSaveButtonEnabled = true
+                    isSomethingChanged = true
                 },
                 textAlign = TextAlign.Start,
                 isError = profileState.targetError != null,
@@ -187,10 +197,12 @@ fun ProfileScreen(
                 text = stringResource(R.string.profile_save_changes_btn),
                 onClick = {
                     profileEvent(ProfileEvent.SaveProfile)
-                    isSaveButtonEnabled = false
                     openAlertDialog.value = true
                     changeUserName.value = false
                     backupUsername = profileState.username
+                    isSaveButtonEnabled = false
+                    isSomethingChanged = false
+                    focusManager.clearFocus()
                 },
                 isEnabled = isSaveButtonEnabled,
             )
@@ -205,4 +217,6 @@ fun ProfileScreen(
         )
     }
 }
+
+
 

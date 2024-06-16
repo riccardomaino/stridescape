@@ -256,8 +256,6 @@ fun NavGraph(
             // Profile Screen
             composable(
                 route = Route.ProfileScreenRoute.route,
-                enterTransition = { fadeIn(animationSpec = tween(200, delayMillis = 0)) },
-                exitTransition = { fadeOut(animationSpec = tween(200, delayMillis = 0)) }
             ) {
                 // Handle the back press to show the floating action button only on the Home screen
                 BackHandler(enabled = !backPressHandled) {

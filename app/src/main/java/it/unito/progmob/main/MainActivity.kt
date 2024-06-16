@@ -12,7 +12,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +24,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -73,6 +75,7 @@ class MainActivity : ComponentActivity() {
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val visiblePermissionDialogQueue by mainViewModel.visiblePermissionDialogQueue.collectAsState()
                 val isActionButtonShown by mainViewModel.isActionButtonShown.collectAsState()
+                var isTopBarVisible by remember { mutableStateOf(true) }
                 val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestMultiplePermissions(),
                     onResult = { perms ->
@@ -94,87 +97,85 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     topBar = {
-                        if (currentBackStackEntry?.destination?.route != Route.OnBoardingScreenRoute.route && currentBackStackEntry?.destination?.route != Route.OnBoardingProfileScreenRoute.route) {
-                            TopAppBar(
-                                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                                title = {
-                                    when (currentBackStackEntry?.destination?.route) {
-                                        Route.OnBoardingProfileScreenRoute.route -> Text(
-                                            stringResource(R.string.onboparding_page4_title),
-                                            style = MaterialTheme.typography.titleLarge.copy(
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        )
+                        when (currentBackStackEntry?.destination?.route) {
+                            Route.OnBoardingScreenRoute.route -> {
+                                isTopBarVisible = false
+                            }
 
-                                        Route.HomeScreenRoute.route -> Text(
-                                            stringResource(R.string.home_title),
-                                            style = MaterialTheme.typography.titleLarge.copy(
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        )
+                            Route.OnBoardingProfileScreenRoute.route -> {
+                                isTopBarVisible = false
+                            }
 
-                                        Route.StatsScreenRoute.route -> Text(
-                                            stringResource(R.string.stats_title),
-                                            style = MaterialTheme.typography.titleLarge.copy(
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        )
+                            Route.ProfileScreenRoute.route -> {
+                                isTopBarVisible = false
+                            }
 
-                                        Route.TrackingScreenRoute.route -> Text(
-                                            stringResource(R.string.tracking_title),
-                                            style = MaterialTheme.typography.titleLarge.copy(
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        )
-
-                                        Route.HistoryScreenRoute.route -> Text(
-                                            stringResource(R.string.history_title),
-                                            style = MaterialTheme.typography.titleLarge.copy(
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        )
-                                    }
-                                },
-                                actions = {
-                                    when(currentBackStackEntry?.destination?.route){
-                                        Route.TrackingScreenRoute.route -> {}
-                                        Route.ProfileScreenRoute.route -> {
-                                            IconButton(
-                                                onClick = {
-                                                    if(navController.previousBackStackEntry?.destination?.route == Route.HomeScreenRoute.route){
-                                                        mainViewModel.onEvent(MainEvent.ShowFloatingActionButton(true))
-                                                    }
-                                                    navController.popBackStack()
-                                                }
-                                            ) {
-                                                Icon(
-                                                    Icons.Default.ArrowBackIosNew,
-                                                    contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
-                                                    tint = MaterialTheme.colorScheme.onSurface
+                            else -> {
+                                TopAppBar(
+                                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                                    title = {
+                                        when (currentBackStackEntry?.destination?.route) {
+                                            Route.OnBoardingProfileScreenRoute.route -> Text(
+                                                stringResource(R.string.onboparding_page4_title),
+                                                style = MaterialTheme.typography.titleLarge.copy(
+                                                    fontWeight = FontWeight.Bold
                                                 )
-                                            }
+                                            )
+
+                                            Route.HomeScreenRoute.route -> Text(
+                                                stringResource(R.string.home_title),
+                                                style = MaterialTheme.typography.titleLarge.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            )
+
+                                            Route.StatsScreenRoute.route -> Text(
+                                                stringResource(R.string.stats_title),
+                                                style = MaterialTheme.typography.titleLarge.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            )
+
+                                            Route.TrackingScreenRoute.route -> Text(
+                                                stringResource(R.string.tracking_title),
+                                                style = MaterialTheme.typography.titleLarge.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            )
+
+                                            Route.HistoryScreenRoute.route -> Text(
+                                                stringResource(R.string.history_title),
+                                                style = MaterialTheme.typography.titleLarge.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            )
                                         }
-                                        else -> {
-                                            IconButton(
-                                                onClick = {
-                                                    navController.navigate(Route.ProfileScreenRoute.route)
-                                                    mainViewModel.onEvent(
-                                                        MainEvent.ShowFloatingActionButton(
-                                                            false
+                                    },
+                                    actions = {
+                                        when (currentBackStackEntry?.destination?.route) {
+                                            Route.TrackingScreenRoute.route -> {}
+                                            else -> {
+                                                IconButton(
+                                                    onClick = {
+                                                        navController.navigate(Route.ProfileScreenRoute.route)
+                                                        mainViewModel.onEvent(
+                                                            MainEvent.ShowFloatingActionButton(
+                                                                false
+                                                            )
                                                         )
+                                                    }
+                                                ) {
+                                                    Icon(
+                                                        Icons.Default.Person,
+                                                        contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
+                                                        tint = MaterialTheme.colorScheme.onSurface
                                                     )
                                                 }
-                                            ) {
-                                                Icon(
-                                                    Icons.Default.Person,
-                                                    contentDescription = stringResource(R.string.topappbar_user_icon_content_desc),
-                                                    tint = MaterialTheme.colorScheme.onSurface
-                                                )
                                             }
                                         }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     },
                     bottomBar = {
@@ -202,7 +203,8 @@ class MainActivity : ComponentActivity() {
                 ) { padding ->
                     Surface(
                         modifier = Modifier
-                            .padding(padding)
+                            .padding(padding),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
                     ) {
                         NavGraph(
                             startDestination = startDestination,
@@ -220,7 +222,10 @@ class MainActivity : ComponentActivity() {
                             Manifest.permission.POST_NOTIFICATIONS -> PostNotificationsPermissionTextProvider()
                             else -> return@forEach
                         },
-                        isPermanentlyDeclined = !ActivityCompat.shouldShowRequestPermissionRationale(this, permission),
+                        isPermanentlyDeclined = !ActivityCompat.shouldShowRequestPermissionRationale(
+                            this,
+                            permission
+                        ),
                         onDismiss = {
                             mainViewModel.onEvent(MainEvent.DismissPermissionDialog)
                         },

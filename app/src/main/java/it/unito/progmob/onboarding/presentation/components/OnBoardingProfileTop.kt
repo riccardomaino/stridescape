@@ -53,7 +53,7 @@ fun OnBoardingProfileTop(
                 .fillMaxHeight()
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(small ,Alignment.Top)
+            verticalArrangement = Arrangement.Top
         ) {
             OnBoardingTextField(
                 textFieldTitle = stringResource(R.string.textfield_username_title),

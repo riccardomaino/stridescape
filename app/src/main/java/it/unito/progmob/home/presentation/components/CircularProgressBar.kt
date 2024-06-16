@@ -51,7 +51,7 @@ fun CircularProgressBar(
     }
 
     val stepCircularBarAnimation = animateFloatAsState(
-        targetValue = if (stepBarAnimationPlayed) (((steps * 100) / targetStepsGoal) / 100).toFloat() else 0f,
+        targetValue = if (stepBarAnimationPlayed) ((steps * 100) / targetStepsGoal) / 100f else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = animDelay

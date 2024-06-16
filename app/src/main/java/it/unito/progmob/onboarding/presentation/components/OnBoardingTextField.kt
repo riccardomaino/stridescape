@@ -38,7 +38,7 @@ fun OnBoardingTextField(
     errorText: UiText?,
     showTitle: Boolean = true,
     placeholder: String = "",
-    widthFraction: Float = 0.7f
+    widthFraction: Float = 0.8f
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,7 +69,7 @@ fun OnBoardingTextField(
             placeholder = { Text(text = placeholder, style = MaterialTheme.typography.titleMedium) },
             modifier = modifier
                 .fillMaxWidth(widthFraction)
-                .padding(vertical = small),
+                .padding(bottom = small),
             singleLine = true,
             value = value,
             onValueChange = onValueChange,
@@ -83,7 +83,7 @@ fun OnBoardingTextField(
                     text = if (isError) errorText!!.asString() else "",
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = modifier
+                    modifier = Modifier
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
