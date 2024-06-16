@@ -96,16 +96,16 @@
     <string name="stopwalkdialog_confirm_btn_text">Conferma</string>
     <string name="stopwalkdialog_title">Terminare?</string>
     <string name="stopwalkdialog_description">Sei sicuro di voler interrompere la tua passeggiata? Ciò terminerà la sessione di monitoraggio corrente.</string>
-    <string name="validation_error_blank_height">Inserisci un valore per l\'altezza.</string>
-    <string name="validation_error_invalid_range_height">Inserisci un numero valido per l\'altezza (25..250).</string>
-    <string name="validation_error_invalid_number_height">Inserisci un numero intero valido per l\'altezza.</string>
-    <string name="validation_error_blank_weight">Inserisci un valore per il peso.</string>
-    <string name="validation_error_invalid_number_weight">Inserisci un numero intero valido per il peso.</string>
-    <string name="validation_error_invalid_range_weight">Inserisci un numero valido per il peso (15..300).</string>
-    <string name="validation_error_blank_target">Inserisci un valore per l\'obiettivo di passi</string>
-    <string name="validation_error_invalid_number_target">Inserisci un numero intero valido per l\'obiettivo di passi</string>
+    <string name="validation_error_blank_height">Inserisci un valore.</string>
+    <string name="validation_error_invalid_range_height">Inserisci un numero valido (25..250).</string>
+    <string name="validation_error_invalid_number_height">Inserisci un numero intero valido.</string>
+    <string name="validation_error_blank_weight">Inserisci un valore.</string>
+    <string name="validation_error_invalid_number_weight">Inserisci un numero intero valido.</string>
+    <string name="validation_error_invalid_range_weight">Inserisci un numero valido (15..300).</string>
+    <string name="validation_error_blank_target">Inserisci un valore.</string>
+    <string name="validation_error_invalid_number_target">Inserisci un numero intero valido.</string>
     <string name="validation_error_invalid_range_target">Inserisci un numero positivo per l\'obiettivo di passi</string>
-    <string name="validation_error_blank_username">Inserisci un valore per il nome utente.</string>
+    <string name="validation_error_blank_username">Inserisci un valore.</string>
     <string name="textfield_user_height_title">Altezza</string>
     <string name="texfield_user_weight_title">Peso</string>
     <string name="texfield_user_steps_target_title">Obiettivo Passi</string>
@@ -135,4 +135,5 @@
     <string name="pathpoint_marker_title_start_point">Inizio</string>
     <string name="pathpoint_marker_title_end_point">Fine</string>
     <string name="history_select_date_range_title">Scegli intervallo date</string>
+    <string name="validation_error_long_username">Inserisci un valore più corto</string>
 </resources>

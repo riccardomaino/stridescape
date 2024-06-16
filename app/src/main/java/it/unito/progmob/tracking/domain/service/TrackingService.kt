@@ -8,22 +8,22 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+import android.hardware.Sensor
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
-import it.unito.progmob.main.MainActivity
 import it.unito.progmob.R
-import it.unito.progmob.core.domain.Constants.TRACKING_DEEP_LINK
 import it.unito.progmob.core.domain.Constants.LOCATION_TRACKING_INTERVAL
+import it.unito.progmob.core.domain.Constants.TRACKING_DEEP_LINK
 import it.unito.progmob.core.domain.ext.hasAllPermissions
 import it.unito.progmob.core.domain.sensor.AccelerometerSensor
 import it.unito.progmob.core.domain.sensor.MeasurableSensor
 import it.unito.progmob.core.domain.sensor.StepCounterSensor
 import it.unito.progmob.core.domain.util.TimeUtils
 import it.unito.progmob.core.domain.util.WalkUtils
+import it.unito.progmob.main.MainActivity
 import it.unito.progmob.tracking.domain.manager.LocationTrackingManager
 import it.unito.progmob.tracking.domain.manager.TimeTrackingManager
 import it.unito.progmob.tracking.domain.model.PathPoint
@@ -36,6 +36,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * A service that tracks the user's location and displays a notification with the current location.
@@ -83,6 +85,18 @@ class TrackingService : Service() {
     @Inject
     @Named("AccelerometerSensor")
     lateinit var accelerometerSensor: MeasurableSensor
+
+    /**
+     * The number of steps taken by the user. This variable is used to calculate the number of steps
+     * using the accelerometer sensor
+     */
+    private var accelerometerStepCounter = 0
+
+    /**
+     * The previous magnitude of the accelerometer sensor. This variable is used to calculate the
+     * number of steps using the accelerometer sensor
+     */
+    private var previousMagnitude = 0.0
 
     /**
      * The actual sensor used to track the number of steps taken by the user.
@@ -138,7 +152,6 @@ class TrackingService : Service() {
      * Handles the destruction of the service. This method is called when the service is destroyed.
      */
     override fun onDestroy() {
-        Log.d(TAG, "onDestroy() called")
         stop()
         super.onDestroy()
     }
@@ -150,10 +163,8 @@ class TrackingService : Service() {
      * step counter
      */
     private fun start() {
-        Log.d(TAG, "start(): called")
         // Check if the application has all the permissions needed to start the service
         if (!this.hasAllPermissions()) {
-            Log.e(TAG, "start(): Error, there are some permissions which aren't granted")
             return
         }
 
@@ -167,14 +178,15 @@ class TrackingService : Service() {
         }
 
         // Update the walk state isTracking field to true
-        if(!hasBeenResumed){
+        if (!hasBeenResumed) {
             pendingIntent = getPendingIntent()
             walkHandler.updateWalkIsTrackingStarted(true)
         }
         walkHandler.updateWalkIsTracking(true)
 
         // Get the NotificationManager used to notify the notification
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // Create the NotificationCompat.Builder used to build all the notifications
         val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
@@ -209,21 +221,49 @@ class TrackingService : Service() {
 
         // Start listening to the step counter sensor in a new coroutine in the same scope
         trackingServiceScope.launch {
-            stepCounterSensor.startListening()
-            stepCounterSensor.setOnSensorValueChangedListener { sensorData ->
-                Log.d("TrackingService", "Listening in Thread: ${Thread.currentThread().name}")
-                val newSteps = sensorData[0].toInt()
-                // Update the walk state with the new steps
-                walkHandler.updateWalkSteps(newSteps)
-                // Notify the the updated notification
-                val updatedNotification = notification
-                    .setStyle(
-                        NotificationCompat.BigTextStyle()
-                            .bigText("Steps: ${walkHandler.walk.value.steps}")
+            stepSensor.startListening()
+            if (stepSensor.sensorType == Sensor.TYPE_STEP_COUNTER) {
+                stepSensor.setOnSensorValueChangedListener { sensorData ->
+                    // Get the new steps from the sensor
+                    val newSteps = sensorData[0].toInt()
+                    // Update the walk state with the new steps
+                    walkHandler.updateWalkSteps(newSteps)
+                    // Notify the the updated notification
+                    val updatedNotification = notification
+                        .setStyle(
+                            NotificationCompat.BigTextStyle()
+                                .bigText("Steps: ${walkHandler.walk.value.steps}")
+                        )
+                    notificationManager.notify(
+                        NOTIFICATION_ID, updatedNotification.build()
                     )
-                notificationManager.notify(
-                    NOTIFICATION_ID, updatedNotification.build()
-                )
+                }
+            } else {
+                accelerometerSensor.setOnSensorValueChangedListener { values ->
+                    val x: Float = values[0]
+                    val y: Float = values[1]
+                    val z: Float = values[2]
+
+                    val magnitude = sqrt(x.pow(2.0f) + y.pow(2.0f) + z.pow(2.0f))
+
+                    val magnitudeDelta = magnitude - previousMagnitude
+                    previousMagnitude = magnitude.toDouble()
+
+                    if (magnitudeDelta > 6) { // adjust the threshold based on your device
+                        accelerometerStepCounter++
+                        // Update the walk state with the new steps
+                        walkHandler.updateWalkSteps(accelerometerStepCounter, true)
+                        // Notify the the updated notification
+                        val updatedNotification = notification
+                            .setStyle(
+                                NotificationCompat.BigTextStyle()
+                                    .bigText("Steps: ${walkHandler.walk.value.steps}")
+                            )
+                        notificationManager.notify(
+                            NOTIFICATION_ID, updatedNotification.build()
+                        )
+                    }
+                }
             }
         }
 
@@ -248,7 +288,6 @@ class TrackingService : Service() {
      * Resumes the tracking service. This method starts the location updates and the step counter sensor.
      */
     private fun resume() {
-        Log.d(TAG, "resume() called")
         hasBeenResumed = true
         start()
     }
@@ -257,9 +296,8 @@ class TrackingService : Service() {
      * Pauses the tracking service. This method stops the location updates and the step counter sensor.
      */
     private fun pause() {
-        Log.d(TAG, "pause() called")
         trackingServiceScope.cancel()
-        stepCounterSensor.stopListening()
+        stepSensor.stopListening()
         // Update the walk state isTracking field to false
         walkHandler.updateWalkIsTracking(false)
         // Update the walk state path adding an empty point
@@ -270,10 +308,9 @@ class TrackingService : Service() {
      * Stops the tracking service. This method removes the notification and stops the service.
      */
     private fun stop() {
-        Log.d(TAG, "stop() called")
         trackingServiceScope.cancel()
         timeTrackingManager.stopTrackingTime()
-        stepCounterSensor.stopListening()
+        stepSensor.stopListening()
         walkHandler.updateWalkIsTracking(false)
         walkHandler.updateWalkIsTrackingStarted(false)
         stopForeground(STOP_FOREGROUND_REMOVE) // Immediately remove the notification
@@ -310,7 +347,6 @@ class TrackingService : Service() {
      * Companion object containing constants used by the service.
      */
     companion object {
-        private val TAG = TrackingService::class.java.simpleName
         const val NOTIFICATION_CHANNEL_ID = "location_tracking_channel"
         const val NOTIFICATION_CHANNEL_NAME = "Tracking notifications"
         const val NOTIFICATION_ID = 1

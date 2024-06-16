@@ -19,6 +19,13 @@ class ValidateUsernameUseCase {
                 message = UiText.StringResource(resId = R.string.validation_error_blank_username)
             )
         }
+
+        if (username.length > 12) {
+            return ValidationResult(
+                successful = false,
+                message = UiText.StringResource(resId = R.string.validation_error_long_username)
+            )
+        }
         // If all checks pass, return a successful validation result.
         return ValidationResult(
             successful = true,

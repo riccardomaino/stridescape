@@ -5,6 +5,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Abstract class representing an Android sensor. This class provides functionality for checking
@@ -33,6 +38,9 @@ abstract class AndroidSensor(
     // Returned from the sensor manager when we start to listen to it and we say which sensor
     // we want to listen to
     private var sensor: Sensor? = null
+
+    val sensorScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    var sensorJob: Job? = null
 
     /**
      * Starts listening to the sensor.
@@ -66,6 +74,10 @@ abstract class AndroidSensor(
         }
         // Now we unregister the listener from the sensor
         sensorManager.unregisterListener(this)
+
+        // Cancel the job that is listening to the sensor values
+        sensorJob?.cancel()
+        sensorJob = null
     }
 
     /**
@@ -73,15 +85,18 @@ abstract class AndroidSensor(
      * @param event - the sensor event that has been triggered
      * */
     override fun onSensorChanged(event: SensorEvent?) {
-        // If the sensor doesn't exists we just return form the function
-        if(!doesSensorExists){
-            return
+        sensorJob = sensorScope.launch {
+            // If the sensor doesn't exists we just return form the function
+            if(!doesSensorExists){
+                return@launch
+            }
+            // If the event is from the sensor we want to handle, we get the values from the event and
+            // pass them to the onSensorValuesChanged function
+            if(event?.sensor?.type == sensorType){
+                onSensorValuesChanged?.invoke(event.values.toList())
+            }
         }
-        // If the event is from the sensor we want to handle, we get the values from the event and
-        // pass them to the onSensorValuesChanged function
-        if(event?.sensor?.type == sensorType){
-            onSensorValuesChanged?.invoke(event.values.toList())
-        }
+        sensorJob = null
     }
 
     /**

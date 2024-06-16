@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import it.unito.progmob.R
 import it.unito.progmob.profile.presentation.components.ImageBorderAnimation
 import it.unito.progmob.profile.presentation.components.ProfileButton
@@ -67,7 +68,6 @@ fun ProfileScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxSize(0.2f)
                 .padding(horizontal = medium),
             horizontalArrangement = Arrangement.spacedBy(medium, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically
@@ -90,7 +90,7 @@ fun ProfileScreen(
             ) {
                 Text(
                     stringResource(R.string.profile_title),
-                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold)
+                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold, fontSize = 35.sp)
                 )
                 AnimatedVisibility(visible = changeUserName.value) {
                     ProfileUserTextField(
@@ -118,7 +118,7 @@ fun ProfileScreen(
                     ) {
                         Text(
                             profileState.username,
-                            style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Thin)
+                            style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Thin)
                         )
                         IconButton(onClick = { changeUserName.value = true }) {
                             Icon(

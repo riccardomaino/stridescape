@@ -102,16 +102,16 @@
     <string name="stopwalkdialog_confirm_btn_text">Confirm</string>
     <string name="stopwalkdialog_title">Stop Walk?</string>
     <string name="stopwalkdialog_description">Are you sure you want to stop your walk? This will end your current tracking session.</string>
-    <string name="validation_error_blank_height">Please enter a value for the height.</string>
-    <string name="validation_error_invalid_number_height">"Please enter a valid integer number for the height. "</string>
-    <string name="validation_error_invalid_range_height">Please enter a valid number for the height (25..250).</string>
-    <string name="validation_error_blank_weight">Please enter a value for the weight.</string>
-    <string name="validation_error_invalid_number_weight">Please enter a valid integer number for the weight.</string>
-    <string name="validation_error_invalid_range_weight">Please enter a valid number for the weight (15..300).</string>
-    <string name="validation_error_blank_target">Please enter a value for the steps target.</string>
-    <string name="validation_error_invalid_number_target">Please enter a valid integer number for the steps target</string>
+    <string name="validation_error_blank_height">Please enter a value.</string>
+    <string name="validation_error_invalid_number_height">"Please enter a valid integer number. "</string>
+    <string name="validation_error_invalid_range_height">Please enter a valid number (25..250).</string>
+    <string name="validation_error_blank_weight">Please enter a value.</string>
+    <string name="validation_error_invalid_number_weight">Please enter a valid integer number.</string>
+    <string name="validation_error_invalid_range_weight">Please enter a valid number (15..300).</string>
+    <string name="validation_error_blank_target">Please enter a value.</string>
+    <string name="validation_error_invalid_number_target">Please enter a valid integer number.</string>
     <string name="validation_error_invalid_range_target">Please enter a positive number for the steps target.</string>
-    <string name="validation_error_blank_username">Please enter a value for the username.</string>
+    <string name="validation_error_blank_username">Please enter a value.</string>
     <string name="textfield_user_height_title">Height</string>
     <string name="texfield_user_weight_title">Weight</string>
     <string name="texfield_user_steps_target_title">Steps Target</string>
@@ -145,4 +145,5 @@
     <string name="pathpoint_marker_title_start_point">Start Point</string>
     <string name="pathpoint_marker_title_end_point">End Point</string>
     <string name="history_select_date_range_title">Select date range</string>
+    <string name="validation_error_long_username">Please enter a shorter value</string>
 </resources>

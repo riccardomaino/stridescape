@@ -3,27 +3,19 @@ package it.unito.progmob.core.data.manager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
+import it.unito.progmob.MainDispatcherRule
 import it.unito.progmob.core.domain.manager.DataStoreManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class DataStoreManagerImplTest {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val testContext: Context = ApplicationProvider.getApplicationContext()
-    private val testCoroutineDispatcher = StandardTestDispatcher()
     private val dataStoreManager: DataStoreManager = DataStoreManagerImpl(testContext)
-
-    @Before
-    fun setup() {
-        Dispatchers.setMain(testCoroutineDispatcher)
-    }
 
     @Test
     fun saveAndReadOnboardingEntry() = runTest {

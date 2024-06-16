@@ -9,7 +9,7 @@ package it.unito.progmob.core.domain.sensor
  * @param sensorType The type of the sensor.
  */
 abstract class MeasurableSensor(
-    protected val sensorType: Int
+     val sensorType: Int
 ) {
 
     /**

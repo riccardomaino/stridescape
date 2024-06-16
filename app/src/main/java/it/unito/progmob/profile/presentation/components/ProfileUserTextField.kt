@@ -33,7 +33,7 @@ fun ProfileUserTextField(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
-        modifier = Modifier.fillMaxWidth(0.8f)
+        modifier = Modifier.fillMaxWidth(0.85f)
     ) {
 
         OutlinedTextField(

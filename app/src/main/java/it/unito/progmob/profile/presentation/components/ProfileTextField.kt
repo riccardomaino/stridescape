@@ -66,7 +66,7 @@ fun ProfileTextField(
         OutlinedTextField(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = medium, vertical = small),
+                .padding(start = medium, end = medium, bottom = small),
             singleLine = true,
             value = value,
             onValueChange = onValueChange,

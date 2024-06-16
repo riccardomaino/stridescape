@@ -2,8 +2,7 @@ package it.unito.progmob.tracking.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Beenhere
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.WhereToVote
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,7 +28,7 @@ fun StopWalkDialog(
         AlertDialog(
             icon = {
                 Icon(
-                    Icons.Filled.Beenhere,
+                    Icons.Filled.WhereToVote,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.primary
                 )

@@ -121,13 +121,13 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockwebserver)
     testImplementation(libs.mockk)
-    testImplementation(libs.androidx.rules)
 
     // [INSTRUMENTATION ANDROID TESTING DEPENDENCIES]
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.core.ktx)
     androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.androidx.core)
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.truth)
@@ -135,7 +135,6 @@ dependencies {
     androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.hilt.android.testing)
-    androidTestImplementation(libs.androidx.rules)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // [DEBUG BUILD DEPENDENCIES]

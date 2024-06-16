@@ -120,15 +120,23 @@ class WalkHandler {
      *
      * @param newSteps the new number of steps taken by the user to update the [Walk]
      */
-    fun updateWalkSteps(newSteps: Int) {
-        initialSteps?.let { initialSteps ->
+    fun updateWalkSteps(newSteps: Int, isAccelerometer: Boolean = false) {
+        if(!isAccelerometer) {
+            initialSteps?.let { initialSteps ->
+                _walk.update {
+                    it.copy(
+                        steps = newSteps - initialSteps
+                    )
+                }
+            } ?: run {
+                initialSteps = newSteps
+            }
+        } else {
             _walk.update {
                 it.copy(
-                    steps = newSteps - initialSteps
+                    steps = newSteps
                 )
             }
-        } ?: run {
-            initialSteps = newSteps
         }
     }
 
