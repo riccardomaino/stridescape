@@ -1,5 +1,6 @@
 package it.unito.progmob.tracking.domain.service
 
+import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
@@ -121,6 +122,11 @@ class TrackingService : Service() {
     private var hasBeenResumed = false
 
     /**
+     * The notification used to display the current location and the number of steps taken by the user.
+     */
+    private lateinit var notification: NotificationCompat.Builder
+
+    /**
      * The [PendingIntent] used to open the app when the notification is clicked.
      */
     private lateinit var pendingIntent: PendingIntent
@@ -181,22 +187,22 @@ class TrackingService : Service() {
         if (!hasBeenResumed) {
             pendingIntent = getPendingIntent()
             walkHandler.updateWalkIsTrackingStarted(true)
+            // Create the NotificationCompat.Builder used to build all the notifications
+            notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+                .setSmallIcon(R.drawable.icon)
+                .setContentTitle(getString(R.string.notification_content_title))
+                .setContentText("${getString(R.string.tracking_time_walking_stat_title)}: 00:00:00")
+                .setStyle(NotificationCompat.BigTextStyle().bigText("${getString(R.string.tracking_steps_walking_stat_title)}: 0"))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(false)
+                .setOngoing(true)
         }
         walkHandler.updateWalkIsTracking(true)
 
         // Get the NotificationManager used to notify the notification
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        // Create the NotificationCompat.Builder used to build all the notifications
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setSmallIcon(R.drawable.icon)
-            .setContentTitle(getString(R.string.notification_content_title))
-            .setContentText("Time: 00:00:00")
-            .setStyle(NotificationCompat.BigTextStyle().bigText("Steps: 0"))
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(false)
-            .setOngoing(true)
 
         // Combine the location and time tracking flows to update the walk state and the notification
         combine(
@@ -212,7 +218,7 @@ class TrackingService : Service() {
             walkHandler.updateWalkPathPointAndTime(newPathPoint, time)
             // Notify the the updated notification
             val updatedNotification = notification
-                .setContentText("Time: ${TimeUtils.formatMillisTime(time)}")
+                .setContentText("${getString(R.string.tracking_time_walking_stat_title)}: ${TimeUtils.formatMillisTime(time)}")
             notificationManager.notify(
                 NOTIFICATION_ID, updatedNotification.build()
             )
@@ -232,7 +238,7 @@ class TrackingService : Service() {
                     val updatedNotification = notification
                         .setStyle(
                             NotificationCompat.BigTextStyle()
-                                .bigText("Steps: ${walkHandler.walk.value.steps}")
+                                .bigText("${getString(R.string.tracking_steps_walking_stat_title)}: ${walkHandler.walk.value.steps}")
                         )
                     notificationManager.notify(
                         NOTIFICATION_ID, updatedNotification.build()
@@ -257,7 +263,7 @@ class TrackingService : Service() {
                         val updatedNotification = notification
                             .setStyle(
                                 NotificationCompat.BigTextStyle()
-                                    .bigText("Steps: ${walkHandler.walk.value.steps}")
+                                    .bigText("${getString(R.string.tracking_steps_walking_stat_title)}: ${walkHandler.walk.value.steps}")
                             )
                         notificationManager.notify(
                             NOTIFICATION_ID, updatedNotification.build()
