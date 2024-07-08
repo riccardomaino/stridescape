@@ -1,4 +1,4 @@
-# Stridescape Project - Relation Summary
+# Stridescape Project
 
 This is a summary for the [Stridescape project relation](<./Relazione Descrizione Progetto - Bussolino e Maino.pdf>)
 
