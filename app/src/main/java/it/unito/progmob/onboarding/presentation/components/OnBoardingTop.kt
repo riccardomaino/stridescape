@@ -38,8 +38,8 @@ fun OnBoardingTop(
         Box(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.primary)
-                .padding(start = large, end = large, top = medium)
-                .fillMaxHeight(fraction = 0.6f),
+                .padding(start = medium, end = medium, top = medium)
+                .fillMaxHeight(fraction = 0.65f),
             contentAlignment = Alignment.BottomCenter
         ) {
             page.image?.let { painterResource(id = it) }?.let {
@@ -50,6 +50,7 @@ fun OnBoardingTop(
                     painter = it,
                     contentDescription = page.imageContentDescription.asString(),
                     contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter
                     )
             }
         }

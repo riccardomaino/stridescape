@@ -2,16 +2,13 @@ package it.unito.progmob.profile.presentation
 
 import ProfileDialog
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -43,7 +40,6 @@ import it.unito.progmob.profile.presentation.components.ProfileUserTextField
 import it.unito.progmob.profile.presentation.state.UiProfileState
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.medium
-import it.unito.progmob.ui.theme.small
 
 @Composable
 fun ProfileScreen(
@@ -69,7 +65,6 @@ fun ProfileScreen(
                 profileState.targetError == null &&
                 isSomethingChanged
     }
-
     Column(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surfaceVariant)
@@ -79,8 +74,8 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.27f)
-                .padding(start = medium, end = medium, top = 5.dp),
+                .fillMaxHeight(0.3f)
+                .padding(start = medium, end = medium, top = large),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -95,9 +90,8 @@ fun ProfileScreen(
                     MaterialTheme.colorScheme.tertiary
                 ),
             )
-            Spacer(modifier = Modifier.height(small))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -116,11 +110,7 @@ fun ProfileScreen(
                         }
                     )
                 }
-
-                AnimatedVisibility(
-                    visible = !changeUserName.value,
-                    exit = ExitTransition.None
-                ) {
+                AnimatedVisibility(visible = !changeUserName.value) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
@@ -140,7 +130,6 @@ fun ProfileScreen(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(medium))
         Column(
             modifier = modifier
                 .padding(horizontal = large)

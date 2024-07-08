@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import it.unito.progmob.R
-import it.unito.progmob.ui.theme.extralargeRadius
+import it.unito.progmob.ui.theme.doubleExtraLarge
 import it.unito.progmob.ui.theme.large
 import it.unito.progmob.ui.theme.small
 
@@ -34,7 +34,7 @@ fun ProfileButton(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        shape = RoundedCornerShape(extralargeRadius),
+        shape = RoundedCornerShape(doubleExtraLarge),
     ) {
         Icon(
             Icons.Filled.Save,

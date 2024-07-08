@@ -103,7 +103,7 @@ fun NavigationBar(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(small),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
@@ -172,7 +172,6 @@ fun NavigationBar(
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
-
                     if (currentBackStackEntry?.destination?.route == Route.HistoryScreenRoute.route) {
                         Canvas(
                             modifier = Modifier.size(small)
@@ -183,21 +182,21 @@ fun NavigationBar(
                             )
                         }
                     }
-                IconButton(onClick = {
-                    if (currentBackStackEntry?.destination?.route != Route.HistoryScreenRoute.route) {
-                        navController.navigate(Route.HistoryScreenRoute.route)
-                        hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
-                        mainEvent(MainEvent.ShowFloatingActionButton(false))
+                    IconButton(onClick = {
+                        if (currentBackStackEntry?.destination?.route != Route.HistoryScreenRoute.route) {
+                            navController.navigate(Route.HistoryScreenRoute.route)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackConstantsCompat.CONFIRM)
+                            mainEvent(MainEvent.ShowFloatingActionButton(false))
+                        }
+                    }) {
+                        Icon(
+                            Icons.Filled.History,
+                            contentDescription = stringResource(R.string.navigationbar_history_icon_content_desc),
+                            modifier = Modifier.size(large),
+                            tint = if (currentBackStackEntry?.destination?.route == Route.HistoryScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+                        )
                     }
-                }) {
-                    Icon(
-                        Icons.Filled.History,
-                        contentDescription = stringResource(R.string.navigationbar_history_icon_content_desc),
-                        modifier = Modifier.size(large),
-                        tint = if (currentBackStackEntry?.destination?.route == Route.HistoryScreenRoute.route) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
-                    )
                 }
-            }
             }
         }
 

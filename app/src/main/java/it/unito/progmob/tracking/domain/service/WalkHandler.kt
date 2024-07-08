@@ -60,7 +60,7 @@ class WalkHandler {
         newPathPoint: PathPoint.LocationPoint,
         time: Long,
         pointsAccuracyLowerBound: Int = 5,
-        pointsAccuracyUpperBound: Int = 100
+        pointsAccuracyUpperBound: Int = 50
     ) {
          // Update the milliseconds time in the walk state
         _walk.update {
