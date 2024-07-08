@@ -20,7 +20,7 @@ class ValidateUsernameUseCase {
             )
         }
 
-        if (username.length > 12) {
+        if (username.length > 15) {
             return ValidationResult(
                 successful = false,
                 message = UiText.StringResource(resId = R.string.validation_error_long_username)

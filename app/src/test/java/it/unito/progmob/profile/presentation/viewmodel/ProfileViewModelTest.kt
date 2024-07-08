@@ -117,9 +117,9 @@ class ProfileViewModelTest{
         val actual = "Luigi Bianchi"
 
         profileViewModel.onEvent(ProfileEvent.UsernameChanged(actual))
-
         othersDispatcherRule.defaultDispatcher.scheduler.advanceUntilIdle()
         val profileState = profileViewModel.profileState.value
+
         assertThat(profileState.username).isEqualTo(actual)
         assertThat(profileState.usernameError).isNull()
     }

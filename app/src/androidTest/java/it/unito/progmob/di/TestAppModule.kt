@@ -76,7 +76,7 @@ import javax.inject.Singleton
 object TestAppModule {
     @Provides
     @Singleton
-    fun provideDataStoreManager(): DataStoreManager = FakeDataStoreManager()
+    fun provideDataStoreManagerTest(): DataStoreManager = FakeDataStoreManager()
 
     @Provides
     @Singleton

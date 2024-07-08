@@ -103,21 +103,20 @@ class DataStoreManagerImpl @Inject constructor(
             preferences[PreferencesKeys.USER_NAME_ENTRY] ?: ""
         }
     }
+
+    /**
+     * Object to hold the keys used in DataStore.
+     */
+    object PreferencesKeys {
+        val ONBOARDING_ENTRY = booleanPreferencesKey(name = Constants.ONBOARDING_ENTRY)
+        val USER_NAME_ENTRY = stringPreferencesKey(name = Constants.USER_NAME_ENTRY)
+        val USER_WEIGHT_ENTRY = stringPreferencesKey(name = Constants.USER_WEIGHT_ENTRY)
+        val USER_HEIGHT_ENTRY = stringPreferencesKey(name = Constants.USER_HEIGHT_ENTRY)
+    }
 }
 
 /**
  * Extension property to create a DataStore instance for the application context.
  */
 private val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = Constants.USER_PREFERENCES_DATASTORE)
-
-/**
- * Object to hold the keys used in DataStore.
- */
-object PreferencesKeys {
-    val ONBOARDING_ENTRY = booleanPreferencesKey(name = Constants.ONBOARDING_ENTRY)
-    val USER_NAME_ENTRY = stringPreferencesKey(name = Constants.USER_NAME_ENTRY)
-    val USER_WEIGHT_ENTRY = stringPreferencesKey(name = Constants.USER_WEIGHT_ENTRY)
-    val USER_HEIGHT_ENTRY = stringPreferencesKey(name = Constants.USER_HEIGHT_ENTRY)
-}
-
 

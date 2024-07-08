@@ -20,7 +20,7 @@ class DateUtilsTest{
     @Test
     fun `get the current day of the week, should be between 0 and 6`() {
         val currentDayOfWeek = DateUtils.getCurrentDayOfWeek()
-        Truth.assertThat(currentDayOfWeek in 1..7).isTrue()
+        Truth.assertThat(currentDayOfWeek in 0..6).isTrue()
     }
 
     @Test
