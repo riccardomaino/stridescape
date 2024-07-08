@@ -1,6 +1,6 @@
 # Stridescape Project
 
-This is a summary for the [Stridescape project relation](<./Relazione Descrizione Progetto - Bussolino e Maino.pdf>)
+This is a summary of the [Stridescape project relation](<./Relazione Descrizione Progetto - Bussolino e Maino.pdf>)
 
 ## Overview
 Stridescape is a mobile application developed for tracking walking activities. The app allows users to monitor their steps, calories burned, distance traveled, and total activity time. The walked path is displayed on a map, and users can view weekly, monthly, and yearly statistics through various graphs. The app also maintains a history of walks with all relevant statistics and allows users to review their routes on a map.
